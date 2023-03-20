@@ -171,7 +171,6 @@ namespace cherrydev
             rect.position += delta;
             EditorUtility.SetDirty(this);
         }
-
 #endif
     }
 }

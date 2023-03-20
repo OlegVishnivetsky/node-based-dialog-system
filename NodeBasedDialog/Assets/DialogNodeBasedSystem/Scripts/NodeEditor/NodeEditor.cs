@@ -46,12 +46,12 @@ namespace cherrydev
             Selection.selectionChanged += ChangeEditorWindowOnSelection;
 
             nodeStyle = new GUIStyle();
-            nodeStyle.normal.background = EditorGUIUtility.Load(EditorIcons.Node) as Texture2D;
+            nodeStyle.normal.background = EditorGUIUtility.Load(StringConstants.Node) as Texture2D;
             nodeStyle.padding = new RectOffset(nodePadding, nodePadding, nodePadding, nodePadding);
             nodeStyle.border = new RectOffset(nodeBorder, nodeBorder, nodeBorder, nodeBorder);
 
             selectedNodeStyle = new GUIStyle();
-            selectedNodeStyle.normal.background = EditorGUIUtility.Load(EditorIcons.SelectedNode) as Texture2D;
+            selectedNodeStyle.normal.background = EditorGUIUtility.Load(StringConstants.SelectedNode) as Texture2D;
             selectedNodeStyle.padding = new RectOffset(nodePadding, nodePadding, nodePadding, nodePadding);
             selectedNodeStyle.border = new RectOffset(nodeBorder, nodeBorder, nodeBorder, nodeBorder);
 

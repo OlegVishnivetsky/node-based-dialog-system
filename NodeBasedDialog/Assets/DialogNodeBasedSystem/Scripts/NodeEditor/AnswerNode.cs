@@ -54,10 +54,10 @@ namespace cherrydev
             GUILayout.BeginArea(rect, nodeStyle);
             EditorGUILayout.LabelField("Answer Node", lableStyle);
 
-            DrawAnswerLine(1, EditorIcons.GreenDot);
-            DrawAnswerLine(2, EditorIcons.GreenDot);
-            DrawAnswerLine(3, EditorIcons.GreenDot);
-            DrawAnswerLine(4, EditorIcons.GreenDot);
+            DrawAnswerLine(1, StringConstants.GreenDot);
+            DrawAnswerLine(2, StringConstants.GreenDot);
+            DrawAnswerLine(3, StringConstants.GreenDot);
+            DrawAnswerLine(4, StringConstants.GreenDot);
 
             GUILayout.EndArea();
         }
