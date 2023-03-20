@@ -1,4 +1,4 @@
-# node-based-dialog-system
+# Node Based Dialog System
 Node Based Dialog System is a tool that will allow you to create dialogs. It's ease to use and include node-based editor, which will make your life easier.
 
 Unity node based dialog system tool. Allows you to easily add an interactive dialogs to your game. A Node Editor presents an editable graph, displaying nodes and the connections between their attributes. You can create simple sentence node or node with answers to build your own dialog.
