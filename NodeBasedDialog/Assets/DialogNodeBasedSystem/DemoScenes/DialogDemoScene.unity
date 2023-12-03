@@ -309,9 +309,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4404572490694987052, guid: 0bd08184220c9914a877f3a735221e05, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4825435160123347712, guid: 0bd08184220c9914a877f3a735221e05, type: 3}
       propertyPath: m_Name
       value: Dialog Prefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 5725075076170748691, guid: 0bd08184220c9914a877f3a735221e05, type: 3}
+      propertyPath: m_Constraint
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5725075076170748691, guid: 0bd08184220c9914a877f3a735221e05, type: 3}
+      propertyPath: m_ConstraintCount
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5848802027117998450, guid: 0bd08184220c9914a877f3a735221e05, type: 3}
       propertyPath: parentTransform
