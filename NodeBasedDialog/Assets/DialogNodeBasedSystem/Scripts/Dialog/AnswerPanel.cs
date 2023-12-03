@@ -8,8 +8,26 @@ namespace cherrydev
 {
     public class AnswerPanel : MonoBehaviour
     {
-        [SerializeField] private List<Button> buttons = new List<Button>();
-        [SerializeField] private List<TextMeshProUGUI> buttonTexts;
+        [SerializeField] private Button answerButtonPrefab;
+        [SerializeField] private Transform parentTransform;
+
+        private List<Button> buttons = new List<Button>();
+        private List<TextMeshProUGUI> buttonTexts = new List<TextMeshProUGUI>();
+
+        /// <summary>
+        /// Instantiate answer buttons based on max amount of answer buttons
+        /// </summary>
+        /// <param name="maxAmountOfAnswerButtons"></param>
+        public void SetUpButtons(int maxAmountOfAnswerButtons)
+        {
+            for (int i = 0; i < maxAmountOfAnswerButtons; i++)
+            {
+                Button answerButton = Instantiate(answerButtonPrefab, parentTransform);
+
+                buttons.Add(answerButton);
+                buttonTexts.Add(answerButton.GetComponentInChildren<TextMeshProUGUI>());
+            }
+        }
 
         /// <summary>
         /// Returning button by index

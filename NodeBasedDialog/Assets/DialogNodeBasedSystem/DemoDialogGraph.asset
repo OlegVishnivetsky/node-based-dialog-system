@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8954450167078482790
+--- !u!114 &-8705819208441359274
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -16,19 +16,19 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 527
-    y: 141.20001
+    x: 562
+    y: 187.2
     width: 170
     height: 115
   isDragging: 0
   isSelected: 0
   sentence:
     characterName: cherrydev
-    text: Next for second sentence
+    text: First sentence
     characterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  parentNode: {fileID: -1472394571577278601}
-  childNode: {fileID: -1868073505810880904}
---- !u!114 &-4306302213135558005
+  parentNode: {fileID: 4936782135289953885}
+  childNode: {fileID: -7841181008643086002}
+--- !u!114 &-8455854530336412942
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,19 +44,19 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 314
-    y: 249.20001
+    x: 2028
+    y: 659.19995
     width: 170
     height: 115
   isDragging: 0
   isSelected: 0
   sentence:
     characterName: cherrydev
-    text: Third answer sentence
+    text: Last sentence
     characterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  parentNode: {fileID: 6625198195364614332}
-  childNode: {fileID: -635558158322049731}
---- !u!114 &-4174725588328313673
+  parentNode: {fileID: 0}
+  childNode: {fileID: 0}
+--- !u!114 &-7841181008643086002
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -72,19 +72,19 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 529
-    y: 381.2
+    x: 763
+    y: 184.2
     width: 170
     height: 115
   isDragging: 0
   isSelected: 0
   sentence:
     characterName: cherrydev
-    text: Next for fourth sentence
+    text: Next to first sentence
     characterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  parentNode: {fileID: -2480446064533067935}
-  childNode: {fileID: -1868073505810880904}
---- !u!114 &-2480446064533067935
+  parentNode: {fileID: -8705819208441359274}
+  childNode: {fileID: 4411136173186865135}
+--- !u!114 &-6005459696232394752
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -100,52 +100,19 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 320
-    y: 371.2
+    x: 763
+    y: 418.19995
     width: 170
     height: 115
   isDragging: 0
   isSelected: 0
   sentence:
     characterName: cherrydev
-    text: Fourth answer sentence
+    text: Next to third sentence
     characterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  parentNode: {fileID: 6625198195364614332}
-  childNode: {fileID: -4174725588328313673}
---- !u!114 &-1868073505810880904
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1717f3c6dba9fa40844ddacac301510, type: 3}
-  m_Name: Answer Node
-  m_EditorClassIdentifier: 
-  connectedNodesList: []
-  nodeGraph: {fileID: 11400000}
-  rect:
-    serializedVersion: 2
-    x: 742
-    y: 161.20001
-    width: 190
-    height: 145
-  isDragging: 0
-  isSelected: 0
-  answers:
-  - End dialog
-  - 
-  - 
-  - 
-  parentSentenceNode: {fileID: -4174725588328313673}
-  childSentenceNodes:
-  - {fileID: 169977738270986999}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
---- !u!114 &-1472394571577278601
+  parentNode: {fileID: 8776957959574132249}
+  childNode: {fileID: 4411136173186865135}
+--- !u!114 &-5184584624021453599
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,19 +128,19 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 311
-    y: 123.20001
+    x: 561
+    y: 298.2
     width: 170
     height: 115
   isDragging: 0
   isSelected: 0
   sentence:
     characterName: cherrydev
-    text: Second answer sentence
+    text: Second sentence
     characterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  parentNode: {fileID: 6625198195364614332}
-  childNode: {fileID: -8954450167078482790}
---- !u!114 &-635558158322049731
+  parentNode: {fileID: 4936782135289953885}
+  childNode: {fileID: 4978805031079437192}
+--- !u!114 &-2790696347262530497
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -189,18 +156,18 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 523
-    y: 257.2
+    x: 99
+    y: 344.2
     width: 170
     height: 115
   isDragging: 0
   isSelected: 0
   sentence:
     characterName: cherrydev
-    text: Next for third sentence
+    text: Hello, this is Dialog Node Based System
     characterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  parentNode: {fileID: -4306302213135558005}
-  childNode: {fileID: -1868073505810880904}
+  parentNode: {fileID: 0}
+  childNode: {fileID: 4936782135289953885}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,21 +181,22 @@ MonoBehaviour:
   m_Name: DemoDialogGraph
   m_EditorClassIdentifier: 
   nodesList:
-  - {fileID: 2970576600738842132}
-  - {fileID: 6625198195364614332}
-  - {fileID: 4252937235876148062}
-  - {fileID: -1472394571577278601}
-  - {fileID: -4306302213135558005}
-  - {fileID: -2480446064533067935}
-  - {fileID: 8393938792172885860}
-  - {fileID: -8954450167078482790}
-  - {fileID: -635558158322049731}
-  - {fileID: -4174725588328313673}
-  - {fileID: -1868073505810880904}
-  - {fileID: 169977738270986999}
+  - {fileID: -2790696347262530497}
+  - {fileID: -8705819208441359274}
+  - {fileID: -5184584624021453599}
+  - {fileID: 8776957959574132249}
+  - {fileID: 3563645847101711405}
+  - {fileID: -7841181008643086002}
+  - {fileID: 4978805031079437192}
+  - {fileID: -6005459696232394752}
+  - {fileID: 548517801765535934}
+  - {fileID: -8455854530336412942}
+  - {fileID: 1175716626248544139}
+  - {fileID: 4936782135289953885}
+  - {fileID: 4411136173186865135}
   nodeToDrawLineFrom: {fileID: 0}
   linePosition: {x: 0, y: 0}
---- !u!114 &169977738270986999
+--- !u!114 &548517801765535934
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -244,8 +212,36 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 966
-    y: 178.20001
+    x: 761
+    y: 535.19995
+    width: 170
+    height: 115
+  isDragging: 0
+  isSelected: 0
+  sentence:
+    characterName: cherrydev
+    text: Next to fourth sentence
+    characterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
+  parentNode: {fileID: 3563645847101711405}
+  childNode: {fileID: 4411136173186865135}
+--- !u!114 &1175716626248544139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 1191
+    y: 358.2
     width: 170
     height: 115
   isDragging: 0
@@ -254,9 +250,9 @@ MonoBehaviour:
     characterName: cherrydev
     text: Last sentence
     characterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  parentNode: {fileID: -1868073505810880904}
+  parentNode: {fileID: 4411136173186865135}
   childNode: {fileID: 0}
---- !u!114 &2970576600738842132
+--- !u!114 &3563645847101711405
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -272,47 +268,19 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: -169
-    y: 154.20001
+    x: 563
+    y: 533.19995
     width: 170
     height: 115
   isDragging: 0
   isSelected: 0
   sentence:
     characterName: cherrydev
-    text: Hello! This is an example of dialog
+    text: Fourth sentence
     characterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  parentNode: {fileID: 0}
-  childNode: {fileID: 6625198195364614332}
---- !u!114 &4252937235876148062
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
-  m_Name: Sentence Node
-  m_EditorClassIdentifier: 
-  connectedNodesList: []
-  nodeGraph: {fileID: 11400000}
-  rect:
-    serializedVersion: 2
-    x: 314
-    y: 2.1999855
-    width: 170
-    height: 115
-  isDragging: 0
-  isSelected: 0
-  sentence:
-    characterName: cherrydev
-    text: First answer sentence
-    characterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  parentNode: {fileID: 6625198195364614332}
-  childNode: {fileID: 8393938792172885860}
---- !u!114 &6625198195364614332
+  parentNode: {fileID: 4936782135289953885}
+  childNode: {fileID: 548517801765535934}
+--- !u!114 &4411136173186865135
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -328,24 +296,51 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 73
-    y: 143.20001
+    x: 978
+    y: 352.2
     width: 190
-    height: 145
+    height: 115
   isDragging: 0
   isSelected: 0
   answers:
-  - First answer
-  - Second answer
-  - Third answer
-  - Fourth answer
-  parentSentenceNode: {fileID: 2970576600738842132}
+  - End dialog
+  parentSentenceNode: {fileID: 548517801765535934}
   childSentenceNodes:
-  - {fileID: 4252937235876148062}
-  - {fileID: -1472394571577278601}
-  - {fileID: -4306302213135558005}
-  - {fileID: -2480446064533067935}
---- !u!114 &8393938792172885860
+  - {fileID: 1175716626248544139}
+--- !u!114 &4936782135289953885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1717f3c6dba9fa40844ddacac301510, type: 3}
+  m_Name: Answer Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 315
+    y: 317.2
+    width: 190
+    height: 175
+  isDragging: 0
+  isSelected: 0
+  answers:
+  - Go to first sentence
+  - Go to second sentence
+  - Go to third sentence
+  - Go to fourth sentence
+  parentSentenceNode: {fileID: -8705819208441359274}
+  childSentenceNodes:
+  - {fileID: -8705819208441359274}
+  - {fileID: -5184584624021453599}
+  - {fileID: 8776957959574132249}
+  - {fileID: 3563645847101711405}
+--- !u!114 &4978805031079437192
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -361,15 +356,43 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 530
-    y: 3.1999855
+    x: 760
+    y: 299.2
     width: 170
     height: 115
   isDragging: 0
-  isSelected: 1
+  isSelected: 0
   sentence:
     characterName: cherrydev
-    text: Next for first sentence
+    text: Next to second sentence
     characterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  parentNode: {fileID: 4252937235876148062}
-  childNode: {fileID: -1868073505810880904}
+  parentNode: {fileID: -5184584624021453599}
+  childNode: {fileID: 4411136173186865135}
+--- !u!114 &8776957959574132249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 558
+    y: 413.19995
+    width: 170
+    height: 115
+  isDragging: 0
+  isSelected: 0
+  sentence:
+    characterName: cherrydev
+    text: Third sentence
+    characterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
+  parentNode: {fileID: 4936782135289953885}
+  childNode: {fileID: -6005459696232394752}

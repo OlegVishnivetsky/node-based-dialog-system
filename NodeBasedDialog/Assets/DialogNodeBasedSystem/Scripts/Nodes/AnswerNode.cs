@@ -7,18 +7,21 @@ namespace cherrydev
     [CreateAssetMenu(menuName = "Scriptable Objects/Nodes/Answer Node", fileName = "New Answer Node")]
     public class AnswerNode : Node
     {
-        private const int amountOfAnswers = 4;
+        private int amountOfAnswers = 1;
 
         public List<string> answers = new List<string>();
 
         public SentenceNode parentSentenceNode;
-        public SentenceNode[] childSentenceNodes;
+        public List<SentenceNode> childSentenceNodes = new List<SentenceNode>();
 
-        private const float lableFieldSpace = 15f;
+        private const float lableFieldSpace = 18f;
         private const float textFieldWidth = 120f;
 
         private const float answerNodeWidth = 190f;
-        private const float answerNodeHeight = 145f;
+        private const float answerNodeHeight = 115f;
+
+        private float currentAnswerNodeHeight = 115f;
+        private float additionalAnswerNodeHeight = 20f;
 
 #if UNITY_EDITOR
 
@@ -32,12 +35,9 @@ namespace cherrydev
         {
             base.Initialise(rect, nodeName, nodeGraph);
 
-            childSentenceNodes = new SentenceNode[amountOfAnswers];
+            CalculateAmountOfAnswers();
 
-            for (int i = 0; i < amountOfAnswers; i++)
-            {
-                answers.Add(string.Empty);
-            }
+            childSentenceNodes = new List<SentenceNode>(amountOfAnswers);
         }
 
         /// <summary>
@@ -49,26 +49,107 @@ namespace cherrydev
         {
             base.Draw(nodeStyle, lableStyle);
 
-            rect.size = new Vector2(answerNodeWidth, answerNodeHeight);
+            childSentenceNodes.RemoveAll(item => item == null);
+
+            rect.size = new Vector2(answerNodeWidth, currentAnswerNodeHeight);
 
             GUILayout.BeginArea(rect, nodeStyle);
             EditorGUILayout.LabelField("Answer Node", lableStyle);
 
-            DrawAnswerLine(1, StringConstants.GreenDot);
-            DrawAnswerLine(2, StringConstants.GreenDot);
-            DrawAnswerLine(3, StringConstants.GreenDot);
-            DrawAnswerLine(4, StringConstants.GreenDot);
+            for (int i = 0; i < amountOfAnswers; i++)
+            {
+                DrawAnswerLine(i + 1, StringConstants.GreenDot);
+            }
+
+            DrawAnswerNodeButtons();
 
             GUILayout.EndArea();
         }
 
+        /// <summary>
+        /// Determines the number of answers depending on answers list count
+        /// </summary>
+        public void CalculateAmountOfAnswers()
+        {
+            if (answers.Count == 0)
+            {
+                amountOfAnswers = 1;
+
+                answers = new List<string>() { string.Empty };
+            }
+            else
+            {
+                amountOfAnswers = answers.Count;
+            }
+        }
+
+        /// <summary>
+        /// Draw answer line
+        /// </summary>
+        /// <param name="answerNumber"></param>
+        /// <param name="iconPathOrName"></param>
         private void DrawAnswerLine(int answerNumber, string iconPathOrName)
         {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"{answerNumber}. ", GUILayout.Width(lableFieldSpace));
-            answers[answerNumber - 1] = EditorGUILayout.TextField(answers[answerNumber - 1], GUILayout.Width(textFieldWidth));
-            EditorGUILayout.LabelField(EditorGUIUtility.IconContent(iconPathOrName), GUILayout.Width(lableFieldSpace));
+
+            EditorGUILayout.LabelField($"{answerNumber}. ", 
+                GUILayout.Width(lableFieldSpace));
+
+            answers[answerNumber - 1] = EditorGUILayout.TextField(answers[answerNumber - 1], 
+                GUILayout.Width(textFieldWidth));
+
+            EditorGUILayout.LabelField(EditorGUIUtility.IconContent(iconPathOrName), 
+                GUILayout.Width(lableFieldSpace));
+
             EditorGUILayout.EndHorizontal();
+        }
+
+        private void DrawAnswerNodeButtons()
+        {
+            if (GUILayout.Button("Add answer"))
+            {
+                IncreaseAmountOfAnswers();
+            }
+
+            if (GUILayout.Button("Remove answer"))
+            {
+                DecreaseAmountOfAnswers();
+            }
+        }
+
+        /// <summary>
+        /// Increase amount of answers and node height
+        /// </summary>
+        private void IncreaseAmountOfAnswers()
+        {
+            amountOfAnswers++;
+
+            answers.Add(string.Empty);
+
+            currentAnswerNodeHeight += additionalAnswerNodeHeight;
+        }
+
+        /// <summary>
+        /// Decrease amount of answers and node height 
+        /// </summary>
+        private void DecreaseAmountOfAnswers()
+        {
+            if (answers.Count == 1)
+            {
+                return;
+            }
+
+            answers.RemoveAt(amountOfAnswers - 1);
+
+            if (childSentenceNodes.Count == amountOfAnswers)
+            {
+                childSentenceNodes[amountOfAnswers - 1].parentNode = null;
+                childSentenceNodes.RemoveAt(amountOfAnswers - 1);
+            }
+
+            amountOfAnswers--;
+
+            currentAnswerNodeHeight -= additionalAnswerNodeHeight;
         }
 
         /// <summary>
@@ -106,17 +187,36 @@ namespace cherrydev
                 return false;
             }
 
-            for (int i = 0; i < amountOfAnswers; i++)
+            if (IsCanAddToChildConnectedNode(sentenceNodeToAdd))
             {
-                if (childSentenceNodes[i] == null && sentenceNodeToAdd.parentNode == null)
-                {
-                    childSentenceNodes[i] = (SentenceNode)nodeToAdd;
+                childSentenceNodes.Add(sentenceNodeToAdd);
 
-                    return true;
-                }
+                sentenceNodeToAdd.parentNode = this;
+
+                return true;
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Calculate answer node height based on amount of answers
+        /// </summary>
+        public void CalculateAnswerNodeHeight()
+        {
+            currentAnswerNodeHeight = answerNodeHeight;
+
+            for (int i = 0; i < amountOfAnswers - 1; i++)
+            {
+                currentAnswerNodeHeight += additionalAnswerNodeHeight;
+            }
+        }
+
+        private bool IsCanAddToChildConnectedNode(SentenceNode sentenceNodeToAdd)
+        {
+            return sentenceNodeToAdd.parentNode == null 
+                && childSentenceNodes.Count < amountOfAnswers 
+                && sentenceNodeToAdd.childNode != this;
         }
 
 #endif

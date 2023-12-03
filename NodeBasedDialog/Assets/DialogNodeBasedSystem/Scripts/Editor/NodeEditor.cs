@@ -59,6 +59,19 @@ namespace cherrydev
             lableStyle.alignment = TextAnchor.MiddleLeft;
             lableStyle.fontSize = lableFontSize;
             lableStyle.normal.textColor = Color.white;
+
+            if (currentNodeGraph != null)
+            {
+                foreach (Node node in currentNodeGraph.nodesList)
+                {
+                    if (node.GetType() == typeof(AnswerNode))
+                    {
+                        AnswerNode answerNode = (AnswerNode)node;
+                        answerNode.CalculateAmountOfAnswers();
+                        answerNode.CalculateAnswerNodeHeight();
+                    }
+                }
+            }
         }
 
         private void OnDisable()
@@ -86,6 +99,15 @@ namespace cherrydev
 
                 currentNodeGraph = nodeGraph;
 
+                foreach (Node node in currentNodeGraph.nodesList)
+                {
+                    if (node.GetType() == typeof(AnswerNode))
+                    {
+                        AnswerNode answerNode = (AnswerNode)node;
+                        answerNode.CalculateAmountOfAnswers();
+                    }
+                }
+
                 return true;
             }
 
@@ -106,6 +128,7 @@ namespace cherrydev
             NodeEditor window = (NodeEditor)GetWindow(typeof(NodeEditor));
             window.titleContent = new GUIContent("Dialog Graph Editor");
             window.Show();
+
         }
 
         private void OnGUI()
@@ -122,6 +145,21 @@ namespace cherrydev
 
             if (GUI.changed)
                 Repaint();
+        }
+
+        /// <summary>
+        /// Calculate amount of answers for all answer nodes
+        /// </summary>
+        private static void CalculateAmountOfAnswersForAllAnswerNodes()
+        {
+            foreach (Node node in currentNodeGraph.nodesList)
+            {
+                if (node.GetType() == typeof(AnswerNode))
+                {
+                    AnswerNode answerNode = (AnswerNode)node;
+                    answerNode.CalculateAmountOfAnswers();
+                }
+            }
         }
 
         /// <summary>
@@ -156,7 +194,7 @@ namespace cherrydev
                 {
                     AnswerNode answerNode = (AnswerNode)node;
 
-                    for (int i = 0; i < answerNode.childSentenceNodes.Length; i++)
+                    for (int i = 0; i < answerNode.childSentenceNodes.Count; i++)
                     {
                         if (answerNode.childSentenceNodes[i] != null)
                         {

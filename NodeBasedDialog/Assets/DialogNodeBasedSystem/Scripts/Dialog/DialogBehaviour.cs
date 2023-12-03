@@ -10,11 +10,14 @@ namespace cherrydev
         [SerializeField] private float dialogCharDelay;
         [SerializeField] private KeyCode nextSentenceKeyCode;
 
+        [Space(7)]
         [SerializeField] private UnityEvent onDialogStart;
         [SerializeField] private UnityEvent onDialogFinished;
 
         private DialogNodeGraph currentNodeGraph;
         private Node currentNode;
+
+        private int maxAmountOfAnswerButtons;
 
         public static event Action OnSentenceNodeActive;
 
@@ -25,6 +28,8 @@ namespace cherrydev
         public static event Action OnAnswerNodeActive;
 
         public static event Action<int, AnswerNode> OnAnswerButtonSetUp;
+
+        public static event Action<int> OnMaxAmountOfAnswerButtonsCalculated;
 
         public static event Action<int> OnAnswerNodeActiveWithParameter;
 
@@ -47,8 +52,9 @@ namespace cherrydev
             onDialogStart?.Invoke();
 
             currentNodeGraph = dialogNodeGraph;
-            currentNode = currentNodeGraph.nodesList[0];
 
+            DefineFirstNode(dialogNodeGraph);
+            CalculateMaxAmountOfAnswerButtons();
             HandleDialogGraphCurrentNode(currentNode);
         }
 
@@ -73,11 +79,12 @@ namespace cherrydev
             else if (currentNode.GetType() == typeof(AnswerNode))
             {
                 AnswerNode answerNode = (AnswerNode)currentNode;
+
                 int amountOfActiveButtons = 0;
 
                 OnAnswerNodeActive?.Invoke();
 
-                for (int i = 0; i < answerNode.childSentenceNodes.Length; i++)
+                for (int i = 0; i < answerNode.childSentenceNodes.Count; i++)
                 {
                     if (answerNode.childSentenceNodes[i] != null)
                     {
@@ -102,6 +109,38 @@ namespace cherrydev
             }
         }
 
+        /// <summary>
+        /// Finds the first node that does not have a parent node but has a child one
+        /// </summary>
+        /// <param name="dialogNodeGraph"></param>
+        private void DefineFirstNode(DialogNodeGraph dialogNodeGraph)
+        {
+            if (dialogNodeGraph.nodesList.Count == 0)
+            {
+                Debug.LogWarning("The list of nodes in the DialogNodeGraph is empty");
+
+                return;
+            }
+
+            foreach (Node node in dialogNodeGraph.nodesList)
+            {
+                currentNode = node;
+
+                if (node.GetType() == typeof(SentenceNode))
+                {
+                    SentenceNode sentenceNode = (SentenceNode)node;
+
+                    if (sentenceNode.parentNode == null && sentenceNode.childNode != null)
+                    {
+                        currentNode = sentenceNode;
+
+                        return;
+                    }
+                }
+            }
+
+            currentNode = dialogNodeGraph.nodesList[0];
+        }
 
         /// <summary>
         /// Setting currentNode field to Node and call HandleDialogGraphCurrentNode method
@@ -160,6 +199,27 @@ namespace cherrydev
                     onDialogFinished?.Invoke();
                 }
             }
+        }
+
+        /// <summary>
+        /// Calculate max amount of answer buttons
+        /// </summary>
+        private void CalculateMaxAmountOfAnswerButtons()
+        {
+            foreach (Node node in currentNodeGraph.nodesList)
+            {
+                if (node.GetType() == typeof(AnswerNode))
+                {
+                    AnswerNode answerNode = (AnswerNode)node;
+
+                    if (answerNode.answers.Count > maxAmountOfAnswerButtons)
+                    {
+                        maxAmountOfAnswerButtons = answerNode.answers.Count;
+                    }
+                }
+            }
+
+            OnMaxAmountOfAnswerButtonsCalculated?.Invoke(maxAmountOfAnswerButtons);
         }
 
         /// <summary>

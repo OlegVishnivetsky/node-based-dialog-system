@@ -10,7 +10,6 @@ namespace cherrydev
 
         [Space(10)]
         public Node parentNode;
-
         public Node childNode;
 
         private const float lableFieldSpace = 40f;
@@ -118,6 +117,11 @@ namespace cherrydev
         public override bool AddToParentConnectedNode(Node nodeToAdd)
         {
             SentenceNode sentenceNodeToAdd;
+
+            if (nodeToAdd.GetType() == typeof(AnswerNode))
+            {
+                return false;
+            }
 
             if (nodeToAdd.GetType() == typeof(SentenceNode))
             {

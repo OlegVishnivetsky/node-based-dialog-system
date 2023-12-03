@@ -4,9 +4,12 @@ namespace cherrydev
 {
     public class DialogDisplayer : MonoBehaviour
     {
+        [Header("MAIN COMPONENT")]
+        [SerializeField] private DialogBehaviour dialogBehaviour;
+
+        [Header("NODE PANELS")]
         [SerializeField] private SentencePanel dialogSentensePanel;
         [SerializeField] private AnswerPanel dialogAnswerPanel;
-        [SerializeField] private DialogBehaviour dialogBehaviour;
 
         private void OnEnable()
         {
@@ -26,6 +29,7 @@ namespace cherrydev
             DialogBehaviour.OnAnswerNodeActive += DisableDialogSentencePanel;
 
             DialogBehaviour.OnAnswerNodeActiveWithParameter += dialogAnswerPanel.EnableCertainAmountOfButtons;
+            DialogBehaviour.OnMaxAmountOfAnswerButtonsCalculated += dialogAnswerPanel.SetUpButtons;
 
             DialogBehaviour.OnAnswerNodeSetUp += SetUpAnswerDialogPanel;
         }
@@ -47,6 +51,7 @@ namespace cherrydev
             DialogBehaviour.OnAnswerNodeActive -= DisableDialogSentencePanel;
 
             DialogBehaviour.OnAnswerNodeActiveWithParameter -= dialogAnswerPanel.EnableCertainAmountOfButtons;
+            DialogBehaviour.OnMaxAmountOfAnswerButtonsCalculated -= dialogAnswerPanel.SetUpButtons;
 
             DialogBehaviour.OnAnswerNodeSetUp -= SetUpAnswerDialogPanel;
         }
