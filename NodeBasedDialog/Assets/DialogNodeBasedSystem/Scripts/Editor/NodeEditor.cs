@@ -92,13 +92,19 @@ namespace cherrydev
             return false;
         }
 
+        public static void SetCurrentNodeGraph(DialogNodeGraph nodeGraph)
+        {
+            currentNodeGraph = nodeGraph;
+        }
+
         /// <summary>
         /// Open Node Editor window
         /// </summary>
         [MenuItem("Dialog Node Based Editor", menuItem = "Window/Dialog Node Based Editor")]
-        private static void OpenWindow()
+        public static void OpenWindow()
         {
             NodeEditor window = (NodeEditor)GetWindow(typeof(NodeEditor));
+            window.titleContent = new GUIContent("Dialog Graph Editor");
             window.Show();
         }
 
