@@ -13,7 +13,7 @@ namespace cherrydev
 
         private void OnEnable()
         {
-            dialogBehaviour.AddListenerToOnDialogFinished(DisableDialogPanel);
+            dialogBehaviour.AddListenerToDialogFinishedEvent(DisableDialogPanel);
 
             DialogBehaviour.OnAnswerButtonSetUp += SetUpAnswerButtonsClickEvent;
 
@@ -87,6 +87,8 @@ namespace cherrydev
         /// </summary>
         public void EnableDialogSentencePanel()
         {
+            dialogSentensePanel.ResetDialogText();
+
             ActiveGameObject(dialogSentensePanel.gameObject, true);
         }
 

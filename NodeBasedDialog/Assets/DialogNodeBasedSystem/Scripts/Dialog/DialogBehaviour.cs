@@ -59,6 +59,25 @@ namespace cherrydev
         }
 
         /// <summary>
+        /// Adding listener to OnDialogFinished UnityEvent
+        /// </summary>
+        /// <param name="action"></param>
+        public void AddListenerToDialogFinishedEvent(UnityAction action)
+        {
+            onDialogFinished.AddListener(action);
+        }
+
+        /// <summary>
+        /// Setting currentNode field to Node and call HandleDialogGraphCurrentNode method
+        /// </summary>
+        /// <param name="node"></param>
+        public void SetCurrentNodeAndHandleDialogGraph(Node node)
+        {
+            currentNode = node;
+            HandleDialogGraphCurrentNode(this.currentNode);
+        }
+
+        /// <summary>
         /// Processing dialog current node
         /// </summary>
         /// <param name="currentNode"></param>
@@ -143,16 +162,6 @@ namespace cherrydev
         }
 
         /// <summary>
-        /// Setting currentNode field to Node and call HandleDialogGraphCurrentNode method
-        /// </summary>
-        /// <param name="node"></param>
-        public void SetCurrentNodeAndHandleDialogGraph(Node node)
-        {
-            currentNode = node;
-            HandleDialogGraphCurrentNode(this.currentNode);
-        }
-
-        /// <summary>
         /// Writing dialog text
         /// </summary>
         /// <param name="text"></param>
@@ -220,15 +229,6 @@ namespace cherrydev
             }
 
             OnMaxAmountOfAnswerButtonsCalculated?.Invoke(maxAmountOfAnswerButtons);
-        }
-
-        /// <summary>
-        /// Adding listener to OnDialogFinished UnityEvent
-        /// </summary>
-        /// <param name="action"></param>
-        public void AddListenerToOnDialogFinished(UnityAction action)
-        {
-            onDialogFinished.AddListener(action);
         }
     }
 }

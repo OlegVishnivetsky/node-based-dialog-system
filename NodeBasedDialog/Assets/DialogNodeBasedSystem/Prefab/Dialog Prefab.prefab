@@ -221,7 +221,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8281007037021807592
 RectTransform:
   m_ObjectHideFlags: 0
@@ -293,16 +293,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 088cefe645cc51c4e8027b7a188a873f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  buttonTexts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  answerButtonPrefab: {fileID: 5910802417833326935, guid: 0da46681b7af88849830c8646905eae8, type: 3}
+  parentTransform: {fileID: 3694393729744715891}
 --- !u!1 &4825435160123347712
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,9 +362,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62935ce2a880bd2409c6ac97ff138510, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogBehaviour: {fileID: 7250229689785646963}
   dialogSentensePanel: {fileID: 6183068862884026198}
   dialogAnswerPanel: {fileID: 5848802027117998450}
-  dialogBehaviour: {fileID: 7250229689785646963}
 --- !u!1 &5825870014156403097
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,7 +519,7 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 300, y: 150}
   m_Spacing: {x: 25, y: 25}
-  m_Constraint: 1
+  m_Constraint: 2
   m_ConstraintCount: 2
 --- !u!1 &7237760433544743376
 GameObject:

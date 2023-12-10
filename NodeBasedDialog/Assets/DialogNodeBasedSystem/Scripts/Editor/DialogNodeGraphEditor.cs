@@ -1,20 +1,22 @@
-using cherrydev;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(DialogNodeGraph))]
-public class DialogNodeGraphEditor : Editor
+namespace cherrydev
 {
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(DialogNodeGraph))]
+    public class DialogNodeGraphEditor : Editor
     {
-        base.OnInspectorGUI();
-
-        DialogNodeGraph nodeGraph = (DialogNodeGraph)target;
-
-        if (GUILayout.Button("Open Editor Window"))
+        public override void OnInspectorGUI()
         {
-            NodeEditor.SetCurrentNodeGraph(nodeGraph);
-            NodeEditor.OpenWindow();
+            base.OnInspectorGUI();
+
+            DialogNodeGraph nodeGraph = (DialogNodeGraph)target;
+
+            if (GUILayout.Button("Open Editor Window"))
+            {
+                NodeEditor.SetCurrentNodeGraph(nodeGraph);
+                NodeEditor.OpenWindow();
+            }
         }
     }
 }
