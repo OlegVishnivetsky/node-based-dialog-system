@@ -23,7 +23,7 @@ namespace cherrydev
 
         public static event Action OnDialogSentenceEnd;
 
-        public static event Action<string, Sprite> OnSentenceNodeActiveWithParameter;
+        public static event Action<string, string, Sprite> OnSentenceNodeActiveWithParameter;
 
         public static event Action OnAnswerNodeActive;
 
@@ -35,7 +35,7 @@ namespace cherrydev
 
         public static event Action<int, string> OnAnswerNodeSetUp;
 
-        public static event Action<char> OnDialogTextCharWrote;
+        public static event Action OnDialogTextCharWrote;
 
         /// <summary>
         /// Start a dialog
@@ -90,7 +90,7 @@ namespace cherrydev
                 SentenceNode sentenceNode = (SentenceNode)currentNode;
 
                 OnSentenceNodeActive?.Invoke();
-                OnSentenceNodeActiveWithParameter?.Invoke(sentenceNode.GetSentenceCharacterName(),
+                OnSentenceNodeActiveWithParameter?.Invoke(sentenceNode.GetSentenceCharacterName(), sentenceNode.GetSentenceText(),
                     sentenceNode.GetCharacterSprite());
 
                 WriteDialogText(sentenceNode.GetSentenceText());
@@ -180,7 +180,7 @@ namespace cherrydev
             foreach (char textChar in text)
             {
                 yield return new WaitForSeconds(dialogCharDelay);
-                OnDialogTextCharWrote?.Invoke(textChar);
+                OnDialogTextCharWrote?.Invoke();
             }
 
             yield return new WaitUntil(() => Input.GetKeyDown(nextSentenceKeyCode));

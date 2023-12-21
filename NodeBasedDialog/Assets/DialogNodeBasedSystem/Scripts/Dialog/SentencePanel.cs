@@ -10,26 +10,22 @@ namespace cherrydev
         [SerializeField] private TextMeshProUGUI dialogText;
         [SerializeField] private Image dialogCharacterImage;
 
-        private void Start()
-        {
-            dialogText.text = string.Empty;
-        }
-
         /// <summary>
-        /// Setting dialogText text to empty string
+        /// Setting dialogText max visible characters to zero
         /// </summary>
         public void ResetDialogText()
         {
-            dialogText.text = string.Empty;
+            dialogText.maxVisibleCharacters = 0;
         }
 
         /// <summary>
-        /// Assigning dialog name text and character iamge sprite
+        /// Assigning dialog name text, character image sprite and dialog text
         /// </summary>
         /// <param name="name"></param>
-        public void AssignDialogNameTextAndSprite(string name, Sprite sprite)
+        public void Setup(string name, string text, Sprite sprite)
         {
             dialogNameText.text = name;
+            dialogText.text = text;
 
             if (sprite == null)
             {
@@ -44,12 +40,11 @@ namespace cherrydev
         }
 
         /// <summary>
-        /// Adding char to dialog text
+        /// Increasing max visible characters
         /// </summary>
-        /// <param name="textChar"></param>
-        public void AddCharToDialogText(char textChar)
+        public void IncreaseMaxVisibleCharacters()
         {
-            dialogText.text += textChar;
+            dialogText.maxVisibleCharacters++;
         }
     }
 }

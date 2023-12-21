@@ -19,11 +19,11 @@ namespace cherrydev
 
             DialogBehaviour.OnDialogSentenceEnd += dialogSentensePanel.ResetDialogText;
 
-            DialogBehaviour.OnDialogTextCharWrote += dialogSentensePanel.AddCharToDialogText;
+            DialogBehaviour.OnDialogTextCharWrote += dialogSentensePanel.IncreaseMaxVisibleCharacters;
 
             DialogBehaviour.OnSentenceNodeActive += EnableDialogSentencePanel;
             DialogBehaviour.OnSentenceNodeActive += DisableDialogAnswerPanel;
-            DialogBehaviour.OnSentenceNodeActiveWithParameter += dialogSentensePanel.AssignDialogNameTextAndSprite;
+            DialogBehaviour.OnSentenceNodeActiveWithParameter += dialogSentensePanel.Setup;
 
             DialogBehaviour.OnAnswerNodeActive += EnableDialogAnswerPanel;
             DialogBehaviour.OnAnswerNodeActive += DisableDialogSentencePanel;
@@ -40,12 +40,12 @@ namespace cherrydev
 
             DialogBehaviour.OnDialogSentenceEnd -= dialogSentensePanel.ResetDialogText;
 
-            DialogBehaviour.OnDialogTextCharWrote -= dialogSentensePanel.AddCharToDialogText;
+            DialogBehaviour.OnDialogTextCharWrote -= dialogSentensePanel.IncreaseMaxVisibleCharacters;
 
             DialogBehaviour.OnSentenceNodeActive -= EnableDialogSentencePanel;
             DialogBehaviour.OnSentenceNodeActive -= DisableDialogAnswerPanel;
 
-            DialogBehaviour.OnSentenceNodeActiveWithParameter -= dialogSentensePanel.AssignDialogNameTextAndSprite;
+            DialogBehaviour.OnSentenceNodeActiveWithParameter -= dialogSentensePanel.Setup;
 
             DialogBehaviour.OnAnswerNodeActive -= EnableDialogAnswerPanel;
             DialogBehaviour.OnAnswerNodeActive -= DisableDialogSentencePanel;
