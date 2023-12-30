@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -8,10 +9,11 @@ namespace cherrydev
     public class DialogBehaviour : MonoBehaviour
     {
         [SerializeField] private float dialogCharDelay;
-        [SerializeField] private KeyCode nextSentenceKeyCode;
+        [SerializeField] private List<KeyCode> nextSentenceKeyCodes;
+        [SerializeField] private bool isCanSkippingText = true;
 
-        [Space(7)]
-        [SerializeField] private UnityEvent onDialogStart;
+        [Space(10)]
+        [SerializeField] private UnityEvent onDialogStarted;
         [SerializeField] private UnityEvent onDialogFinished;
 
         private DialogNodeGraph currentNodeGraph;
@@ -19,23 +21,31 @@ namespace cherrydev
 
         private int maxAmountOfAnswerButtons;
 
-        public static event Action OnSentenceNodeActive;
+        private bool isDialogStarted;
+        private bool isCurrentSentenceSkipped;
 
-        public static event Action OnDialogSentenceEnd;
+        public event Action OnSentenceNodeActive;
 
-        public static event Action<string, string, Sprite> OnSentenceNodeActiveWithParameter;
+        public event Action<string, string, Sprite> OnSentenceNodeActiveWithParameter;
 
-        public static event Action OnAnswerNodeActive;
+        public event Action OnAnswerNodeActive;
 
-        public static event Action<int, AnswerNode> OnAnswerButtonSetUp;
+        public event Action<int, AnswerNode> OnAnswerButtonSetUp;
 
-        public static event Action<int> OnMaxAmountOfAnswerButtonsCalculated;
+        public event Action<int> OnMaxAmountOfAnswerButtonsCalculated;
 
-        public static event Action<int> OnAnswerNodeActiveWithParameter;
+        public event Action<int> OnAnswerNodeActiveWithParameter;
 
-        public static event Action<int, string> OnAnswerNodeSetUp;
+        public event Action<int, string> OnAnswerNodeSetUp;
 
-        public static event Action OnDialogTextCharWrote;
+        public event Action OnDialogTextCharWrote;
+
+        public event Action<string> OnDialogTextSkipped;
+
+        private void Update()
+        {
+            HandleSentenceSkipping();
+        }
 
         /// <summary>
         /// Start a dialog
@@ -43,13 +53,15 @@ namespace cherrydev
         /// <param name="dialogNodeGraph"></param>
         public void StartDialog(DialogNodeGraph dialogNodeGraph)
         {
+            isDialogStarted = true;
+
             if (dialogNodeGraph.nodesList == null)
             {
                 Debug.LogWarning("Dialog Graph's node list is empty");
                 return;
             }
 
-            onDialogStart?.Invoke();
+            onDialogStarted?.Invoke();
 
             currentNodeGraph = dialogNodeGraph;
 
@@ -89,6 +101,8 @@ namespace cherrydev
             {
                 SentenceNode sentenceNode = (SentenceNode)currentNode;
 
+                isCurrentSentenceSkipped = false;
+
                 OnSentenceNodeActive?.Invoke();
                 OnSentenceNodeActiveWithParameter?.Invoke(sentenceNode.GetSentenceCharacterName(), sentenceNode.GetSentenceText(),
                     sentenceNode.GetCharacterSprite());
@@ -120,6 +134,8 @@ namespace cherrydev
 
                 if (amountOfActiveButtons == 0)
                 {
+                    isDialogStarted = false;
+
                     onDialogFinished?.Invoke();
                     return;
                 }
@@ -179,13 +195,19 @@ namespace cherrydev
         {
             foreach (char textChar in text)
             {
-                yield return new WaitForSeconds(dialogCharDelay);
+                if (isCurrentSentenceSkipped)
+                {
+                    OnDialogTextSkipped?.Invoke(text);
+                    break;
+                }
+
                 OnDialogTextCharWrote?.Invoke();
+
+                yield return new WaitForSeconds(dialogCharDelay);
             }
 
-            yield return new WaitUntil(() => Input.GetKeyDown(nextSentenceKeyCode));
+            yield return new WaitUntil(CheckNextSentenceKeyCodes);
 
-            OnDialogSentenceEnd?.Invoke();
             CheckForDialogNextNode();
         }
 
@@ -205,6 +227,8 @@ namespace cherrydev
                 }
                 else
                 {
+                    isDialogStarted = false;
+
                     onDialogFinished?.Invoke();
                 }
             }
@@ -229,6 +253,39 @@ namespace cherrydev
             }
 
             OnMaxAmountOfAnswerButtonsCalculated?.Invoke(maxAmountOfAnswerButtons);
+        }
+
+        /// <summary>
+        /// Handles text skipping mechanics
+        /// </summary>
+        private void HandleSentenceSkipping()
+        {
+            if (!isDialogStarted || !isCanSkippingText)
+            {
+                return;
+            }
+
+            if (CheckNextSentenceKeyCodes() && !isCurrentSentenceSkipped)
+            {
+                isCurrentSentenceSkipped = true;
+            }
+        }
+
+        /// <summary>
+        /// Checking whether at least one key from the nextSentenceKeyCodes was pressed
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckNextSentenceKeyCodes()
+        {
+            for (int i = 0; i < nextSentenceKeyCodes.Count; i++)
+            { 
+                if (Input.GetKeyDown(nextSentenceKeyCodes[i]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

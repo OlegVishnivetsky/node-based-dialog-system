@@ -342,8 +342,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54577d38420c01d44a9b28330b6a8517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogCharDelay: 0.03
-  nextSentenceKeyCode: 32
+  dialogCharDelay: 0.2
+  nextSentenceKeyCodes: 2000000043010000
+  isCanSkippingText: 1
   onDialogStart:
     m_PersistentCalls:
       m_Calls: []

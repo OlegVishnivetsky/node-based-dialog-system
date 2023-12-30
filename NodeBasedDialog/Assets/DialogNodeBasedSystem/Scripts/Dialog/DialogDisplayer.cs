@@ -15,45 +15,44 @@ namespace cherrydev
         {
             dialogBehaviour.AddListenerToDialogFinishedEvent(DisableDialogPanel);
 
-            DialogBehaviour.OnAnswerButtonSetUp += SetUpAnswerButtonsClickEvent;
+            dialogBehaviour.OnAnswerButtonSetUp += SetUpAnswerButtonsClickEvent;
 
-            DialogBehaviour.OnDialogSentenceEnd += dialogSentensePanel.ResetDialogText;
+            dialogBehaviour.OnDialogTextCharWrote += dialogSentensePanel.IncreaseMaxVisibleCharacters;
+            dialogBehaviour.OnDialogTextSkipped += dialogSentensePanel.ShowFullDialogText;
 
-            DialogBehaviour.OnDialogTextCharWrote += dialogSentensePanel.IncreaseMaxVisibleCharacters;
+            dialogBehaviour.OnSentenceNodeActive += EnableDialogSentencePanel;
+            dialogBehaviour.OnSentenceNodeActive += DisableDialogAnswerPanel;
+            dialogBehaviour.OnSentenceNodeActive += dialogSentensePanel.ResetDialogText;
+            dialogBehaviour.OnSentenceNodeActiveWithParameter += dialogSentensePanel.Setup;
 
-            DialogBehaviour.OnSentenceNodeActive += EnableDialogSentencePanel;
-            DialogBehaviour.OnSentenceNodeActive += DisableDialogAnswerPanel;
-            DialogBehaviour.OnSentenceNodeActiveWithParameter += dialogSentensePanel.Setup;
+            dialogBehaviour.OnAnswerNodeActive += EnableDialogAnswerPanel;
+            dialogBehaviour.OnAnswerNodeActive += DisableDialogSentencePanel;
 
-            DialogBehaviour.OnAnswerNodeActive += EnableDialogAnswerPanel;
-            DialogBehaviour.OnAnswerNodeActive += DisableDialogSentencePanel;
+            dialogBehaviour.OnAnswerNodeActiveWithParameter += dialogAnswerPanel.EnableCertainAmountOfButtons;
+            dialogBehaviour.OnMaxAmountOfAnswerButtonsCalculated += dialogAnswerPanel.SetUpButtons;
 
-            DialogBehaviour.OnAnswerNodeActiveWithParameter += dialogAnswerPanel.EnableCertainAmountOfButtons;
-            DialogBehaviour.OnMaxAmountOfAnswerButtonsCalculated += dialogAnswerPanel.SetUpButtons;
-
-            DialogBehaviour.OnAnswerNodeSetUp += SetUpAnswerDialogPanel;
+            dialogBehaviour.OnAnswerNodeSetUp += SetUpAnswerDialogPanel;
         }
 
         private void OnDisable()
         {
-            DialogBehaviour.OnAnswerButtonSetUp -= SetUpAnswerButtonsClickEvent;
+            dialogBehaviour.OnAnswerButtonSetUp -= SetUpAnswerButtonsClickEvent;
 
-            DialogBehaviour.OnDialogSentenceEnd -= dialogSentensePanel.ResetDialogText;
+            dialogBehaviour.OnDialogTextCharWrote -= dialogSentensePanel.IncreaseMaxVisibleCharacters;
+            dialogBehaviour.OnDialogTextSkipped -= dialogSentensePanel.ShowFullDialogText;
 
-            DialogBehaviour.OnDialogTextCharWrote -= dialogSentensePanel.IncreaseMaxVisibleCharacters;
+            dialogBehaviour.OnSentenceNodeActive -= EnableDialogSentencePanel;
+            dialogBehaviour.OnSentenceNodeActive -= DisableDialogAnswerPanel;
+            dialogBehaviour.OnSentenceNodeActive += dialogSentensePanel.ResetDialogText;
+            dialogBehaviour.OnSentenceNodeActiveWithParameter -= dialogSentensePanel.Setup;
 
-            DialogBehaviour.OnSentenceNodeActive -= EnableDialogSentencePanel;
-            DialogBehaviour.OnSentenceNodeActive -= DisableDialogAnswerPanel;
+            dialogBehaviour.OnAnswerNodeActive -= EnableDialogAnswerPanel;
+            dialogBehaviour.OnAnswerNodeActive -= DisableDialogSentencePanel;
 
-            DialogBehaviour.OnSentenceNodeActiveWithParameter -= dialogSentensePanel.Setup;
+            dialogBehaviour.OnAnswerNodeActiveWithParameter -= dialogAnswerPanel.EnableCertainAmountOfButtons;
+            dialogBehaviour.OnMaxAmountOfAnswerButtonsCalculated -= dialogAnswerPanel.SetUpButtons;
 
-            DialogBehaviour.OnAnswerNodeActive -= EnableDialogAnswerPanel;
-            DialogBehaviour.OnAnswerNodeActive -= DisableDialogSentencePanel;
-
-            DialogBehaviour.OnAnswerNodeActiveWithParameter -= dialogAnswerPanel.EnableCertainAmountOfButtons;
-            DialogBehaviour.OnMaxAmountOfAnswerButtonsCalculated -= dialogAnswerPanel.SetUpButtons;
-
-            DialogBehaviour.OnAnswerNodeSetUp -= SetUpAnswerDialogPanel;
+            dialogBehaviour.OnAnswerNodeSetUp -= SetUpAnswerDialogPanel;
         }
 
         /// <summary>
