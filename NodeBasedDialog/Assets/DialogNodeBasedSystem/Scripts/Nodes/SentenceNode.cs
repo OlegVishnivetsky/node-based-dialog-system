@@ -25,6 +25,16 @@ namespace cherrydev
         }
 
         /// <summary>
+        /// Setting sentence text
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public void SetSentenceText(string text)
+        {
+            sentence.text = text;
+        }
+
+        /// <summary>
         /// Returning sentence text
         /// </summary>
         /// <returns></returns>
