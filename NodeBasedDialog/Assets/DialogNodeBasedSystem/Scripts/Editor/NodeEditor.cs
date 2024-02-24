@@ -22,8 +22,8 @@ namespace cherrydev
         private Vector2 graphOffset;
         private Vector2 graphDrag;
 
-        private const float nodeWidth = 170f;
-        private const float nodeHeight = 115f;
+        private const float nodeWidth = 190f;
+        private const float nodeHeight = 135f;
 
         private const float connectingLineWidth = 2f;
         private const float connectingLineArrowSize = 4f;
@@ -59,21 +59,11 @@ namespace cherrydev
             lableStyle.alignment = TextAnchor.MiddleLeft;
             lableStyle.fontSize = lableFontSize;
             lableStyle.normal.textColor = Color.white;
-
-            if (currentNodeGraph != null)
-            {
-                foreach (Node node in currentNodeGraph.nodesList)
-                {
-                    if (node.GetType() == typeof(AnswerNode))
-                    {
-                        AnswerNode answerNode = (AnswerNode)node;
-                        answerNode.CalculateAmountOfAnswers();
-                        answerNode.CalculateAnswerNodeHeight();
-                    }
-                }
-            }
         }
 
+        /// <summary>
+        /// Saving all changes and unsubscribing from events
+        /// </summary>
         private void OnDisable()
         {
             Selection.selectionChanged -= ChangeEditorWindowOnSelection;
@@ -93,20 +83,18 @@ namespace cherrydev
         {
             DialogNodeGraph nodeGraph = EditorUtility.InstanceIDToObject(instanceID) as DialogNodeGraph;
 
+            if (currentNodeGraph != null)
+            {
+                SetUpNodes();
+            }
+
             if (nodeGraph != null)
             {
                 OpenWindow();
 
                 currentNodeGraph = nodeGraph;
 
-                foreach (Node node in currentNodeGraph.nodesList)
-                {
-                    if (node.GetType() == typeof(AnswerNode))
-                    {
-                        AnswerNode answerNode = (AnswerNode)node;
-                        answerNode.CalculateAmountOfAnswers();
-                    }
-                }
+                SetUpNodes();
 
                 return true;
             }
@@ -131,6 +119,9 @@ namespace cherrydev
 
         }
 
+        /// <summary>
+        /// Rendering and handling GUI events
+        /// </summary>
         private void OnGUI()
         {
             if (currentNodeGraph != null)
@@ -148,9 +139,9 @@ namespace cherrydev
         }
 
         /// <summary>
-        /// Calculate amount of answers for all answer nodes
+        /// Setting up nodes when opening the editor
         /// </summary>
-        private static void CalculateAmountOfAnswersForAllAnswerNodes()
+        private static void SetUpNodes()
         {
             foreach (Node node in currentNodeGraph.nodesList)
             {
@@ -158,6 +149,12 @@ namespace cherrydev
                 {
                     AnswerNode answerNode = (AnswerNode)node;
                     answerNode.CalculateAmountOfAnswers();
+                    answerNode.CalculateAnswerNodeHeight();
+                }
+                if (node.GetType() == typeof(SentenceNode))
+                {
+                    SentenceNode sentenceNode = (SentenceNode)node;
+                    sentenceNode.CheckNodeSize(nodeWidth, nodeHeight);
                 }
             }
         }

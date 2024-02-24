@@ -342,10 +342,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54577d38420c01d44a9b28330b6a8517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogCharDelay: 0.2
+  dialogCharDelay: 0.05
   nextSentenceKeyCodes: 2000000043010000
   isCanSkippingText: 1
-  onDialogStart:
+  onDialogStarted:
     m_PersistentCalls:
       m_Calls: []
   onDialogFinished:

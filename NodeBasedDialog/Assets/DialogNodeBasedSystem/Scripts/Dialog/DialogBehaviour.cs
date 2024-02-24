@@ -24,6 +24,18 @@ namespace cherrydev
         private bool isDialogStarted;
         private bool isCurrentSentenceSkipped;
 
+        public bool IsCanSkippingText
+        {
+            get
+            {
+                return isCanSkippingText;
+            }
+            set
+            {
+                isCanSkippingText = value;
+            }
+        }
+
         public event Action OnSentenceNodeActive;
 
         public event Action<string, string, Sprite> OnSentenceNodeActiveWithParameter;
@@ -42,9 +54,34 @@ namespace cherrydev
 
         public event Action<string> OnDialogTextSkipped;
 
+        public DialogExternalFunctionsHandler ExternalFunctionsHandler { get; private set; }
+
+        private void Awake()
+        {
+            ExternalFunctionsHandler = new DialogExternalFunctionsHandler();
+        }
+
         private void Update()
         {
             HandleSentenceSkipping();
+        }
+
+        /// <summary>
+        /// Setting dialogCharDelay float parameter
+        /// </summary>
+        /// <param name="value"></param>
+        public void SetCharDelay(float value)
+        {
+            dialogCharDelay = value;
+        }
+
+        /// <summary>
+        /// Setting nextSentenceKeyCodes
+        /// </summary>
+        /// <param name="keyCodes"></param>
+        public void SetNextSentenceKeyCodes(List<KeyCode> keyCodes)
+        {
+            nextSentenceKeyCodes = keyCodes;
         }
 
         /// <summary>
@@ -68,6 +105,17 @@ namespace cherrydev
             DefineFirstNode(dialogNodeGraph);
             CalculateMaxAmountOfAnswerButtons();
             HandleDialogGraphCurrentNode(currentNode);
+        }
+
+        /// <summary>
+        /// This method is designed for ease of use. Calls a method 
+        /// BindExternalFunction of the class DialogExternalFunctionsHandler
+        /// </summary>
+        /// <param name="funcName"></param>
+        /// <param name="function"></param>
+        public void BindExternalFunction(string funcName, Action function)
+        {
+            ExternalFunctionsHandler.BindExternalFunction(funcName, function);
         }
 
         /// <summary>
@@ -99,49 +147,72 @@ namespace cherrydev
 
             if (currentNode.GetType() == typeof(SentenceNode))
             {
-                SentenceNode sentenceNode = (SentenceNode)currentNode;
-
-                isCurrentSentenceSkipped = false;
-
-                OnSentenceNodeActive?.Invoke();
-                OnSentenceNodeActiveWithParameter?.Invoke(sentenceNode.GetSentenceCharacterName(), sentenceNode.GetSentenceText(),
-                    sentenceNode.GetCharacterSprite());
-
-                WriteDialogText(sentenceNode.GetSentenceText());
+                HandleSentenceNode(currentNode);
             }
             else if (currentNode.GetType() == typeof(AnswerNode))
             {
-                AnswerNode answerNode = (AnswerNode)currentNode;
-
-                int amountOfActiveButtons = 0;
-
-                OnAnswerNodeActive?.Invoke();
-
-                for (int i = 0; i < answerNode.childSentenceNodes.Count; i++)
-                {
-                    if (answerNode.childSentenceNodes[i] != null)
-                    {
-                        OnAnswerNodeSetUp?.Invoke(i, answerNode.answers[i]);
-                        OnAnswerButtonSetUp?.Invoke(i, answerNode);
-
-                        amountOfActiveButtons++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                if (amountOfActiveButtons == 0)
-                {
-                    isDialogStarted = false;
-
-                    onDialogFinished?.Invoke();
-                    return;
-                }
-
-                OnAnswerNodeActiveWithParameter?.Invoke(amountOfActiveButtons);
+                HandleAnswerNode(currentNode);
             }
+        }
+
+        /// <summary>
+        /// Processing sentence node
+        /// </summary>
+        /// <param name="currentNode"></param>
+        private void HandleSentenceNode(Node currentNode)
+        {
+            SentenceNode sentenceNode = (SentenceNode)currentNode;
+
+            isCurrentSentenceSkipped = false;
+
+            OnSentenceNodeActive?.Invoke();
+            OnSentenceNodeActiveWithParameter?.Invoke(sentenceNode.GetSentenceCharacterName(), sentenceNode.GetSentenceText(),
+                sentenceNode.GetCharacterSprite());
+
+            if (sentenceNode.IsExternalFunc())
+            {
+                ExternalFunctionsHandler.CallExternalFunction(sentenceNode.GetExternalFunctionName());
+            }
+
+            WriteDialogText(sentenceNode.GetSentenceText());
+        }
+
+        /// <summary>
+        /// Processing answer node
+        /// </summary>
+        /// <param name="currentNode"></param>
+        private void HandleAnswerNode(Node currentNode)
+        {
+            AnswerNode answerNode = (AnswerNode)currentNode;
+
+            int amountOfActiveButtons = 0;
+
+            OnAnswerNodeActive?.Invoke();
+
+            for (int i = 0; i < answerNode.childSentenceNodes.Count; i++)
+            {
+                if (answerNode.childSentenceNodes[i] != null)
+                {
+                    OnAnswerNodeSetUp?.Invoke(i, answerNode.answers[i]);
+                    OnAnswerButtonSetUp?.Invoke(i, answerNode);
+
+                    amountOfActiveButtons++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (amountOfActiveButtons == 0)
+            {
+                isDialogStarted = false;
+
+                onDialogFinished?.Invoke();
+                return;
+            }
+
+            OnAnswerNodeActiveWithParameter?.Invoke(amountOfActiveButtons);
         }
 
         /// <summary>

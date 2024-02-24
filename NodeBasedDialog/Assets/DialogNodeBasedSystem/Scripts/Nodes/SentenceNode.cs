@@ -12,8 +12,25 @@ namespace cherrydev
         public Node parentNode;
         public Node childNode;
 
-        private const float lableFieldSpace = 40f;
-        private const float textFieldWidth = 90f;
+        [Space(7)]
+        [SerializeField] private bool isExternalFunc;
+        [SerializeField] private string externalFunctionName;
+
+        private string externalButtonLable;
+
+        private const float lableFieldSpace = 47f;
+        private const float textFieldWidth = 100f;
+
+        private const float externalNodeHeight = 155f;
+
+        /// <summary>
+        /// Returning external function name
+        /// </summary>
+        /// <returns></returns>
+        public string GetExternalFunctionName()
+        {
+            return externalFunctionName;
+        }
 
         /// <summary>
         /// Returning sentence character name
@@ -52,6 +69,15 @@ namespace cherrydev
             return sentence.characterSprite;
         }
 
+        /// <summary>
+        /// Returns the value of a isExternalFunc boolean field
+        /// </summary>
+        /// <returns></returns>
+        public bool IsExternalFunc()
+        {
+            return isExternalFunc;
+        }
+
 #if UNITY_EDITOR
 
         /// <summary>
@@ -67,23 +93,99 @@ namespace cherrydev
 
             EditorGUILayout.LabelField("Sentence Node", lableStyle);
 
+            DrawCharacterNameFieldHorizontal();
+            DrawSentenceTextFieldHorizontal();
+            DrawCharacterSpriteHorizontal();
+            DrawExternalFunctionTextField();
+
+            if (GUILayout.Button(externalButtonLable))
+            {
+                isExternalFunc = !isExternalFunc;
+
+            }
+
+            GUILayout.EndArea();
+        }
+
+        /// <summary>
+        /// Draw label and text fields for char name
+        /// </summary>
+        private void DrawCharacterNameFieldHorizontal()
+        {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField($"Name ", GUILayout.Width(lableFieldSpace));
             sentence.characterName = EditorGUILayout.TextField(sentence.characterName, GUILayout.Width(textFieldWidth));
             EditorGUILayout.EndHorizontal();
+        }
 
+        /// <summary>
+        /// Draw label and text fields for sentence text
+        /// </summary>
+        private void DrawSentenceTextFieldHorizontal()
+        {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField($"Text ", GUILayout.Width(lableFieldSpace));
             sentence.text = EditorGUILayout.TextField(sentence.text, GUILayout.Width(textFieldWidth));
             EditorGUILayout.EndHorizontal();
+        }
 
+        /// <summary>
+        /// Draw label and text fields for char sprite
+        /// </summary>
+        private void DrawCharacterSpriteHorizontal()
+        {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField($"Sprite ", GUILayout.Width(lableFieldSpace));
             sentence.characterSprite = (Sprite)EditorGUILayout.ObjectField(sentence.characterSprite,
                 typeof(Sprite), false, GUILayout.Width(textFieldWidth));
             EditorGUILayout.EndHorizontal();
+        }
 
-            GUILayout.EndArea();
+        /// <summary>
+        /// Draw label and text fields for external function, 
+        /// depends on IsExternalFunc boolean field
+        /// </summary>
+        private void DrawExternalFunctionTextField()
+        {
+            if (isExternalFunc)
+            {
+                externalButtonLable = "Remove external func";
+
+                EditorGUILayout.BeginHorizontal();
+                rect.height = externalNodeHeight;
+                EditorGUILayout.LabelField($"Func Name ", GUILayout.Width(lableFieldSpace));
+                externalFunctionName = EditorGUILayout.TextField(externalFunctionName,
+                    GUILayout.Width(textFieldWidth));
+                EditorGUILayout.EndHorizontal();
+            }
+            else
+            {
+                externalButtonLable = "Add external func";
+                rect.height = standartHeight;
+            }
+        }
+
+        /// <summary>
+        /// Checking node size
+        /// </summary>
+        /// <param name="rect"></param>
+        public void CheckNodeSize(float width, float height)
+        {
+            rect.width = width;
+            
+            if (standartHeight == 0)
+            {
+                standartHeight = height;
+            }
+
+            if (isExternalFunc)
+            {
+                rect.height = externalNodeHeight;
+            }
+            else
+            {
+                rect.height = standartHeight;
+            }
         }
 
         /// <summary>
