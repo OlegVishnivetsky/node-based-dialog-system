@@ -2,7 +2,7 @@
 
 **Last Updated:** 02/24/2024 
 
-**Publisher: cherrydev** 
+**Publisher: cherrydev (Oleg Vishnivetsky)** 
 
 <aside>
 💡 **About: Nodes-based dialog system** asset is a tool that 
@@ -12,7 +12,7 @@ connect nodes to build conversations between characters in their game.
 Each node represents a piece of dialog, and the connections between 
 nodes determine the flow of the conversation.
 ————————————————————————————————
-A **Node Editor** presents an editable graph, displaying 
+<br>A **Node Editor** presents an editable graph, displaying 
 nodes and the connections between their attributes. You can create 
 simple sentence node or node with answers to build your own dialog.
 
