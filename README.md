@@ -141,4 +141,6 @@ Github: [https://github.com/OlegVishnivetsky](https://github.com/OlegVishnivetsk
 
 Itch.io: [https://oleg-vishnivetsky.itch.io/](https://oleg-vishnivetsky.itch.io/)
 
+Unity Asset Store: https://assetstore.unity.com/packages/tools/game-toolkits/node-based-dialog-system-249962
+
 This file will be updated over time. If you write suggestions again.
