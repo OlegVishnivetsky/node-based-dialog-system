@@ -1,4 +1,4 @@
-# Dialog Node Based System (Unity asset tool)
+#  	:speech_balloon: Dialog Node Based System (Unity asset tool) 	:speech_balloon:
 
 **Last Updated:** 02/24/2024 
 
@@ -129,13 +129,11 @@ public class TestDialogStarter : MonoBehaviour
 
 💡 You can assign all these parameters in code
 
-![Untitled](Dialog%20Node%20Based%20System%20(Unity%20asset%20tool)%205e73a66631b54705a3dc7c82eb841e96/Untitled%201.png)
+![Untitled 1](https://github.com/OlegVishnivetsky/node-based-dialog-system/assets/98222611/7ec4fb1b-3a24-466e-b58c-976738d9eb18)
 
 ---
 
-![star (2).png](Dialog%20Node%20Based%20System%20(Unity%20asset%20tool)%205e73a66631b54705a3dc7c82eb841e96/star_(2).png)
-
-Feel free to edit any code to suit your needs. If you find any bugs or have any questions, you can write about it to me by email, github or in reviews in the Unity Asset Store. I will also be pleased if you visit my itchio page.  😄
+:star::star::star::star::star: Feel free to edit any code to suit your needs. If you find any bugs or have any questions, you can write about it to me by email, github or in reviews in the Unity Asset Store. I will also be pleased if you visit my itchio page.  😄
 
 Gmail: olegmroleg@gmail.com
 
