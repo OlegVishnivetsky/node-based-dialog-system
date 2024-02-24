@@ -95,7 +95,7 @@ public class TestDialogStarter : MonoBehaviour
 
 💡 You need to bind an external function before calling it.
 
-![Untitled](Dialog%20Node%20Based%20System%20(Unity%20asset%20tool)%205e73a66631b54705a3dc7c82eb841e96/Untitled.png)
+![Untitled](https://github.com/OlegVishnivetsky/node-based-dialog-system/assets/98222611/ca9faeb7-23c2-4734-8bda-2de7a3417ab6)
 
 ```csharp
 public void BindExternalFunction(string funcName, Action function);
