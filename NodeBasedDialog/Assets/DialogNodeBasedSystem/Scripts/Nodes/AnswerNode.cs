@@ -189,11 +189,16 @@ namespace cherrydev
 
             if (IsCanAddToChildConnectedNode(sentenceNodeToAdd))
             {
+                Debug.Log("Cant connect to child node");
                 childSentenceNodes.Add(sentenceNodeToAdd);
 
                 sentenceNodeToAdd.parentNode = this;
 
                 return true;
+            }
+            else
+            {
+                Debug.Log("Cant connect to child node");
             }
 
             return false;
@@ -216,7 +221,7 @@ namespace cherrydev
         {
             return sentenceNodeToAdd.parentNode == null 
                 && childSentenceNodes.Count < amountOfAnswers 
-                && sentenceNodeToAdd.childNode != this;
+                && !sentenceNodeToAdd.childNodes.Contains(this);
         }
 
 #endif

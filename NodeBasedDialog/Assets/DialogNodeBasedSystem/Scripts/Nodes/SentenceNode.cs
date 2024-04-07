@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace cherrydev
 
         [Space(10)]
         public Node parentNode;
-        public Node childNode;
+        public List<Node> childNodes = new List<Node>();
 
         [Space(7)]
         [SerializeField] private bool isExternalFunc;
@@ -211,13 +212,13 @@ namespace cherrydev
             {
                 sentenceNodeToAdd = (SentenceNode)nodeToAdd;
 
-                if (sentenceNodeToAdd != null && sentenceNodeToAdd.childNode == this)
+                if (sentenceNodeToAdd != null && sentenceNodeToAdd.childNodes.Contains(this))
                 {
                     return false;
                 }
             }
 
-            childNode = nodeToAdd;
+            childNodes.Add(nodeToAdd);
             return true;
         }
 
@@ -251,7 +252,7 @@ namespace cherrydev
             {
                 sentenceNodeToAdd = (SentenceNode)nodeToAdd;
 
-                if (sentenceNodeToAdd.childNode == this)
+                if (sentenceNodeToAdd.childNodes.Contains(this))
                 {
                     return true;
                 }

@@ -206,12 +206,23 @@ namespace cherrydev
                 {
                     SentenceNode sentenceNode = (SentenceNode)node;
 
-                    if (sentenceNode.childNode != null)
+                    if (sentenceNode == null)
+                    {
+                        return;
+                    }
+
+                    if (sentenceNode.childNodes != null)
                     {
                         parentNode = node;
-                        childNode = sentenceNode.childNode;
 
-                        DrawConnectionLine(parentNode, childNode);
+                        foreach (Node childSentenceNode in sentenceNode.childNodes)
+                        {
+                            childNode = childSentenceNode;
+
+                            DrawConnectionLine(parentNode, childNode);
+                        }
+
+                        
                     }
                 }
             }

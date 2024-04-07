@@ -236,7 +236,7 @@ namespace cherrydev
                 {
                     SentenceNode sentenceNode = (SentenceNode)node;
 
-                    if (sentenceNode.parentNode == null && sentenceNode.childNode != null)
+                    if (sentenceNode.parentNode == null && sentenceNode.childNodes.Count != 0)
                     {
                         currentNode = sentenceNode;
 
@@ -291,9 +291,12 @@ namespace cherrydev
             {
                 SentenceNode sentenceNode = (SentenceNode)currentNode;
 
-                if (sentenceNode.childNode != null)
+                if (sentenceNode.childNodes != null)
                 {
-                    currentNode = sentenceNode.childNode;
+                    int randomNodeIndex = UnityEngine.Random.Range(0, 
+                        sentenceNode.childNodes.Count);
+
+                    currentNode = sentenceNode.childNodes[randomNodeIndex];
                     HandleDialogGraphCurrentNode(currentNode);
                 }
                 else
