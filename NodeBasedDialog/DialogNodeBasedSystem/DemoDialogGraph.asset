@@ -1,0 +1,407 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8332141607729408182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1717f3c6dba9fa40844ddacac301510, type: 3}
+  m_Name: Answer Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 106
+    y: -189
+    width: 190
+    height: 135
+  isDragging: 0
+  isSelected: 0
+  parentNode: {fileID: 4040593866834472671}
+  childNode: {fileID: 0}
+  answers:
+  - 'Nha '
+  - Okay
+  parentSentenceNode: {fileID: 0}
+  childSentenceNodes:
+  - {fileID: 4686793606130479723}
+  - {fileID: 4686793606130479723}
+  childConnectionNodes: []
+--- !u!114 &-7675632240543908075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: -167
+    y: 21
+    width: 190
+    height: 135
+  isDragging: 0
+  isSelected: 0
+  sentence:
+    characterName: 
+    text: Do you think about death
+    characterSprite: {fileID: 0}
+  parentNode: {fileID: -562391709856894766}
+  childNode: {fileID: -7417336234477643453}
+  childNodes: []
+  isExternalFunc: 0
+  externalFunctionName: 
+--- !u!114 &-7417336234477643453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1717f3c6dba9fa40844ddacac301510, type: 3}
+  m_Name: Answer Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 99
+    y: 35
+    width: 190
+    height: 135
+  isDragging: 0
+  isSelected: 0
+  parentNode: {fileID: -7675632240543908075}
+  childNode: {fileID: 0}
+  answers:
+  - Sometimes
+  - No
+  parentSentenceNode: {fileID: 0}
+  childSentenceNodes:
+  - {fileID: 4686793606130479723}
+  - {fileID: 4686793606130479723}
+  childConnectionNodes: []
+--- !u!114 &-988402167996210400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: -599
+    y: 23
+    width: 190
+    height: 135
+  isDragging: 0
+  isSelected: 0
+  sentence:
+    characterName: 
+    text: 'So do you ever wonder why? '
+    characterSprite: {fileID: 0}
+  parentNode: {fileID: 0}
+  childNode: {fileID: -562391709856894766}
+  childNodes: []
+  isExternalFunc: 0
+  externalFunctionName: 
+--- !u!114 &-562391709856894766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1717f3c6dba9fa40844ddacac301510, type: 3}
+  m_Name: Answer Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: -362
+    y: 20
+    width: 190
+    height: 155
+  isDragging: 0
+  isSelected: 0
+  parentNode: {fileID: -988402167996210400}
+  childNode: {fileID: 0}
+  answers:
+  - No
+  - Yes
+  - Why
+  parentSentenceNode: {fileID: 0}
+  childSentenceNodes:
+  - {fileID: 4040593866834472671}
+  - {fileID: -7675632240543908075}
+  - {fileID: 3515524276693064567}
+  childConnectionNodes: []
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33f741ea10ebcf842a91c9b871dd032a, type: 3}
+  m_Name: DemoDialogGraph
+  m_EditorClassIdentifier: 
+  nodesList:
+  - {fileID: 8080081446718622928}
+  - {fileID: -988402167996210400}
+  - {fileID: -562391709856894766}
+  - {fileID: 4040593866834472671}
+  - {fileID: -7675632240543908075}
+  - {fileID: 3515524276693064567}
+  - {fileID: -8332141607729408182}
+  - {fileID: -7417336234477643453}
+  - {fileID: 8641991290643505218}
+  - {fileID: 4686793606130479723}
+  - {fileID: 7052244303408421887}
+  - {fileID: 6010957771461930869}
+  nodeToDrawLineFrom: {fileID: 0}
+  linePosition: {x: 0, y: 0}
+--- !u!114 &3515524276693064567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: -166
+    y: 179
+    width: 190
+    height: 135
+  isDragging: 0
+  isSelected: 0
+  sentence:
+    characterName: 
+    text: 'Im wondering '
+    characterSprite: {fileID: 0}
+  parentNode: {fileID: -562391709856894766}
+  childNode: {fileID: 0}
+  childNodes: []
+  isExternalFunc: 0
+  externalFunctionName: 
+--- !u!114 &4040593866834472671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: -165
+    y: -129
+    width: 190
+    height: 135
+  isDragging: 0
+  isSelected: 0
+  sentence:
+    characterName: 
+    text: You should think more about stuff
+    characterSprite: {fileID: 0}
+  parentNode: {fileID: -562391709856894766}
+  childNode: {fileID: -8332141607729408182}
+  childNodes: []
+  isExternalFunc: 0
+  externalFunctionName: 
+--- !u!114 &4686793606130479723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 471
+    y: 129
+    width: 190
+    height: 135
+  isDragging: 0
+  isSelected: 0
+  sentence:
+    characterName: 
+    text: 'Well i think about death all the time '
+    characterSprite: {fileID: 0}
+  parentNode: {fileID: 6010957771461930869}
+  childNode: {fileID: 8080081446718622928}
+  childNodes: []
+  isExternalFunc: 0
+  externalFunctionName: 
+--- !u!114 &6010957771461930869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1717f3c6dba9fa40844ddacac301510, type: 3}
+  m_Name: Answer Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 158
+    y: 254
+    width: 190
+    height: 135
+  isDragging: 0
+  isSelected: 0
+  parentNode: {fileID: 0}
+  childNode: {fileID: 0}
+  answers:
+  - 'Well lets leave it at that '
+  - 'If your wondering ask '
+  parentSentenceNode: {fileID: 0}
+  childSentenceNodes:
+  - {fileID: 8641991290643505218}
+  - {fileID: 4686793606130479723}
+  childConnectionNodes: []
+--- !u!114 &7052244303408421887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 467
+    y: -13
+    width: 190
+    height: 135
+  isDragging: 0
+  isSelected: 0
+  sentence:
+    characterName: 
+    text: 
+    characterSprite: {fileID: 0}
+  parentNode: {fileID: 7052244303408421887}
+  childNode: {fileID: 7052244303408421887}
+  childNodes: []
+  isExternalFunc: 0
+  externalFunctionName: 
+--- !u!114 &8080081446718622928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 754
+    y: 214
+    width: 190
+    height: 135
+  isDragging: 0
+  isSelected: 0
+  sentence:
+    characterName: 
+    text: end
+    characterSprite: {fileID: 0}
+  parentNode: {fileID: 4686793606130479723}
+  childNode: {fileID: 0}
+  childNodes: []
+  isExternalFunc: 0
+  externalFunctionName: 
+--- !u!114 &8641991290643505218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 447
+    y: 364
+    width: 190
+    height: 135
+  isDragging: 0
+  isSelected: 0
+  sentence:
+    characterName: 
+    text: okay meanie
+    characterSprite: {fileID: 0}
+  parentNode: {fileID: 6010957771461930869}
+  childNode: {fileID: 8080081446718622928}
+  childNodes: []
+  isExternalFunc: 0
+  externalFunctionName: 
