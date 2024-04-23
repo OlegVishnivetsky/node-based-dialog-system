@@ -90,10 +90,10 @@ namespace cherrydev
             SentenceNode sentenceNode = dialogBehaviour.GetSentenceNode();
 
             dialogSentensePanel.ResetDialogText();
-            dialogSentensePanel.SetUpEmotionImages(memberNode.members.Count);
 
-            dialogSentensePanel.ShowEmotionImage(memberNode.members.FindIndex(memberInfo => 
-            memberInfo.memberName == sentenceNode.GetSentenceCharacterName()), sentenceNode.GetEmotionSprite());
+            dialogSentensePanel.SetUpEmotionImages(memberNode.members, 
+                memberNode.members.FindIndex(memberInfo => memberInfo.memberName 
+                == sentenceNode.GetSentenceCharacterName()));
 
             ActiveGameObject(dialogSentensePanel.gameObject, true);
         }

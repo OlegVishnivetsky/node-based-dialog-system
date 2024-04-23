@@ -1,4 +1,6 @@
+using DG.Tweening;
 using System.Collections.Generic;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,29 +14,34 @@ namespace cherrydev
         [SerializeField] private Image dialogCharacterImage;
 
         [Space(7)]
-        [SerializeField] private List<EmotionImage> emotionImages;
+        [SerializeField] private List<MemberImage> membersImages;
+        [SerializeField] private RectTransform selectionImageTransform;
+        [SerializeField] private float duration;
+        [SerializeField] private Ease ease;
 
-        public void SetUpEmotionImages(int amountOfMembers)
+        public void SetUpEmotionImages(List<MemberInfo> memberInfos, int selectedMemberIndex)
         {
-            foreach (EmotionImage image in emotionImages)
+            StartCoroutine(SetUpEmotionImagesRoutine(memberInfos, selectedMemberIndex));
+        }
+
+        public IEnumerator SetUpEmotionImagesRoutine(List<MemberInfo> memberInfos, int selectedMemberIndex)
+        {
+            foreach (MemberImage image in membersImages)
             {
                 image.gameObject.SetActive(false);
             }
 
-            for (int i = 0; i < amountOfMembers; i++)
+            for (int i = 0; i < memberInfos.Count; i++)
             {
-                emotionImages[i].gameObject.SetActive(true);
-            }
-        }
+                membersImages[i].gameObject.SetActive(true);
+                membersImages[i].SetEmotionSprite(memberInfos[i].sprite);
 
-        public void ShowEmotionImage(int index, Sprite sprite)
-        {
-            foreach (var emotionImage in emotionImages)
-            {
-                emotionImage.ResetEmotionSprite();
+                yield return null;
             }
 
-            emotionImages[index].SetEmotionSprite(sprite);
+            selectionImageTransform
+                .DOMove(membersImages[selectedMemberIndex].transform.position, duration)
+                .SetEase(ease);
         }
 
         /// <summary>

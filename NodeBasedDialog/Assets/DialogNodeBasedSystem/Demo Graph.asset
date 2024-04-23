@@ -16,8 +16,8 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 471
-    y: 188.20001
+    x: 529
+    y: 215.20001
     width: 190
     height: 155
   isDragging: 0
@@ -47,8 +47,8 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 664
-    y: 183.20001
+    x: 721
+    y: 210.20001
     width: 190
     height: 155
   isDragging: 0
@@ -78,8 +78,8 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 277
-    y: 188.19995
+    x: 334
+    y: 215.19995
     width: 190
     height: 155
   isDragging: 0
@@ -89,7 +89,7 @@ MonoBehaviour:
     text: Hello cat girl
     characterSprite: {fileID: 21300000, guid: 267a0c8622a60c3468d20b15e8e069b1, type: 3}
     emotionSprite: {fileID: 21300000, guid: 85e001959b0f19447b6fb35ce371055f, type: 3}
-  parentNode: {fileID: 5798324529227285510}
+  parentNode: {fileID: 6236174091990158760}
   childNode: {fileID: -4402633936689915351}
   isExternalFunc: 0
   externalFunctionName: 
@@ -109,10 +109,10 @@ MonoBehaviour:
   - {fileID: -3500367617556325483}
   - {fileID: -4402633936689915351}
   - {fileID: -3739212165040143908}
-  - {fileID: 5798324529227285510}
+  - {fileID: 6236174091990158760}
   nodeToDrawLineFrom: {fileID: 0}
   linePosition: {x: 0, y: 0}
---- !u!114 &5798324529227285510
+--- !u!114 &6236174091990158760
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -128,16 +128,16 @@ MonoBehaviour:
   nodeGraph: {fileID: 11400000}
   rect:
     serializedVersion: 2
-    x: 69
-    y: 189.2
+    x: 93
+    y: 192.20001
     width: 190
-    height: 215
+    height: 200
   isDragging: 0
   isSelected: 1
   members:
   - memberName: School Girl
+    sprite: {fileID: 21300000, guid: 9d65e05fcf098a64ab4b9022f02e3ea8, type: 3}
   - memberName: Car Girl
-  - memberName: 
-  - memberName: 
+    sprite: {fileID: 21300000, guid: 582b87a9f4b33e748afb5a77961cacf1, type: 3}
   childSentenceNode: {fileID: -3500367617556325483}
-  amountOfMembers: 4
+  amountOfMembers: 2

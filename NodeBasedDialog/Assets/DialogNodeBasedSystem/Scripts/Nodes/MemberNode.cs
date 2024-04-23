@@ -10,14 +10,15 @@ namespace cherrydev
         public SentenceNode childSentenceNode;
         public int amountOfMembers = 1;
 
-
-        private float currentMemberNodeHeight = 115f;
-        private float additionalMemberNodeHeight = 20f;
+        private float currentMemberNodeHeight = 155f;
+        private float additionalMemberNodeHeight = 45f;
 
         private const float numberLableFieldSpace = 10f;
         private const float nameLableFieldSpace = 40f;
 
         private const float textFieldWidth = 90f;
+
+        private float memberNodeHeight = 155f;
         private const float memberNodeWidth = 190f;
 
         private const int minAmountOfMembers = 1;
@@ -73,17 +74,22 @@ namespace cherrydev
 
         public void CheckNodeSize()
         {
+            float totalHeight = memberNodeHeight;
+
             for (int i = 0; i < members.Count - 1; i++)
             {
-                currentMemberNodeHeight += additionalMemberNodeHeight;
+                totalHeight += additionalMemberNodeHeight;
             }
+
+            currentMemberNodeHeight = totalHeight;
         }
 
         public void HandleMebmerFieldsDrawing()
         {
             for (int i = 0; i < amountOfMembers; i++)
             {
-                DrawMemverField(i);
+                DrawMemberNameHorizontal(i);
+                DrawCharacterSpriteHorizontal(i);
             }
         }
 
@@ -107,19 +113,28 @@ namespace cherrydev
             this.childSentenceNode = childSentenceNode;
         }
 
-        private void DrawMemverField(int number)
+        private void DrawMemberNameHorizontal(int number)
         {
             EditorGUILayout.BeginHorizontal();
-
             EditorGUILayout.LabelField($"{number + 1}. ",
                 GUILayout.Width(numberLableFieldSpace));
             EditorGUILayout.LabelField($"Name ",
                 GUILayout.Width(nameLableFieldSpace));
-
             members[number].memberName = EditorGUILayout.TextField(members[number].memberName,
                 GUILayout.Width(textFieldWidth));
-
             EditorGUILayout.EndHorizontal();
+        }
+
+        private void DrawCharacterSpriteHorizontal(int number)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField($"   ",
+                GUILayout.Width(numberLableFieldSpace));
+            EditorGUILayout.LabelField($"Sprite ", GUILayout.Width(nameLableFieldSpace));
+            members[number].sprite = (Sprite)EditorGUILayout.ObjectField(members[number].sprite,
+                typeof(Sprite), false, GUILayout.Width(textFieldWidth));
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space(5);
         }
 
         private void AddMember()
@@ -144,6 +159,7 @@ namespace cherrydev
     public class MemberInfo
     {
         public string memberName;
+        public Sprite sprite;
 
         public int Number { get; set; }
 
