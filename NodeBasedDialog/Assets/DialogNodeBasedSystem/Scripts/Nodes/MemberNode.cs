@@ -7,10 +7,9 @@ namespace cherrydev
     public class MemberNode : Node
     {
         public List<MemberInfo> members = new List<MemberInfo>();
-
         public SentenceNode childSentenceNode;
+        public int amountOfMembers = 1;
 
-        private int amountOfMembers = 1;
 
         private float currentMemberNodeHeight = 115f;
         private float additionalMemberNodeHeight = 20f;
@@ -70,6 +69,14 @@ namespace cherrydev
             }
 
             GUILayout.EndArea();
+        }
+
+        public void CheckNodeSize()
+        {
+            for (int i = 0; i < members.Count - 1; i++)
+            {
+                currentMemberNodeHeight += additionalMemberNodeHeight;
+            }
         }
 
         public void HandleMebmerFieldsDrawing()

@@ -156,6 +156,11 @@ namespace cherrydev
                     SentenceNode sentenceNode = (SentenceNode)node;
                     sentenceNode.CheckNodeSize(nodeWidth, nodeHeight);
                 }
+                if (node.GetType() == typeof(MemberNode))
+                {
+                    MemberNode memberNode = (MemberNode)node;
+                    memberNode.CheckNodeSize();
+                }
             }
         }
 

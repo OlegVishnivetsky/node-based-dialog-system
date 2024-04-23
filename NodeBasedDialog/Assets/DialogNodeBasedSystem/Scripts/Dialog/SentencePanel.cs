@@ -12,17 +12,29 @@ namespace cherrydev
         [SerializeField] private Image dialogCharacterImage;
 
         [Space(7)]
-        [SerializeField] private List<Image> emotionImages;
-        [SerializeField] private Sprite noneSprite;
+        [SerializeField] private List<EmotionImage> emotionImages;
+
+        public void SetUpEmotionImages(int amountOfMembers)
+        {
+            foreach (EmotionImage image in emotionImages)
+            {
+                image.gameObject.SetActive(false);
+            }
+
+            for (int i = 0; i < amountOfMembers; i++)
+            {
+                emotionImages[i].gameObject.SetActive(true);
+            }
+        }
 
         public void ShowEmotionImage(int index, Sprite sprite)
         {
-            foreach (Image image in emotionImages)
+            foreach (var emotionImage in emotionImages)
             {
-                image.sprite = noneSprite;
+                emotionImage.ResetEmotionSprite();
             }
 
-            emotionImages[index].sprite = sprite;
+            emotionImages[index].SetEmotionSprite(sprite);
         }
 
         /// <summary>
