@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogBehaviour: {fileID: 6258486368699249023}
-  dialogGraph: {fileID: 11400000, guid: 169a42f4149e48e4fa5cd47222879121, type: 2}
+  dialogGraph: {fileID: 11400000, guid: 4c9e2b545bdd52c4aa426f53ee950954, type: 2}
 --- !u!4 &1896025583
 Transform:
   m_ObjectHideFlags: 0

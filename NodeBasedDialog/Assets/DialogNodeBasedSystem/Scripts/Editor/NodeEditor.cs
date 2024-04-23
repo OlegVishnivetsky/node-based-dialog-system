@@ -23,7 +23,7 @@ namespace cherrydev
         private Vector2 graphDrag;
 
         private const float nodeWidth = 190f;
-        private const float nodeHeight = 135f;
+        private const float nodeHeight = 155f;
 
         private const float connectingLineWidth = 2f;
         private const float connectingLineArrowSize = 4f;
@@ -210,6 +210,18 @@ namespace cherrydev
                     {
                         parentNode = node;
                         childNode = sentenceNode.childNode;
+
+                        DrawConnectionLine(parentNode, childNode);
+                    }
+                }
+                else if (node.GetType() == typeof(MemberNode))
+                {
+                    MemberNode memberNode = (MemberNode)node;
+
+                    if (memberNode.childSentenceNode != null)
+                    {
+                        parentNode = memberNode;
+                        childNode = memberNode.childSentenceNode;
 
                         DrawConnectionLine(parentNode, childNode);
                     }
@@ -609,12 +621,25 @@ namespace cherrydev
         {
             GenericMenu contextMenu = new GenericMenu();
 
+            contextMenu.AddItem(new GUIContent("Create Member Node"), false, CreateMemberNode, mousePosition);
             contextMenu.AddItem(new GUIContent("Create Sentence Node"), false, CreateSentenceNode, mousePosition);
             contextMenu.AddItem(new GUIContent("Create Answer Node"), false, CreateAnswerNode, mousePosition);
             contextMenu.AddSeparator("");
             contextMenu.AddItem(new GUIContent("Select All Nodes"), false, SelectAllNodes, mousePosition);
             contextMenu.AddItem(new GUIContent("Remove Selected Nodes"), false, RemoveSelectedNodes, mousePosition);
             contextMenu.ShowAsContext();
+        }
+
+        public void CreateMemberNode(object mousePosition)
+        {
+            if (currentNodeGraph.nodesList.FindAll(node => node.GetType() == typeof(MemberNode)).Count == 1)
+            {
+                Debug.LogWarning("Max amount of member node");
+                return;
+            }
+
+            MemberNode memberNode = ScriptableObject.CreateInstance<MemberNode>();
+            InitialiseNode(mousePosition, memberNode, "Member Node");
         }
 
         /// <summary>
@@ -690,7 +715,8 @@ namespace cherrydev
 
             currentNodeGraph.nodesList.Add(node);
 
-            node.Initialise(new Rect(mousePosition, new Vector2(nodeWidth, nodeHeight)), nodeName, currentNodeGraph);
+            node.Initialise(new Rect(mousePosition, new Vector2(nodeWidth, nodeHeight)), 
+                nodeName, currentNodeGraph);
 
             AssetDatabase.AddObjectToAsset(node, currentNodeGraph);
             AssetDatabase.SaveAssets();

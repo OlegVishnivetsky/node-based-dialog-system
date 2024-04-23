@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-4712259835426627168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 394e9f35ab940e6408a5322d88ec8c78, type: 3}
+  m_Name: Member Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 114
+    y: 192.19995
+    width: 190
+    height: 135
+  isDragging: 0
+  isSelected: 0
+  members:
+  - memberName: School Girl
+  - memberName: Car Girl
+  childSentenceNode: {fileID: -3500367617556325483}
+--- !u!114 &-4402633936689915351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 480
+    y: 184.20001
+    width: 190
+    height: 155
+  isDragging: 0
+  isSelected: 1
+  sentence:
+    characterName: Car Girl
+    text: Hello school girl
+    characterSprite: {fileID: 21300000, guid: fdf94a8d2a1e4e44db55c0effe7661c2, type: 3}
+    emotionSprite: {fileID: 21300000, guid: 582b87a9f4b33e748afb5a77961cacf1, type: 3}
+  parentNode: {fileID: -3500367617556325483}
+  childNode: {fileID: -3739212165040143908}
+  isExternalFunc: 0
+  externalFunctionName: 
+--- !u!114 &-3739212165040143908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 663
+    y: 183.20001
+    width: 190
+    height: 155
+  isDragging: 0
+  isSelected: 1
+  sentence:
+    characterName: School Girl
+    text: nice yo meet you
+    characterSprite: {fileID: 21300000, guid: b35c74948fba65a4ca99eae51af70230, type: 3}
+    emotionSprite: {fileID: 21300000, guid: 69cd8fce9d1316f47bbf3c6484eed934, type: 3}
+  parentNode: {fileID: -4402633936689915351}
+  childNode: {fileID: 0}
+  isExternalFunc: 0
+  externalFunctionName: 
+--- !u!114 &-3500367617556325483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  connectedNodesList: []
+  nodeGraph: {fileID: 11400000}
+  rect:
+    serializedVersion: 2
+    x: 297
+    y: 183.19995
+    width: 190
+    height: 155
+  isDragging: 0
+  isSelected: 0
+  sentence:
+    characterName: School Girl
+    text: Hello cat girl
+    characterSprite: {fileID: 21300000, guid: 267a0c8622a60c3468d20b15e8e069b1, type: 3}
+    emotionSprite: {fileID: 21300000, guid: 85e001959b0f19447b6fb35ce371055f, type: 3}
+  parentNode: {fileID: -4712259835426627168}
+  childNode: {fileID: -4402633936689915351}
+  isExternalFunc: 0
+  externalFunctionName: 
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33f741ea10ebcf842a91c9b871dd032a, type: 3}
+  m_Name: Demo Graph
+  m_EditorClassIdentifier: 
+  nodesList:
+  - {fileID: -4712259835426627168}
+  - {fileID: -3500367617556325483}
+  - {fileID: -4402633936689915351}
+  - {fileID: -3739212165040143908}
+  nodeToDrawLineFrom: {fileID: 0}
+  linePosition: {x: 0, y: 0}

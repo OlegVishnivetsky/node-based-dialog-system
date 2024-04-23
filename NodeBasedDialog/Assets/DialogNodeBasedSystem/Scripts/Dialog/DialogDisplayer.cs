@@ -43,7 +43,7 @@ namespace cherrydev
 
             dialogBehaviour.OnSentenceNodeActive -= EnableDialogSentencePanel;
             dialogBehaviour.OnSentenceNodeActive -= DisableDialogAnswerPanel;
-            dialogBehaviour.OnSentenceNodeActive += dialogSentensePanel.ResetDialogText;
+            dialogBehaviour.OnSentenceNodeActive -= dialogSentensePanel.ResetDialogText;
             dialogBehaviour.OnSentenceNodeActiveWithParameter -= dialogSentensePanel.Setup;
 
             dialogBehaviour.OnAnswerNodeActive -= EnableDialogAnswerPanel;
@@ -86,7 +86,13 @@ namespace cherrydev
         /// </summary>
         public void EnableDialogSentencePanel()
         {
+            MemberNode memberNode = dialogBehaviour.GetMemberNode();
+            SentenceNode sentenceNode = dialogBehaviour.GetSentenceNode();
+
             dialogSentensePanel.ResetDialogText();
+
+            dialogSentensePanel.ShowEmotionImage(memberNode.members.FindIndex(memberInfo => 
+            memberInfo.memberName == sentenceNode.GetSentenceCharacterName()), sentenceNode.GetEmotionSprite());
 
             ActiveGameObject(dialogSentensePanel.gameObject, true);
         }

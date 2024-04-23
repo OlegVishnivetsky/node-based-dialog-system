@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,20 @@ namespace cherrydev
         [SerializeField] private TextMeshProUGUI dialogNameText;
         [SerializeField] private TextMeshProUGUI dialogText;
         [SerializeField] private Image dialogCharacterImage;
+
+        [Space(7)]
+        [SerializeField] private List<Image> emotionImages;
+        [SerializeField] private Sprite noneSprite;
+
+        public void ShowEmotionImage(int index, Sprite sprite)
+        {
+            foreach (Image image in emotionImages)
+            {
+                image.sprite = noneSprite;
+            }
+
+            emotionImages[index].sprite = sprite;
+        }
 
         /// <summary>
         /// Setting dialogText max visible characters to zero

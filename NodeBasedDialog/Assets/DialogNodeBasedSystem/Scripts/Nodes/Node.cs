@@ -26,8 +26,8 @@ namespace cherrydev
         public virtual void Initialise(Rect rect, string nodeName, DialogNodeGraph nodeGraph)
         {
             name = nodeName;
-            standartHeight = rect.height;
             this.rect = rect;
+            standartHeight = rect.height;
             this.nodeGraph = nodeGraph;
         }
 

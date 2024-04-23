@@ -17,7 +17,10 @@ namespace cherrydev
         [SerializeField] private UnityEvent onDialogFinished;
 
         private DialogNodeGraph currentNodeGraph;
+
         private Node currentNode;
+        private SentenceNode sentenceNode;
+        private MemberNode startingMemberNode;
 
         private int maxAmountOfAnswerButtons;
 
@@ -44,6 +47,8 @@ namespace cherrydev
 
         public event Action<int, AnswerNode> OnAnswerButtonSetUp;
 
+        public event Action<int, List<MemberInfo>> OnAmountOfMembersDefined;
+
         public event Action<int> OnMaxAmountOfAnswerButtonsCalculated;
 
         public event Action<int> OnAnswerNodeActiveWithParameter;
@@ -64,6 +69,16 @@ namespace cherrydev
         private void Update()
         {
             HandleSentenceSkipping();
+        }
+
+        public MemberNode GetMemberNode()
+        {
+            return startingMemberNode;
+        }
+
+        public SentenceNode GetSentenceNode()
+        {
+            return sentenceNode;
         }
 
         /// <summary>
@@ -103,6 +118,7 @@ namespace cherrydev
             currentNodeGraph = dialogNodeGraph;
 
             DefineFirstNode(dialogNodeGraph);
+            DefineAmountOfMembers();
             CalculateMaxAmountOfAnswerButtons();
             HandleDialogGraphCurrentNode(currentNode);
         }
@@ -162,6 +178,8 @@ namespace cherrydev
         private void HandleSentenceNode(Node currentNode)
         {
             SentenceNode sentenceNode = (SentenceNode)currentNode;
+
+            this.sentenceNode = sentenceNode;
 
             isCurrentSentenceSkipped = false;
 
@@ -232,20 +250,32 @@ namespace cherrydev
             {
                 currentNode = node;
 
-                if (node.GetType() == typeof(SentenceNode))
+                if (node.GetType() == typeof(MemberNode))
                 {
-                    SentenceNode sentenceNode = (SentenceNode)node;
+                    MemberNode memberNode = (MemberNode)node;
 
-                    if (sentenceNode.parentNode == null && sentenceNode.childNode != null)
+                    if (memberNode.childSentenceNode != null)
                     {
-                        currentNode = sentenceNode;
+                        currentNode = memberNode.childSentenceNode;
+                        startingMemberNode = memberNode;
+                        sentenceNode = memberNode.childSentenceNode;
 
                         return;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Connect member node to sentence node");
                     }
                 }
             }
 
             currentNode = dialogNodeGraph.nodesList[0];
+        }
+
+        private void DefineAmountOfMembers()
+        {
+            OnAmountOfMembersDefined?.Invoke(startingMemberNode.GetAmountOfMembers(), 
+                startingMemberNode.members);
         }
 
         /// <summary>

@@ -18,10 +18,10 @@ namespace cherrydev
 
         private string externalButtonLable;
 
-        private const float lableFieldSpace = 47f;
+        private const float lableFieldSpace = 50f;
         private const float textFieldWidth = 100f;
 
-        private const float externalNodeHeight = 155f;
+        private const float externalNodeHeight = 180f;
 
         /// <summary>
         /// Returning external function name
@@ -69,6 +69,11 @@ namespace cherrydev
             return sentence.characterSprite;
         }
 
+        public Sprite GetEmotionSprite()
+        {
+            return sentence.emotionSprite;
+        }
+
         /// <summary>
         /// Returns the value of a isExternalFunc boolean field
         /// </summary>
@@ -96,6 +101,7 @@ namespace cherrydev
             DrawCharacterNameFieldHorizontal();
             DrawSentenceTextFieldHorizontal();
             DrawCharacterSpriteHorizontal();
+            DrawEmotionSpriteHorizontal();
             DrawExternalFunctionTextField();
 
             if (GUILayout.Button(externalButtonLable))
@@ -141,6 +147,15 @@ namespace cherrydev
             EditorGUILayout.EndHorizontal();
         }
 
+        private void DrawEmotionSpriteHorizontal()
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField($"Emotion Sprite ", GUILayout.Width(lableFieldSpace));
+            sentence.emotionSprite = (Sprite)EditorGUILayout.ObjectField(sentence.emotionSprite,
+                typeof(Sprite), false, GUILayout.Width(textFieldWidth));
+            EditorGUILayout.EndHorizontal();
+        }
+
         /// <summary>
         /// Draw label and text fields for external function, 
         /// depends on IsExternalFunc boolean field
@@ -171,13 +186,10 @@ namespace cherrydev
         /// <param name="rect"></param>
         public void CheckNodeSize(float width, float height)
         {
-            rect.width = width;
-            
-            if (standartHeight == 0)
-            {
-                standartHeight = height;
-            }
+            rect.width = width;      
 
+            standartHeight = height;
+            
             if (isExternalFunc)
             {
                 rect.height = externalNodeHeight;
