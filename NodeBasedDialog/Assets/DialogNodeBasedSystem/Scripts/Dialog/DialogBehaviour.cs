@@ -26,32 +26,18 @@ namespace cherrydev
 
         public bool IsCanSkippingText
         {
-            get
-            {
-                return isCanSkippingText;
-            }
-            set
-            {
-                isCanSkippingText = value;
-            }
+            get => isCanSkippingText;
+            set => isCanSkippingText = value;
         }
 
         public event Action OnSentenceNodeActive;
-
         public event Action<string, string, Sprite> OnSentenceNodeActiveWithParameter;
-
         public event Action OnAnswerNodeActive;
-
         public event Action<int, AnswerNode> OnAnswerButtonSetUp;
-
         public event Action<int> OnMaxAmountOfAnswerButtonsCalculated;
-
         public event Action<int> OnAnswerNodeActiveWithParameter;
-
         public event Action<int, string> OnAnswerNodeSetUp;
-
         public event Action OnDialogTextCharWrote;
-
         public event Action<string> OnDialogTextSkipped;
 
         public DialogExternalFunctionsHandler ExternalFunctionsHandler { get; private set; }
@@ -191,7 +177,7 @@ namespace cherrydev
 
             for (int i = 0; i < answerNode.childSentenceNodes.Count; i++)
             {
-                if (answerNode.childSentenceNodes[i] != null)
+                if (answerNode.childSentenceNodes[i])
                 {
                     OnAnswerNodeSetUp?.Invoke(i, answerNode.answers[i]);
                     OnAnswerButtonSetUp?.Invoke(i, answerNode);

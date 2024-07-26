@@ -114,15 +114,16 @@ namespace cherrydev
 
             gameObject.SetActive(isActive);
         }
-
+        
         /// <summary>
-        /// Setting up answer button onClick event
+        /// Removing all listeners and Setting up answer button onClick event
         /// </summary>
         /// <param name="index"></param>
         /// <param name="answerNode"></param>
         public void SetUpAnswerButtonsClickEvent(int index, AnswerNode answerNode)
         {
-            dialogAnswerPanel.GetButtonByIndex(index).onClick.AddListener(() =>
+            dialogAnswerPanel.GetButtonByIndex(index).onClick.RemoveAllListeners();
+            dialogAnswerPanel.AddButtonOnClickListener(index, () =>
             {
                 dialogBehaviour.SetCurrentNodeAndHandleDialogGraph(answerNode.childSentenceNodes[index]);
             });

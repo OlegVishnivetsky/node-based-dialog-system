@@ -64,9 +64,6 @@ namespace cherrydev
                 case EventType.MouseDrag:
                     ProcessMouseDragEvent(currentEvent);
                     break;
-
-                default:
-                    break;
             }
         }
 

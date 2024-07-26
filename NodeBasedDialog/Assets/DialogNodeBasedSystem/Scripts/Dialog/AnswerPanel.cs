@@ -20,6 +20,8 @@ namespace cherrydev
         /// <param name="maxAmountOfAnswerButtons"></param>
         public void SetUpButtons(int maxAmountOfAnswerButtons)
         {
+            DeleteAllExistingButtons();
+            
             for (int i = 0; i < maxAmountOfAnswerButtons; i++)
             {
                 Button answerButton = Instantiate(answerButtonPrefab, parentTransform);
@@ -59,6 +61,7 @@ namespace cherrydev
             buttons[index].onClick.AddListener(action);
         }
 
+        // ReSharper disable Unity.PerformanceAnalysis
         /// <summary>
         /// Enable certain amount of buttons
         /// </summary>
@@ -85,6 +88,23 @@ namespace cherrydev
             foreach (Button button in buttons)
             {
                 button.gameObject.SetActive(false);
+            }
+        }
+
+        /// <summary>
+        /// Removes all existing buttons, used before setup
+        /// </summary>
+        private void DeleteAllExistingButtons()
+        {
+            if (buttons.Count > 0)
+            {
+                foreach (var button in buttons)
+                {
+                    Destroy(button.gameObject);
+                }
+                            
+                buttons.Clear();
+                buttonTexts.Clear();
             }
         }
     }
