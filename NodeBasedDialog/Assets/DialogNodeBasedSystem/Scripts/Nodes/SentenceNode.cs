@@ -161,7 +161,7 @@ namespace cherrydev
             else
             {
                 externalButtonLable = "Add external func";
-                rect.height = standartHeight;
+                rect.height = standardHeight;
             }
         }
 
@@ -173,9 +173,9 @@ namespace cherrydev
         {
             rect.width = width;
             
-            if (standartHeight == 0)
+            if (standardHeight == 0)
             {
-                standartHeight = height;
+                standardHeight = height;
             }
 
             if (isExternalFunc)
@@ -184,7 +184,7 @@ namespace cherrydev
             }
             else
             {
-                rect.height = standartHeight;
+                rect.height = standardHeight;
             }
         }
 

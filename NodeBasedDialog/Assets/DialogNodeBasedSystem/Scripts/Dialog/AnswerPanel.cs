@@ -21,7 +21,7 @@ namespace cherrydev
         public void SetUpButtons(int maxAmountOfAnswerButtons)
         {
             DeleteAllExistingButtons();
-            
+
             for (int i = 0; i < maxAmountOfAnswerButtons; i++)
             {
                 Button answerButton = Instantiate(answerButtonPrefab, parentTransform);
@@ -102,7 +102,7 @@ namespace cherrydev
                 {
                     Destroy(button.gameObject);
                 }
-                            
+
                 buttons.Clear();
                 buttonTexts.Clear();
             }

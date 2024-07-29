@@ -139,6 +139,10 @@ namespace cherrydev
             {
                 HandleAnswerNode(currentNode);
             }
+            else if (currentNode.GetType() == typeof(RandomNode))
+            {
+                HandleRandomNode(currentNode);
+            }
         }
 
         /// <summary>
@@ -161,6 +165,19 @@ namespace cherrydev
             }
 
             WriteDialogText(sentenceNode.GetSentenceText());
+        }
+        private void HandleRandomNode(Node currentNode)
+        {
+            RandomNode randomNode = (RandomNode)currentNode;
+
+            isCurrentSentenceSkipped = false;
+
+            OnSentenceNodeActive?.Invoke();
+            Sentence sentence = randomNode.GetRndSentence();
+            OnSentenceNodeActiveWithParameter?.Invoke(sentence.characterName, sentence.text,
+                sentence.characterSprite);
+
+            WriteDialogText(sentence.text);
         }
 
         /// <summary>
@@ -229,6 +246,17 @@ namespace cherrydev
                         return;
                     }
                 }
+                else if (node.GetType() == typeof(RandomNode))
+                {
+                    RandomNode randomNode = (RandomNode)node;
+
+                    if (randomNode.parentNode == null && randomNode.childNodes != null && randomNode.childNodes.Count > 0)
+                    {
+                        currentNode = randomNode;
+
+                        return;
+                    }
+                }
             }
 
             currentNode = dialogNodeGraph.nodesList[0];
@@ -289,6 +317,22 @@ namespace cherrydev
                     onDialogFinished?.Invoke();
                 }
             }
+            else if (currentNode.GetType() == typeof(RandomNode))
+            {
+                RandomNode randomNode = (RandomNode)currentNode;
+
+                if (randomNode.childNodes != null && randomNode.childNodes.Count > 0)
+                {
+                    currentNode = randomNode.GetNextNode();
+                    HandleDialogGraphCurrentNode(currentNode);
+                }
+                else
+                {
+                    isDialogStarted = false;
+
+                    onDialogFinished?.Invoke();
+                }
+            }
         }
 
         /// <summary>
@@ -335,7 +379,7 @@ namespace cherrydev
         private bool CheckNextSentenceKeyCodes()
         {
             for (int i = 0; i < nextSentenceKeyCodes.Count; i++)
-            { 
+            {
                 if (Input.GetKeyDown(nextSentenceKeyCodes[i]))
                 {
                     return true;

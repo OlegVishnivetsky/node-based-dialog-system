@@ -214,6 +214,26 @@ namespace cherrydev
                         DrawConnectionLine(parentNode, childNode);
                     }
                 }
+                else if (node.GetType() == typeof(RandomNode))
+                {
+                    RandomNode randomNode = (RandomNode)node;
+
+                    if (randomNode.childNodes == null)
+                    {
+                        return;
+                    }
+
+                    for (int i = 0; i < randomNode.childNodes.Count; i++)
+                    {
+                        if (randomNode.childNodes[i] != null)
+                        {
+                            parentNode = node;
+                            childNode = randomNode.childNodes[i];
+
+                            DrawConnectionLine(parentNode, childNode, i, randomNode.childNodes.Count);
+                        }
+                    }
+                }
             }
         }
 
@@ -222,9 +242,19 @@ namespace cherrydev
         /// </summary>
         /// <param name="parentNode"></param>
         /// <param name="childNode"></param>
-        private void DrawConnectionLine(Node parentNode, Node childNode)
+        /// 
+        const int heightFromFirst = 90;
+        const int itemHeight = 61;
+        private void DrawConnectionLine(Node parentNode, Node childNode, int item = -1, int numItems = -1)
         {
             Vector2 startPosition = parentNode.rect.center;
+            if (item != -1)
+            {
+                //startPosition.y = parentNode.rect.yMin + item * (parentNode.rect.height - 200f) / numItems + 100;
+                startPosition.y = parentNode.rect.yMin + heightFromFirst + item * itemHeight;
+                startPosition.x = parentNode.rect.xMax - 10;
+            }
+
             Vector2 endPosition = childNode.rect.center;
 
             Vector2 midPosition = (startPosition + endPosition) / 2;
@@ -611,6 +641,7 @@ namespace cherrydev
 
             contextMenu.AddItem(new GUIContent("Create Sentence Node"), false, CreateSentenceNode, mousePosition);
             contextMenu.AddItem(new GUIContent("Create Answer Node"), false, CreateAnswerNode, mousePosition);
+            contextMenu.AddItem(new GUIContent("Create Random Node"), false, CreateRandomNode, mousePosition);
             contextMenu.AddSeparator("");
             contextMenu.AddItem(new GUIContent("Select All Nodes"), false, SelectAllNodes, mousePosition);
             contextMenu.AddItem(new GUIContent("Remove Selected Nodes"), false, RemoveSelectedNodes, mousePosition);
@@ -625,6 +656,16 @@ namespace cherrydev
         {
             SentenceNode sentenceNode = ScriptableObject.CreateInstance<SentenceNode>();
             InitialiseNode(mousePositionObject, sentenceNode, "Sentence Node");
+        }
+
+        /// <summary>
+        /// Create Random Node at mouse position and add it to Node Graph asset
+        /// </summary>
+        /// <param name="mousePositionObject"></param>
+        private void CreateRandomNode(object mousePositionObject)
+        {
+            RandomNode sentenceNode = ScriptableObject.CreateInstance<RandomNode>();
+            InitialiseNode(mousePositionObject, sentenceNode, "Random Node");
         }
 
         /// <summary>
