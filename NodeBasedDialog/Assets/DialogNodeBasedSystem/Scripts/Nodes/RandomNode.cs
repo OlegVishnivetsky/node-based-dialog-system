@@ -159,7 +159,6 @@ namespace cherrydev
             if (GUILayout.Button("-", style))
             {
                 startSentence = i;
-                Debug.Log($"startSentence = {startSentence}");
             }
 
             EditorGUILayout.EndHorizontal();
@@ -186,19 +185,13 @@ namespace cherrydev
         /// <returns></returns>
         public override bool AddToChildConnectedNode(Node nodeToAdd)
         {
-            if (nodeToAdd is AnswerNode answer)
-            {
-                Debug.Log($"Linking {startSentence}");
                 childNodes ??= new();
                 while (childNodes.Count < startSentence + 1)
                 {
                     childNodes.Add(null);
                 }
-                childNodes[startSentence] = answer;
+                childNodes[startSentence] = nodeToAdd;
                 return true;
-            }
-            
-            return false;
         }
 
         /// <summary>
