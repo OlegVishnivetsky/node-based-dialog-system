@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -48,17 +49,16 @@ namespace cherrydev
         public override void Draw(GUIStyle nodeStyle, GUIStyle lableStyle)
         {
             base.Draw(nodeStyle, lableStyle);
-
             childSentenceNodes.RemoveAll(item => item == null);
-
+            currentAnswerNodeHeight = 115f + additionalAnswerNodeHeight * answers.Count;
             rect.size = new Vector2(answerNodeWidth, currentAnswerNodeHeight);
 
             GUILayout.BeginArea(rect, nodeStyle);
             EditorGUILayout.LabelField("Answer Node", lableStyle);
-
+            amountOfAnswers = answers.Count;
             for (int i = 0; i < amountOfAnswers; i++)
             {
-                DrawAnswerLine(i + 1, StringConstants.GreenDot);
+                DrawAnswerLine(i, StringConstants.GreenDot);
             }
 
             DrawAnswerNodeButtons();
@@ -92,10 +92,10 @@ namespace cherrydev
         {
             EditorGUILayout.BeginHorizontal();
 
-            EditorGUILayout.LabelField($"{answerNumber}. ", 
+            EditorGUILayout.LabelField($"{answerNumber+1}. ", 
                 GUILayout.Width(lableFieldSpace));
 
-            answers[answerNumber - 1] = EditorGUILayout.TextField(answers[answerNumber - 1], 
+            answers[answerNumber] = EditorGUILayout.TextField(answers[answerNumber], 
                 GUILayout.Width(textFieldWidth));
 
             EditorGUILayout.LabelField(EditorGUIUtility.IconContent(iconPathOrName), 
@@ -243,6 +243,12 @@ namespace cherrydev
                 && childSentenceNodes.Count < amountOfAnswers 
                 && randomSentenceNodeToAdd.childNodes != null 
                 && !randomSentenceNodeToAdd.childNodes.Contains(this);
+        }
+
+        public void Redraw()
+        {
+            currentAnswerNodeHeight = 115f + additionalAnswerNodeHeight * answers.Count;
+            rect.size = new Vector2(answerNodeWidth, currentAnswerNodeHeight);
         }
 #endif
     }

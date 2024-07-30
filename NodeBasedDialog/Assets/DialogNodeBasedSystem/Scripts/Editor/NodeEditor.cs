@@ -22,8 +22,8 @@ namespace cherrydev
         private Vector2 graphOffset;
         private Vector2 graphDrag;
 
-        private const float nodeWidth = 190f;
-        private const float nodeHeight = 135f;
+        private const float nodeWidth = 240f;
+        private const float nodeHeight = 180f;
 
         private const float connectingLineWidth = 2f;
         private const float connectingLineArrowSize = 4f;
@@ -198,7 +198,7 @@ namespace cherrydev
                             parentNode = node;
                             childNode = answerNode.childSentenceNodes[i];
 
-                            DrawConnectionLine(parentNode, childNode);
+                            DrawConnectionLine(parentNode, childNode, i, answerNode.childSentenceNodes.Count, false);
                         }
                     }
                 }
@@ -230,7 +230,7 @@ namespace cherrydev
                             parentNode = node;
                             childNode = randomNode.childNodes[i];
 
-                            DrawConnectionLine(parentNode, childNode, i, randomNode.childNodes.Count);
+                            DrawConnectionLine(parentNode, childNode, i, randomNode.childNodes.Count, true);
                         }
                     }
                 }
@@ -243,19 +243,26 @@ namespace cherrydev
         /// <param name="parentNode"></param>
         /// <param name="childNode"></param>
         /// 
-        const int heightFromFirst = 90;
-        const int itemHeight = 61;
-        private void DrawConnectionLine(Node parentNode, Node childNode, int item = -1, int numItems = -1)
+        const float heightFromFirst = 89.5f;
+        const int itemHeight = 90;
+        private void DrawConnectionLine(Node parentNode, Node childNode, int item = -1, int numItems = -1, bool isRandom = false)
         {
             Vector2 startPosition = parentNode.rect.center;
+            startPosition.x = parentNode.rect.xMax - 10;
             if (item != -1)
             {
-                //startPosition.y = parentNode.rect.yMin + item * (parentNode.rect.height - 200f) / numItems + 100;
-                startPosition.y = parentNode.rect.yMin + heightFromFirst + item * itemHeight;
-                startPosition.x = parentNode.rect.xMax - 10;
+                if (isRandom)
+                {
+                    startPosition.y = parentNode.rect.yMin + heightFromFirst + item * itemHeight;
+                }
+                else
+                {
+                    startPosition.y = parentNode.rect.yMin + 50 + item * 20;
+                }
             }
 
             Vector2 endPosition = childNode.rect.center;
+            endPosition.x = childNode.rect.xMin + 10;
 
             Vector2 midPosition = (startPosition + endPosition) / 2;
             Vector2 direction = endPosition - startPosition;
@@ -645,7 +652,28 @@ namespace cherrydev
             contextMenu.AddSeparator("");
             contextMenu.AddItem(new GUIContent("Select All Nodes"), false, SelectAllNodes, mousePosition);
             contextMenu.AddItem(new GUIContent("Remove Selected Nodes"), false, RemoveSelectedNodes, mousePosition);
+            contextMenu.AddItem(new GUIContent("Redraw Nodes"), false, RedrawNodes, mousePosition);
             contextMenu.ShowAsContext();
+        }
+
+        private void RedrawNodes(object userData)
+        {
+            foreach (var node in currentNodeGraph.nodesList)
+            {
+                if (node is RandomNode rn)
+                {
+                    rn.Redraw();
+                }
+                else if (node is SentenceNode sn)
+                {
+                    sn.Redraw();
+                }
+                else if (node is AnswerNode an)
+                {
+                    an.Redraw();
+                }
+            }
+            Repaint();
         }
 
         /// <summary>

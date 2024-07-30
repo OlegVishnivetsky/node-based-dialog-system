@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,9 +17,11 @@ namespace cherrydev
         [SerializeField] private bool isExternalFunc;
         [SerializeField] private string externalFunctionName;
 
-        private string externalButtonLable;
+        private string externalButtonLabel;
 
-        private const float lableFieldSpace = 47f;
+        private const float NODE_WIDTH = 240f;
+
+        private const float labelFieldSpace = 47f;
         private const float textFieldWidth = 100f;
 
         private const float externalNodeHeight = 155f;
@@ -98,13 +101,13 @@ namespace cherrydev
             DrawCharacterSpriteHorizontal();
             DrawExternalFunctionTextField();
 
-            if (GUILayout.Button(externalButtonLable))
+            if (GUILayout.Button(externalButtonLabel))
             {
                 isExternalFunc = !isExternalFunc;
-
             }
 
             GUILayout.EndArea();
+            Redraw();
         }
 
         /// <summary>
@@ -113,7 +116,7 @@ namespace cherrydev
         private void DrawCharacterNameFieldHorizontal()
         {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"Name ", GUILayout.Width(lableFieldSpace));
+            EditorGUILayout.LabelField($"Name ", GUILayout.Width(labelFieldSpace));
             sentence.characterName = EditorGUILayout.TextField(sentence.characterName, GUILayout.Width(textFieldWidth));
             EditorGUILayout.EndHorizontal();
         }
@@ -124,7 +127,7 @@ namespace cherrydev
         private void DrawSentenceTextFieldHorizontal()
         {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"Text ", GUILayout.Width(lableFieldSpace));
+            EditorGUILayout.LabelField($"Text ", GUILayout.Width(labelFieldSpace));
             sentence.text = EditorGUILayout.TextField(sentence.text, GUILayout.Width(textFieldWidth));
             EditorGUILayout.EndHorizontal();
         }
@@ -135,7 +138,7 @@ namespace cherrydev
         private void DrawCharacterSpriteHorizontal()
         {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"Sprite ", GUILayout.Width(lableFieldSpace));
+            EditorGUILayout.LabelField($"Sprite ", GUILayout.Width(labelFieldSpace));
             sentence.characterSprite = (Sprite)EditorGUILayout.ObjectField(sentence.characterSprite,
                 typeof(Sprite), false, GUILayout.Width(textFieldWidth));
             EditorGUILayout.EndHorizontal();
@@ -149,18 +152,18 @@ namespace cherrydev
         {
             if (isExternalFunc)
             {
-                externalButtonLable = "Remove external func";
+                externalButtonLabel = "Remove external func";
 
                 EditorGUILayout.BeginHorizontal();
                 rect.height = externalNodeHeight;
-                EditorGUILayout.LabelField($"Func Name ", GUILayout.Width(lableFieldSpace));
+                EditorGUILayout.LabelField($"Func Name ", GUILayout.Width(labelFieldSpace));
                 externalFunctionName = EditorGUILayout.TextField(externalFunctionName,
                     GUILayout.Width(textFieldWidth));
                 EditorGUILayout.EndHorizontal();
             }
             else
             {
-                externalButtonLable = "Add external func";
+                externalButtonLabel = "Add external func";
                 rect.height = standardHeight;
             }
         }
@@ -262,6 +265,22 @@ namespace cherrydev
             }
 
             return true;
+        }
+
+        private const float nodeHeight = 135f;
+        public void Redraw()
+        {
+            standardHeight = nodeHeight;
+
+            if (isExternalFunc)
+            {
+                rect.height = externalNodeHeight;
+            }
+            else
+            {
+                rect.height = standardHeight;
+            }
+            rect.width = NODE_WIDTH;
         }
 
 #endif

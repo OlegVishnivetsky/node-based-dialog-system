@@ -13,9 +13,10 @@ namespace cherrydev
         public List<Node> childNodes;
         public Node parentNode;
 
-        private const float lableFieldSpace = 47f;
+        private const float labelFieldSpace = 65f;
         private const float textFieldWidth = 100f;
 
+        private const float NODE_WIDTH = 240f;
         private const float buttonsHeight = -60f;
 
         private int startSentence;
@@ -28,6 +29,29 @@ namespace cherrydev
         int rndSentence = -1;
         public Sentence GetRndSentence()
         {
+            int total = 0;
+            foreach (Sentence sentence in sentences)
+            {
+                total += sentence.probability;
+            }
+
+            if (total == 0)
+            {
+                rndSentence = Random.Range(0, sentences.Count);
+                return sentences[rndSentence];
+            }
+
+            int rnd = Random.Range(0, total);
+            for (int i = 0; i < sentences.Count; i++)
+            {
+                if (rnd < sentences[i].probability)
+                {
+                    rndSentence = i;
+                    return sentences[rndSentence];
+                }
+                rnd -= sentences[i].probability;
+            }
+
             rndSentence = Random.Range(0, sentences.Count);
             return sentences[rndSentence];
         }
@@ -90,13 +114,15 @@ namespace cherrydev
         /// </summary>
         /// <param name="nodeStyle"></param>
         /// <param name="lableStyle"></param>
-        public override void Draw(GUIStyle nodeStyle, GUIStyle lableStyle)
+        private const float SENTENCE_HEIGHT = 89.5f;
+        private const int BUTTON_HEIGHT = 90;
+        public override void Draw(GUIStyle nodeStyle, GUIStyle labelStyle)
         {
-            base.Draw(nodeStyle, lableStyle);
+            base.Draw(nodeStyle, labelStyle);
 
             GUILayout.BeginArea(rect, nodeStyle);
 
-            EditorGUILayout.LabelField("Random Node", lableStyle);
+            EditorGUILayout.LabelField("Random Node", labelStyle);
 
             for (int i = 0; i < sentences.Count; i++)
             {
@@ -104,7 +130,7 @@ namespace cherrydev
             }
 
             DrawAnswerNodeButtons();
-            rect.height = (standardHeight + buttonsHeight) * sentences.Count - buttonsHeight;
+            rect.height = SENTENCE_HEIGHT * sentences.Count + BUTTON_HEIGHT;
 
             GUILayout.EndArea();
         }
@@ -130,21 +156,22 @@ namespace cherrydev
         /// </summary>
         private void DrawSentenceLine(int i)
         {
+            EditorGUILayout.Separator();
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"Name ", GUILayout.Width(lableFieldSpace));
+            EditorGUILayout.LabelField($"{i + 1}. Name ", GUILayout.Width(labelFieldSpace));
             var s = sentences[i];
             s.characterName = EditorGUILayout.TextField(sentences[i].characterName, GUILayout.Width(textFieldWidth));
             sentences[i] = s;
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"Text ", GUILayout.Width(lableFieldSpace));
+            EditorGUILayout.LabelField($"Text ", GUILayout.Width(labelFieldSpace));
             s = sentences[i];
             s.text = EditorGUILayout.TextField(sentences[i].text, GUILayout.Width(textFieldWidth));
             sentences[i] = s;
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"Sprite ", GUILayout.Width(lableFieldSpace));
+            EditorGUILayout.LabelField($"Sprite ", GUILayout.Width(labelFieldSpace));
             s = sentences[i];
             s.characterSprite = (Sprite)EditorGUILayout.ObjectField(s.characterSprite,
                 typeof(Sprite), false, GUILayout.Width(textFieldWidth));
@@ -162,6 +189,14 @@ namespace cherrydev
             }
 
             EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField($"Probability ", GUILayout.Width(labelFieldSpace));
+            s = sentences[i];
+            s.probability = EditorGUILayout.IntField(sentences[i].probability, GUILayout.Width(textFieldWidth));
+            sentences[i] = s;
+            EditorGUILayout.EndHorizontal();
+
         }
 
         /// <summary>
@@ -240,6 +275,12 @@ namespace cherrydev
         public Node GetNextNode()
         {
             return childNodes[rndSentence];
+        }
+
+        public void Redraw()
+        {
+            rect.height = SENTENCE_HEIGHT * sentences.Count + BUTTON_HEIGHT;
+            rect.width = NODE_WIDTH;
         }
 
 #endif
