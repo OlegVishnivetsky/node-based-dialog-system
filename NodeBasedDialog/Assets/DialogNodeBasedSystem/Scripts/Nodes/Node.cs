@@ -13,7 +13,7 @@ namespace cherrydev
         [HideInInspector] public bool isDragging;
         [HideInInspector] public bool isSelected;
 
-        protected float standartHeight;
+        protected float standardHeight;
 
 #if UNITY_EDITOR
 
@@ -26,7 +26,7 @@ namespace cherrydev
         public virtual void Initialise(Rect rect, string nodeName, DialogNodeGraph nodeGraph)
         {
             name = nodeName;
-            standartHeight = rect.height;
+            standardHeight = rect.height;
             this.rect = rect;
             this.nodeGraph = nodeGraph;
         }

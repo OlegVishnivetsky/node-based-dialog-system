@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace cherrydev
         public List<string> answers = new List<string>();
 
         public SentenceNode parentSentenceNode;
-        public List<SentenceNode> childSentenceNodes = new List<SentenceNode>();
+        public List<Node> childSentenceNodes = new List<Node>();
 
         private const float lableFieldSpace = 18f;
         private const float textFieldWidth = 120f;
@@ -37,7 +38,7 @@ namespace cherrydev
 
             CalculateAmountOfAnswers();
 
-            childSentenceNodes = new List<SentenceNode>(amountOfAnswers);
+            childSentenceNodes = new List<Node>(amountOfAnswers);
         }
 
         /// <summary>
@@ -48,17 +49,16 @@ namespace cherrydev
         public override void Draw(GUIStyle nodeStyle, GUIStyle lableStyle)
         {
             base.Draw(nodeStyle, lableStyle);
-
             childSentenceNodes.RemoveAll(item => item == null);
-
+            currentAnswerNodeHeight = 115f + additionalAnswerNodeHeight * answers.Count;
             rect.size = new Vector2(answerNodeWidth, currentAnswerNodeHeight);
 
             GUILayout.BeginArea(rect, nodeStyle);
             EditorGUILayout.LabelField("Answer Node", lableStyle);
-
+            amountOfAnswers = answers.Count;
             for (int i = 0; i < amountOfAnswers; i++)
             {
-                DrawAnswerLine(i + 1, StringConstants.GreenDot);
+                DrawAnswerLine(i, StringConstants.GreenDot);
             }
 
             DrawAnswerNodeButtons();
@@ -92,10 +92,10 @@ namespace cherrydev
         {
             EditorGUILayout.BeginHorizontal();
 
-            EditorGUILayout.LabelField($"{answerNumber}. ", 
+            EditorGUILayout.LabelField($"{answerNumber+1}. ", 
                 GUILayout.Width(lableFieldSpace));
 
-            answers[answerNumber - 1] = EditorGUILayout.TextField(answers[answerNumber - 1], 
+            answers[answerNumber] = EditorGUILayout.TextField(answers[answerNumber], 
                 GUILayout.Width(textFieldWidth));
 
             EditorGUILayout.LabelField(EditorGUIUtility.IconContent(iconPathOrName), 
@@ -143,7 +143,14 @@ namespace cherrydev
 
             if (childSentenceNodes.Count == amountOfAnswers)
             {
-                childSentenceNodes[amountOfAnswers - 1].parentNode = null;
+                if (childSentenceNodes[amountOfAnswers - 1] is SentenceNode sn)
+                {
+                    sn.parentNode = null;
+                }
+                else if (childSentenceNodes[amountOfAnswers - 1] is RandomNode rn)
+                {
+                    rn.parentNode = null;
+                }
                 childSentenceNodes.RemoveAt(amountOfAnswers - 1);
             }
 
@@ -176,18 +183,23 @@ namespace cherrydev
         /// <returns></returns>
         public override bool AddToChildConnectedNode(Node nodeToAdd)
         {
-            SentenceNode sentenceNodeToAdd;
+            SentenceNode sentenceNodeToAdd = null;
+            RandomNode randomNodeToAdd = null;
 
-            if (nodeToAdd.GetType() != typeof(AnswerNode))
+            if (nodeToAdd.GetType() == typeof(SentenceNode))
             {
                 sentenceNodeToAdd = (SentenceNode)nodeToAdd;
+            }
+            else if (nodeToAdd.GetType() == typeof(RandomNode))
+            {
+                randomNodeToAdd = (RandomNode)nodeToAdd;
             }
             else
             {
                 return false;
             }
 
-            if (IsCanAddToChildConnectedNode(sentenceNodeToAdd))
+            if (sentenceNodeToAdd != null && IsCanAddToChildConnectedNode(sentenceNodeToAdd))
             {
                 childSentenceNodes.Add(sentenceNodeToAdd);
 
@@ -195,7 +207,14 @@ namespace cherrydev
 
                 return true;
             }
+            if (randomNodeToAdd != null && IsCanAddToChildConnectedNode(randomNodeToAdd))
+            {
+                childSentenceNodes.Add(randomNodeToAdd);
 
+                randomNodeToAdd.parentNode = this;
+
+                return true;
+            }
             return false;
         }
 
@@ -217,8 +236,20 @@ namespace cherrydev
             return sentenceNodeToAdd.parentNode == null 
                 && childSentenceNodes.Count < amountOfAnswers 
                 && sentenceNodeToAdd.childNode != this;
+        }  
+        private bool IsCanAddToChildConnectedNode(RandomNode randomSentenceNodeToAdd)
+        {
+            return randomSentenceNodeToAdd.parentNode == null 
+                && childSentenceNodes.Count < amountOfAnswers 
+                && randomSentenceNodeToAdd.childNodes != null 
+                && !randomSentenceNodeToAdd.childNodes.Contains(this);
         }
 
+        public void Redraw()
+        {
+            currentAnswerNodeHeight = 115f + additionalAnswerNodeHeight * answers.Count;
+            rect.size = new Vector2(answerNodeWidth, currentAnswerNodeHeight);
+        }
 #endif
     }
 }

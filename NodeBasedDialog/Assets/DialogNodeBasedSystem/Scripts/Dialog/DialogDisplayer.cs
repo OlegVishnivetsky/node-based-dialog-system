@@ -114,7 +114,7 @@ namespace cherrydev
 
             gameObject.SetActive(isActive);
         }
-        
+
         /// <summary>
         /// Removing all listeners and Setting up answer button onClick event
         /// </summary>
