@@ -8,16 +8,16 @@ namespace cherrydev
     {
         public delegate object ExternalFunction();
 
-        private Dictionary<string, ExternalFunction> externals = new Dictionary<string, ExternalFunction>();
+        private readonly Dictionary<string, ExternalFunction> _externals = new();
 
         public ExternalFunction CallExternalFunction(string funcName)
         {
-            if (externals.ContainsKey(funcName))
+            if (_externals.ContainsKey(funcName))
             {
-                ExternalFunction external = externals[funcName];
+                ExternalFunction external = _externals[funcName];
                 external?.Invoke();
 
-                return externals[funcName];
+                return _externals[funcName];
             }
             else
             {
@@ -28,13 +28,13 @@ namespace cherrydev
 
         public void BindExternalFunctionBase(string funcName, ExternalFunction externalFunction)
         {
-            if (externals.ContainsKey(funcName))
+            if (_externals.ContainsKey(funcName))
             {
                 Debug.LogWarning($"This function ({funcName}) is already binded");
                 return;
             }
 
-            externals[funcName] = externalFunction;
+            _externals[funcName] = externalFunction;
         }
 
         public void BindExternalFunction(string funcName, Action function)

@@ -6,54 +6,44 @@ namespace cherrydev
 {
     public class SentencePanel : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI dialogNameText;
-        [SerializeField] private TextMeshProUGUI dialogText;
-        [SerializeField] private Image dialogCharacterImage;
+        [SerializeField] private TextMeshProUGUI _dialogNameText;
+        [SerializeField] private TextMeshProUGUI _dialogText;
+        [SerializeField] private Image _dialogCharacterImage;
 
         /// <summary>
         /// Setting dialogText max visible characters to zero
         /// </summary>
-        public void ResetDialogText()
-        {
-            dialogText.maxVisibleCharacters = 0;
-        }
+        public void ResetDialogText() => _dialogText.maxVisibleCharacters = 0;
 
         /// <summary>
         /// Set dialog text max visible characters to dialog text length
         /// </summary>
         /// <param name="text"></param>
-        public void ShowFullDialogText(string text)
-        {
-            dialogText.maxVisibleCharacters = text.Length;
-        }
-
-        /// <summary>
-        /// Assigning dialog name text, character image sprite and dialog text
-        /// </summary>
-        /// <param name="name"></param>
-        public void Setup(string name, string text, Sprite sprite)
-        {
-            dialogNameText.text = name;
-            dialogText.text = text;
-
-            if (sprite == null)
-            {
-                dialogCharacterImage.color = new Color(dialogCharacterImage.color.r,
-                    dialogCharacterImage.color.g, dialogCharacterImage.color.b, 0);
-                return;
-            }
-
-            dialogCharacterImage.color = new Color(dialogCharacterImage.color.r,
-                    dialogCharacterImage.color.g, dialogCharacterImage.color.b, 255);
-            dialogCharacterImage.sprite = sprite;
-        }
+        public void ShowFullDialogText(string text) => _dialogText.maxVisibleCharacters = text.Length;
 
         /// <summary>
         /// Increasing max visible characters
         /// </summary>
-        public void IncreaseMaxVisibleCharacters()
+        public void IncreaseMaxVisibleCharacters() => _dialogText.maxVisibleCharacters++;
+        
+        /// <summary>
+        /// Assigning dialog name text, character image sprite and dialog text
+        /// </summary>
+        public void Setup(string characterName, string text, Sprite sprite)
         {
-            dialogText.maxVisibleCharacters++;
+            _dialogNameText.text = characterName;
+            _dialogText.text = text;
+
+            if (sprite == null)
+            {
+                _dialogCharacterImage.color = new Color(_dialogCharacterImage.color.r,
+                    _dialogCharacterImage.color.g, _dialogCharacterImage.color.b, 0);
+                return;
+            }
+
+            _dialogCharacterImage.color = new Color(_dialogCharacterImage.color.r,
+                    _dialogCharacterImage.color.g, _dialogCharacterImage.color.b, 255);
+            _dialogCharacterImage.sprite = sprite;
         }
     }
 }

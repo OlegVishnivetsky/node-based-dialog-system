@@ -6,14 +6,14 @@ namespace cherrydev
 {
     public class Node : ScriptableObject
     {
-        [HideInInspector] public List<Node> connectedNodesList;
-        [HideInInspector] public DialogNodeGraph nodeGraph;
-        [HideInInspector] public Rect rect = new Rect();
+        [HideInInspector] public List<Node> ConnectedNodesList;
+        [HideInInspector] public DialogNodeGraph NodeGraph;
+        [HideInInspector] public Rect Rect = new Rect();
 
-        [HideInInspector] public bool isDragging;
-        [HideInInspector] public bool isSelected;
+        [HideInInspector] public bool IsDragging;
+        [HideInInspector] public bool IsSelected;
 
-        protected float standartHeight;
+        protected float StandardHeight;
 
 #if UNITY_EDITOR
 
@@ -26,24 +26,21 @@ namespace cherrydev
         public virtual void Initialise(Rect rect, string nodeName, DialogNodeGraph nodeGraph)
         {
             name = nodeName;
-            standartHeight = rect.height;
-            this.rect = rect;
-            this.nodeGraph = nodeGraph;
+            StandardHeight = rect.height;
+            Rect = rect; 
+            NodeGraph = nodeGraph;
         }
 
         /// <summary>
         /// Base draw method
         /// </summary>
         /// <param name="nodeStyle"></param>
-        /// <param name="lableStyle"></param>
-        public virtual void Draw(GUIStyle nodeStyle, GUIStyle lableStyle)
-        { }
+        /// <param name="labelStyle"></param>
+        public virtual void Draw(GUIStyle nodeStyle, GUIStyle labelStyle) { }
 
-        public virtual bool AddToParentConnectedNode(Node nodeToAdd)
-        { return true; }
+        public virtual bool AddToParentConnectedNode(Node nodeToAdd) => true;
 
-        public virtual bool AddToChildConnectedNode(Node nodeToAdd)
-        { return true; }
+        public virtual bool AddToChildConnectedNode(Node nodeToAdd) => true;
 
         /// <summary>
         /// Process node events
@@ -56,11 +53,9 @@ namespace cherrydev
                 case EventType.MouseDown:
                     ProcessMouseDownEvent(currentEvent);
                     break;
-
                 case EventType.MouseUp:
                     ProcessMouseUpEvent(currentEvent);
                     break;
-
                 case EventType.MouseDrag:
                     ProcessMouseDragEvent(currentEvent);
                     break;
@@ -74,32 +69,24 @@ namespace cherrydev
         private void ProcessMouseDownEvent(Event currentEvent)
         {
             if (currentEvent.button == 0)
-            {
                 ProcessLeftMouseDownEvent(currentEvent);
-            }
             else if (currentEvent.button == 1)
-            {
                 ProcessRightMouseDownEvent(currentEvent);
-            }
         }
 
         /// <summary>
         /// Process node left click event
         /// </summary>
         /// <param name="currentEvent"></param>
-        private void ProcessLeftMouseDownEvent(Event currentEvent)
-        {
+        private void ProcessLeftMouseDownEvent(Event currentEvent) => 
             OnNodeLeftClick();
-        }
 
         /// <summary>
         /// Process node right click down event
         /// </summary>
         /// <param name="currentEvent"></param>
-        private void ProcessRightMouseDownEvent(Event currentEvent)
-        {
-            nodeGraph.SetNodeToDrawLineFromAndLinePosition(this, currentEvent.mousePosition);
-        }
+        private void ProcessRightMouseDownEvent(Event currentEvent) => 
+            NodeGraph.SetNodeToDrawLineFromAndLinePosition(this, currentEvent.mousePosition);
 
         /// <summary>
         /// Process node mouse up event
@@ -108,19 +95,15 @@ namespace cherrydev
         private void ProcessMouseUpEvent(Event currentEvent)
         {
             if (currentEvent.button == 0)
-            {
                 ProcessLeftMouseUpEvent(currentEvent);
-            }
         }
 
         /// <summary>
         /// Process node left click up event
         /// </summary>
         /// <param name="currentEvent"></param>
-        private void ProcessLeftMouseUpEvent(Event currentEvent)
-        {
-            isDragging = false;
-        }
+        private void ProcessLeftMouseUpEvent(Event currentEvent) => 
+            IsDragging = false;
 
         /// <summary>
         /// Process node mouse drag event
@@ -129,9 +112,7 @@ namespace cherrydev
         private void ProcessMouseDragEvent(Event currentEvent)
         {
             if (currentEvent.button == 0)
-            {
                 ProcessLeftMouseDragEvent(currentEvent);
-            }
         }
 
         /// <summary>
@@ -140,7 +121,7 @@ namespace cherrydev
         /// <param name="currentEvent"></param>
         private void ProcessLeftMouseDragEvent(Event currentEvent)
         {
-            isDragging = true;
+            IsDragging = true;
             DragNode(currentEvent.delta);
             GUI.changed = true;
         }
@@ -151,15 +132,7 @@ namespace cherrydev
         public void OnNodeLeftClick()
         {
             Selection.activeObject = this;
-
-            if (isSelected)
-            {
-                isSelected = false;
-            }
-            else
-            {
-                isSelected = true;
-            }
+            IsSelected = !IsSelected;
         }
 
         /// <summary>
@@ -168,7 +141,7 @@ namespace cherrydev
         /// <param name="delta"></param>
         public void DragNode(Vector2 delta)
         {
-            rect.position += delta;
+            Rect.position += delta;
             EditorUtility.SetDirty(this);
         }
 #endif

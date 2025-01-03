@@ -6,77 +6,59 @@ namespace cherrydev
     [CreateAssetMenu(menuName = "Scriptable Objects/Nodes/Sentence Node", fileName = "New Sentence Node")]
     public class SentenceNode : Node
     {
-        [SerializeField] private Sentence sentence;
+        [SerializeField] private Sentence _sentence;
 
         [Space(10)]
-        public Node parentNode;
-        public Node childNode;
+        public Node ParentNode;
+        public Node ChildNode;
 
         [Space(7)]
-        [SerializeField] private bool isExternalFunc;
-        [SerializeField] private string externalFunctionName;
+        [SerializeField] private bool _isExternalFunc;
+        [SerializeField] private string _externalFunctionName;
 
-        private string externalButtonLable;
+        private string _externalButtonLabel;
 
-        private const float lableFieldSpace = 47f;
-        private const float textFieldWidth = 100f;
-
-        private const float externalNodeHeight = 155f;
+        private const float LabelFieldSpace = 47f;
+        private const float TextFieldWidth = 100f;
+        
+        private const float ExternalNodeHeight = 155f;
 
         /// <summary>
         /// Returning external function name
         /// </summary>
         /// <returns></returns>
-        public string GetExternalFunctionName()
-        {
-            return externalFunctionName;
-        }
+        public string GetExternalFunctionName() => _externalFunctionName;
 
         /// <summary>
         /// Returning sentence character name
         /// </summary>
         /// <returns></returns>
-        public string GetSentenceCharacterName()
-        {
-            return sentence.characterName;
-        }
+        public string GetSentenceCharacterName() => _sentence.CharacterName;
 
         /// <summary>
         /// Setting sentence text
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        public void SetSentenceText(string text)
-        {
-            sentence.text = text;
-        }
+        public void SetSentenceText(string text) => _sentence.Text = text;
 
         /// <summary>
         /// Returning sentence text
         /// </summary>
         /// <returns></returns>
-        public string GetSentenceText()
-        {
-            return sentence.text;
-        }
+        public string GetSentenceText() => _sentence.Text;
 
         /// <summary>
         /// Returning sentence character sprite
         /// </summary>
         /// <returns></returns>
-        public Sprite GetCharacterSprite()
-        {
-            return sentence.characterSprite;
-        }
+        public Sprite GetCharacterSprite() => _sentence.CharacterSprite;
 
         /// <summary>
         /// Returns the value of a isExternalFunc boolean field
         /// </summary>
         /// <returns></returns>
-        public bool IsExternalFunc()
-        {
-            return isExternalFunc;
-        }
+        public bool IsExternalFunc() => _isExternalFunc;
 
 #if UNITY_EDITOR
 
@@ -89,7 +71,7 @@ namespace cherrydev
         {
             base.Draw(nodeStyle, lableStyle);
 
-            GUILayout.BeginArea(rect, nodeStyle);
+            GUILayout.BeginArea(Rect, nodeStyle);
 
             EditorGUILayout.LabelField("Sentence Node", lableStyle);
 
@@ -98,9 +80,9 @@ namespace cherrydev
             DrawCharacterSpriteHorizontal();
             DrawExternalFunctionTextField();
 
-            if (GUILayout.Button(externalButtonLable))
+            if (GUILayout.Button(_externalButtonLabel))
             {
-                isExternalFunc = !isExternalFunc;
+                _isExternalFunc = !_isExternalFunc;
 
             }
 
@@ -113,8 +95,8 @@ namespace cherrydev
         private void DrawCharacterNameFieldHorizontal()
         {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"Name ", GUILayout.Width(lableFieldSpace));
-            sentence.characterName = EditorGUILayout.TextField(sentence.characterName, GUILayout.Width(textFieldWidth));
+            EditorGUILayout.LabelField($"Name ", GUILayout.Width(LabelFieldSpace));
+            _sentence.CharacterName = EditorGUILayout.TextField(_sentence.CharacterName, GUILayout.Width(TextFieldWidth));
             EditorGUILayout.EndHorizontal();
         }
 
@@ -124,8 +106,8 @@ namespace cherrydev
         private void DrawSentenceTextFieldHorizontal()
         {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"Text ", GUILayout.Width(lableFieldSpace));
-            sentence.text = EditorGUILayout.TextField(sentence.text, GUILayout.Width(textFieldWidth));
+            EditorGUILayout.LabelField($"Text ", GUILayout.Width(LabelFieldSpace));
+            _sentence.Text = EditorGUILayout.TextField(_sentence.Text, GUILayout.Width(TextFieldWidth));
             EditorGUILayout.EndHorizontal();
         }
 
@@ -135,9 +117,9 @@ namespace cherrydev
         private void DrawCharacterSpriteHorizontal()
         {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField($"Sprite ", GUILayout.Width(lableFieldSpace));
-            sentence.characterSprite = (Sprite)EditorGUILayout.ObjectField(sentence.characterSprite,
-                typeof(Sprite), false, GUILayout.Width(textFieldWidth));
+            EditorGUILayout.LabelField($"Sprite ", GUILayout.Width(LabelFieldSpace));
+            _sentence.CharacterSprite = (Sprite)EditorGUILayout.ObjectField(_sentence.CharacterSprite,
+                typeof(Sprite), false, GUILayout.Width(TextFieldWidth));
             EditorGUILayout.EndHorizontal();
         }
 
@@ -147,45 +129,40 @@ namespace cherrydev
         /// </summary>
         private void DrawExternalFunctionTextField()
         {
-            if (isExternalFunc)
+            if (_isExternalFunc)
             {
-                externalButtonLable = "Remove external func";
+                _externalButtonLabel = "Remove external func";
 
                 EditorGUILayout.BeginHorizontal();
-                rect.height = externalNodeHeight;
-                EditorGUILayout.LabelField($"Func Name ", GUILayout.Width(lableFieldSpace));
-                externalFunctionName = EditorGUILayout.TextField(externalFunctionName,
-                    GUILayout.Width(textFieldWidth));
+                Rect.height = ExternalNodeHeight;
+                EditorGUILayout.LabelField($"Func Name ", GUILayout.Width(LabelFieldSpace));
+                _externalFunctionName = EditorGUILayout.TextField(_externalFunctionName,
+                    GUILayout.Width(TextFieldWidth));
                 EditorGUILayout.EndHorizontal();
             }
             else
             {
-                externalButtonLable = "Add external func";
-                rect.height = standartHeight;
+                _externalButtonLabel = "Add external func";
+                Rect.height = StandardHeight;
             }
         }
 
         /// <summary>
         /// Checking node size
         /// </summary>
-        /// <param name="rect"></param>
         public void CheckNodeSize(float width, float height)
         {
-            rect.width = width;
+            Rect.width = width;
             
-            if (standartHeight == 0)
+            if (StandardHeight == 0)
             {
-                standartHeight = height;
+                StandardHeight = height;
             }
 
-            if (isExternalFunc)
-            {
-                rect.height = externalNodeHeight;
-            }
+            if (_isExternalFunc)
+                Rect.height = ExternalNodeHeight;
             else
-            {
-                rect.height = standartHeight;
-            }
+                Rect.height = StandardHeight;
         }
 
         /// <summary>
@@ -202,22 +179,18 @@ namespace cherrydev
                 nodeToAdd = (SentenceNode)nodeToAdd;
 
                 if (nodeToAdd == this)
-                {
                     return false;
-                }
             }
 
             if (nodeToAdd.GetType() == typeof(SentenceNode))
             {
                 sentenceNodeToAdd = (SentenceNode)nodeToAdd;
 
-                if (sentenceNodeToAdd != null && sentenceNodeToAdd.childNode == this)
-                {
+                if (sentenceNodeToAdd != null && sentenceNodeToAdd.ChildNode == this)
                     return false;
-                }
             }
 
-            childNode = nodeToAdd;
+            ChildNode = nodeToAdd;
             return true;
         }
 
@@ -245,19 +218,19 @@ namespace cherrydev
                 }
             }
 
-            parentNode = nodeToAdd;
+            ParentNode = nodeToAdd;
 
             if (nodeToAdd.GetType() == typeof(SentenceNode))
             {
                 sentenceNodeToAdd = (SentenceNode)nodeToAdd;
 
-                if (sentenceNodeToAdd.childNode == this)
+                if (sentenceNodeToAdd.ChildNode == this)
                 {
                     return true;
                 }
                 else
                 {
-                    parentNode = null;
+                    ParentNode = null;
                 }
             }
 

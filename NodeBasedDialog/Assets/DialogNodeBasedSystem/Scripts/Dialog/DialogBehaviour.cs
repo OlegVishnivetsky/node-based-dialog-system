@@ -8,26 +8,26 @@ namespace cherrydev
 {
     public class DialogBehaviour : MonoBehaviour
     {
-        [SerializeField] private float dialogCharDelay;
-        [SerializeField] private List<KeyCode> nextSentenceKeyCodes;
-        [SerializeField] private bool isCanSkippingText = true;
+        [SerializeField] private float _dialogCharDelay;
+        [SerializeField] private List<KeyCode> _nextSentenceKeyCodes;
+        [SerializeField] private bool _isCanSkippingText = true;
 
         [Space(10)]
-        [SerializeField] private UnityEvent onDialogStarted;
-        [SerializeField] private UnityEvent onDialogFinished;
+        [SerializeField] private UnityEvent _onDialogStarted;
+        [SerializeField] private UnityEvent _onDialogFinished;
 
-        private DialogNodeGraph currentNodeGraph;
-        private Node currentNode;
+        private DialogNodeGraph _currentNodeGraph;
+        private Node _currentNode;
 
-        private int maxAmountOfAnswerButtons;
+        private int _maxAmountOfAnswerButtons;
 
-        private bool isDialogStarted;
-        private bool isCurrentSentenceSkipped;
+        private bool _isDialogStarted;
+        private bool _isCurrentSentenceSkipped;
 
         public bool IsCanSkippingText
         {
-            get => isCanSkippingText;
-            set => isCanSkippingText = value;
+            get => _isCanSkippingText;
+            set => _isCanSkippingText = value;
         }
 
         public event Action OnSentenceNodeActive;
@@ -42,33 +42,21 @@ namespace cherrydev
 
         public DialogExternalFunctionsHandler ExternalFunctionsHandler { get; private set; }
 
-        private void Awake()
-        {
-            ExternalFunctionsHandler = new DialogExternalFunctionsHandler();
-        }
+        private void Awake() => ExternalFunctionsHandler = new DialogExternalFunctionsHandler();
 
-        private void Update()
-        {
-            HandleSentenceSkipping();
-        }
+        private void Update() => HandleSentenceSkipping();
 
         /// <summary>
         /// Setting dialogCharDelay float parameter
         /// </summary>
         /// <param name="value"></param>
-        public void SetCharDelay(float value)
-        {
-            dialogCharDelay = value;
-        }
+        public void SetCharDelay(float value) => _dialogCharDelay = value;
 
         /// <summary>
         /// Setting nextSentenceKeyCodes
         /// </summary>
         /// <param name="keyCodes"></param>
-        public void SetNextSentenceKeyCodes(List<KeyCode> keyCodes)
-        {
-            nextSentenceKeyCodes = keyCodes;
-        }
+        public void SetNextSentenceKeyCodes(List<KeyCode> keyCodes) => _nextSentenceKeyCodes = keyCodes;
 
         /// <summary>
         /// Start a dialog
@@ -76,21 +64,21 @@ namespace cherrydev
         /// <param name="dialogNodeGraph"></param>
         public void StartDialog(DialogNodeGraph dialogNodeGraph)
         {
-            isDialogStarted = true;
+            _isDialogStarted = true;
 
-            if (dialogNodeGraph.nodesList == null)
+            if (dialogNodeGraph.NodesList == null)
             {
                 Debug.LogWarning("Dialog Graph's node list is empty");
                 return;
             }
 
-            onDialogStarted?.Invoke();
+            _onDialogStarted?.Invoke();
 
-            currentNodeGraph = dialogNodeGraph;
+            _currentNodeGraph = dialogNodeGraph;
 
             DefineFirstNode(dialogNodeGraph);
             CalculateMaxAmountOfAnswerButtons();
-            HandleDialogGraphCurrentNode(currentNode);
+            HandleDialogGraphCurrentNode(_currentNode);
         }
 
         /// <summary>
@@ -99,19 +87,15 @@ namespace cherrydev
         /// </summary>
         /// <param name="funcName"></param>
         /// <param name="function"></param>
-        public void BindExternalFunction(string funcName, Action function)
-        {
+        public void BindExternalFunction(string funcName, Action function) => 
             ExternalFunctionsHandler.BindExternalFunction(funcName, function);
-        }
 
         /// <summary>
         /// Adding listener to OnDialogFinished UnityEvent
         /// </summary>
         /// <param name="action"></param>
-        public void AddListenerToDialogFinishedEvent(UnityAction action)
-        {
-            onDialogFinished.AddListener(action);
-        }
+        public void AddListenerToDialogFinishedEvent(UnityAction action) => 
+            _onDialogFinished.AddListener(action);
 
         /// <summary>
         /// Setting currentNode field to Node and call HandleDialogGraphCurrentNode method
@@ -119,8 +103,8 @@ namespace cherrydev
         /// <param name="node"></param>
         public void SetCurrentNodeAndHandleDialogGraph(Node node)
         {
-            currentNode = node;
-            HandleDialogGraphCurrentNode(this.currentNode);
+            _currentNode = node;
+            HandleDialogGraphCurrentNode(this._currentNode);
         }
 
         /// <summary>
@@ -132,13 +116,9 @@ namespace cherrydev
             StopAllCoroutines();
 
             if (currentNode.GetType() == typeof(SentenceNode))
-            {
                 HandleSentenceNode(currentNode);
-            }
             else if (currentNode.GetType() == typeof(AnswerNode))
-            {
                 HandleAnswerNode(currentNode);
-            }
         }
 
         /// <summary>
@@ -149,17 +129,15 @@ namespace cherrydev
         {
             SentenceNode sentenceNode = (SentenceNode)currentNode;
 
-            isCurrentSentenceSkipped = false;
+            _isCurrentSentenceSkipped = false;
 
             OnSentenceNodeActive?.Invoke();
             OnSentenceNodeActiveWithParameter?.Invoke(sentenceNode.GetSentenceCharacterName(), sentenceNode.GetSentenceText(),
                 sentenceNode.GetCharacterSprite());
 
             if (sentenceNode.IsExternalFunc())
-            {
                 ExternalFunctionsHandler.CallExternalFunction(sentenceNode.GetExternalFunctionName());
-            }
-
+            
             WriteDialogText(sentenceNode.GetSentenceText());
         }
 
@@ -175,26 +153,24 @@ namespace cherrydev
 
             OnAnswerNodeActive?.Invoke();
 
-            for (int i = 0; i < answerNode.childSentenceNodes.Count; i++)
+            for (int i = 0; i < answerNode.ChildSentenceNodes.Count; i++)
             {
-                if (answerNode.childSentenceNodes[i])
+                if (answerNode.ChildSentenceNodes[i])
                 {
-                    OnAnswerNodeSetUp?.Invoke(i, answerNode.answers[i]);
+                    OnAnswerNodeSetUp?.Invoke(i, answerNode.Answers[i]);
                     OnAnswerButtonSetUp?.Invoke(i, answerNode);
 
                     amountOfActiveButtons++;
                 }
                 else
-                {
                     break;
-                }
             }
 
             if (amountOfActiveButtons == 0)
             {
-                isDialogStarted = false;
+                _isDialogStarted = false;
 
-                onDialogFinished?.Invoke();
+                _onDialogFinished?.Invoke();
                 return;
             }
 
@@ -207,41 +183,37 @@ namespace cherrydev
         /// <param name="dialogNodeGraph"></param>
         private void DefineFirstNode(DialogNodeGraph dialogNodeGraph)
         {
-            if (dialogNodeGraph.nodesList.Count == 0)
+            if (dialogNodeGraph.NodesList.Count == 0)
             {
                 Debug.LogWarning("The list of nodes in the DialogNodeGraph is empty");
 
                 return;
             }
 
-            foreach (Node node in dialogNodeGraph.nodesList)
+            foreach (Node node in dialogNodeGraph.NodesList)
             {
-                currentNode = node;
+                _currentNode = node;
 
                 if (node.GetType() == typeof(SentenceNode))
                 {
                     SentenceNode sentenceNode = (SentenceNode)node;
 
-                    if (sentenceNode.parentNode == null && sentenceNode.childNode != null)
+                    if (sentenceNode.ParentNode == null && sentenceNode.ChildNode != null)
                     {
-                        currentNode = sentenceNode;
-
+                        _currentNode = sentenceNode;
                         return;
                     }
                 }
             }
 
-            currentNode = dialogNodeGraph.nodesList[0];
+            _currentNode = dialogNodeGraph.NodesList[0];
         }
 
         /// <summary>
         /// Writing dialog text
         /// </summary>
         /// <param name="text"></param>
-        private void WriteDialogText(string text)
-        {
-            StartCoroutine(WriteDialogTextRoutine(text));
-        }
+        private void WriteDialogText(string text) => StartCoroutine(WriteDialogTextRoutine(text));
 
         /// <summary>
         /// Writing dialog text coroutine
@@ -252,7 +224,7 @@ namespace cherrydev
         {
             foreach (char textChar in text)
             {
-                if (isCurrentSentenceSkipped)
+                if (_isCurrentSentenceSkipped)
                 {
                     OnDialogTextSkipped?.Invoke(text);
                     break;
@@ -260,7 +232,7 @@ namespace cherrydev
 
                 OnDialogTextCharWrote?.Invoke();
 
-                yield return new WaitForSeconds(dialogCharDelay);
+                yield return new WaitForSeconds(_dialogCharDelay);
             }
 
             yield return new WaitUntil(CheckNextSentenceKeyCodes);
@@ -273,20 +245,20 @@ namespace cherrydev
         /// </summary>
         private void CheckForDialogNextNode()
         {
-            if (currentNode.GetType() == typeof(SentenceNode))
+            if (_currentNode.GetType() == typeof(SentenceNode))
             {
-                SentenceNode sentenceNode = (SentenceNode)currentNode;
+                SentenceNode sentenceNode = (SentenceNode)_currentNode;
 
-                if (sentenceNode.childNode != null)
+                if (sentenceNode.ChildNode != null)
                 {
-                    currentNode = sentenceNode.childNode;
-                    HandleDialogGraphCurrentNode(currentNode);
+                    _currentNode = sentenceNode.ChildNode;
+                    HandleDialogGraphCurrentNode(_currentNode);
                 }
                 else
                 {
-                    isDialogStarted = false;
+                    _isDialogStarted = false;
 
-                    onDialogFinished?.Invoke();
+                    _onDialogFinished?.Invoke();
                 }
             }
         }
@@ -296,20 +268,18 @@ namespace cherrydev
         /// </summary>
         private void CalculateMaxAmountOfAnswerButtons()
         {
-            foreach (Node node in currentNodeGraph.nodesList)
+            foreach (Node node in _currentNodeGraph.NodesList)
             {
                 if (node.GetType() == typeof(AnswerNode))
                 {
                     AnswerNode answerNode = (AnswerNode)node;
 
-                    if (answerNode.answers.Count > maxAmountOfAnswerButtons)
-                    {
-                        maxAmountOfAnswerButtons = answerNode.answers.Count;
-                    }
+                    if (answerNode.Answers.Count > _maxAmountOfAnswerButtons)
+                        _maxAmountOfAnswerButtons = answerNode.Answers.Count;
                 }
             }
 
-            OnMaxAmountOfAnswerButtonsCalculated?.Invoke(maxAmountOfAnswerButtons);
+            OnMaxAmountOfAnswerButtonsCalculated?.Invoke(_maxAmountOfAnswerButtons);
         }
 
         /// <summary>
@@ -317,15 +287,11 @@ namespace cherrydev
         /// </summary>
         private void HandleSentenceSkipping()
         {
-            if (!isDialogStarted || !isCanSkippingText)
-            {
+            if (!_isDialogStarted || !_isCanSkippingText)
                 return;
-            }
-
-            if (CheckNextSentenceKeyCodes() && !isCurrentSentenceSkipped)
-            {
-                isCurrentSentenceSkipped = true;
-            }
+            
+            if (CheckNextSentenceKeyCodes() && !_isCurrentSentenceSkipped)
+                _isCurrentSentenceSkipped = true;
         }
 
         /// <summary>
@@ -334,12 +300,10 @@ namespace cherrydev
         /// <returns></returns>
         private bool CheckNextSentenceKeyCodes()
         {
-            for (int i = 0; i < nextSentenceKeyCodes.Count; i++)
+            for (int i = 0; i < _nextSentenceKeyCodes.Count; i++)
             { 
-                if (Input.GetKeyDown(nextSentenceKeyCodes[i]))
-                {
+                if (Input.GetKeyDown(_nextSentenceKeyCodes[i]))
                     return true;
-                }
             }
 
             return false;

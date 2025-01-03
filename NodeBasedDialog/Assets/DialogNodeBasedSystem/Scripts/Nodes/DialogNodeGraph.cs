@@ -6,12 +6,12 @@ namespace cherrydev
     [CreateAssetMenu(menuName = "Scriptable Objects/Nodes/Node Graph", fileName = "New Node Graph")]
     public class DialogNodeGraph : ScriptableObject
     {
-        public List<Node> nodesList = new List<Node>();
+        public List<Node> NodesList = new();
 
 #if UNITY_EDITOR
 
-        [HideInInspector] public Node nodeToDrawLineFrom = null;
-        [HideInInspector] public Vector2 linePosition = Vector2.zero;
+        [HideInInspector] public Node NodeToDrawLineFrom = null;
+        [HideInInspector] public Vector2 LinePosition = Vector2.zero;
 
         /// <summary>
         /// Assigning values to nodeToDrawLineFrom and linePosition fields
@@ -20,8 +20,8 @@ namespace cherrydev
         /// <param name="linePosition"></param>
         public void SetNodeToDrawLineFromAndLinePosition(Node nodeToDrawLineFrom, Vector2 linePosition)
         {
-            this.nodeToDrawLineFrom = nodeToDrawLineFrom;
-            this.linePosition = linePosition;
+            this.NodeToDrawLineFrom = nodeToDrawLineFrom;
+            this.LinePosition = linePosition;
         }
 
         /// <summary>
@@ -30,12 +30,10 @@ namespace cherrydev
         /// <param name="delta"></param>
         public void DragAllSelectedNodes(Vector2 delta)
         {
-            foreach (var node in nodesList)
+            foreach (var node in NodesList)
             {
-                if (node.isSelected)
-                {
+                if (node.IsSelected)
                     node.DragNode(delta);
-                }
             }
         }
 
@@ -47,12 +45,10 @@ namespace cherrydev
         {
             int amount = 0;
 
-            foreach (Node node in nodesList)
+            foreach (Node node in NodesList)
             {
-                if (node.isSelected)
-                {
+                if (node.IsSelected)
                     amount++;
-                }
             }
 
             return amount;

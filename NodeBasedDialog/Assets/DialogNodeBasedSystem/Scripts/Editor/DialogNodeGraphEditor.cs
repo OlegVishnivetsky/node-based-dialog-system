@@ -16,6 +16,7 @@ namespace cherrydev
             {
                 NodeEditor.SetCurrentNodeGraph(nodeGraph);
                 NodeEditor.OpenWindow();
+                NodeEditor.OnDoubleClickAsset(nodeGraph.GetInstanceID(), -1);
             }
         }
     }

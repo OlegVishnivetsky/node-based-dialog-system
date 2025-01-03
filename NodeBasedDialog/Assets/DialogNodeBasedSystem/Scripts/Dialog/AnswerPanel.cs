@@ -8,11 +8,11 @@ namespace cherrydev
 {
     public class AnswerPanel : MonoBehaviour
     {
-        [SerializeField] private Button answerButtonPrefab;
-        [SerializeField] private Transform parentTransform;
+        [SerializeField] private Button _answerButtonPrefab;
+        [SerializeField] private Transform _parentTransform;
 
-        private List<Button> buttons = new List<Button>();
-        private List<TextMeshProUGUI> buttonTexts = new List<TextMeshProUGUI>();
+        private readonly List<Button> _buttons = new();
+        private readonly List<TextMeshProUGUI> _buttonTexts = new();
 
         /// <summary>
         /// Instantiate answer buttons based on max amount of answer buttons
@@ -24,10 +24,10 @@ namespace cherrydev
             
             for (int i = 0; i < maxAmountOfAnswerButtons; i++)
             {
-                Button answerButton = Instantiate(answerButtonPrefab, parentTransform);
+                Button answerButton = Instantiate(_answerButtonPrefab, _parentTransform);
 
-                buttons.Add(answerButton);
-                buttonTexts.Add(answerButton.GetComponentInChildren<TextMeshProUGUI>());
+                _buttons.Add(answerButton);
+                _buttonTexts.Add(answerButton.GetComponentInChildren<TextMeshProUGUI>());
             }
         }
 
@@ -36,30 +36,21 @@ namespace cherrydev
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public Button GetButtonByIndex(int index)
-        {
-            return buttons[index];
-        }
+        public Button GetButtonByIndex(int index) => _buttons[index];
 
         /// <summary>
         /// Returning button text bu index
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public TextMeshProUGUI GetButtonTextByIndex(int index)
-        {
-            return buttonTexts[index];
-        }
+        public TextMeshProUGUI GetButtonTextByIndex(int index) => _buttonTexts[index];
 
         /// <summary>
         /// Setting UnityAction to button onClick event by index 
         /// </summary>
         /// <param name="index"></param>
         /// <param name="action"></param>
-        public void AddButtonOnClickListener(int index, UnityAction action)
-        {
-            buttons[index].onClick.AddListener(action);
-        }
+        public void AddButtonOnClickListener(int index, UnityAction action) => _buttons[index].onClick.AddListener(action);
 
         // ReSharper disable Unity.PerformanceAnalysis
         /// <summary>
@@ -68,7 +59,7 @@ namespace cherrydev
         /// <param name="amount"></param>
         public void EnableCertainAmountOfButtons(int amount)
         {
-            if (buttons.Count == 0)
+            if (_buttons.Count == 0)
             {
                 Debug.LogWarning("Please assign button list!");
                 return;
@@ -76,19 +67,17 @@ namespace cherrydev
 
             for (int i = 0; i < amount; i++)
             {
-                buttons[i].gameObject.SetActive(true);
+                _buttons[i].gameObject.SetActive(true);
             }
         }
 
         /// <summary>
         /// Disable all buttons
         /// </summary>
-        public void DisalbleAllButtons()
+        public void DisableAllButtons()
         {
-            foreach (Button button in buttons)
-            {
+            foreach (Button button in _buttons)
                 button.gameObject.SetActive(false);
-            }
         }
 
         /// <summary>
@@ -96,15 +85,13 @@ namespace cherrydev
         /// </summary>
         private void DeleteAllExistingButtons()
         {
-            if (buttons.Count > 0)
+            if (_buttons.Count > 0)
             {
-                foreach (var button in buttons)
-                {
+                foreach (var button in _buttons) 
                     Destroy(button.gameObject);
-                }
                             
-                buttons.Clear();
-                buttonTexts.Clear();
+                _buttons.Clear();
+                _buttonTexts.Clear();
             }
         }
     }

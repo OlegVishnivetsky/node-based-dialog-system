@@ -3,18 +3,14 @@ using cherrydev;
 
 public class TestDialogStarter : MonoBehaviour
 {
-    [SerializeField] private DialogBehaviour dialogBehaviour;
-    [SerializeField] private DialogNodeGraph dialogGraph;
+    [SerializeField] private DialogBehaviour _dialogBehaviour;
+    [SerializeField] private DialogNodeGraph _dialogGraph;
 
     private void Start()
     {
-        dialogBehaviour.BindExternalFunction("Test", DebugExternal);
-
-        dialogBehaviour.StartDialog(dialogGraph);
+        _dialogBehaviour.BindExternalFunction("Test", DebugExternal);
+        _dialogBehaviour.StartDialog(_dialogGraph);
     }
 
-    private void DebugExternal()
-    {
-        Debug.Log("External function works!");
-    }
+    private void DebugExternal() => Debug.Log("External function works!");
 }
