@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 namespace cherrydev
 {
@@ -8,20 +9,79 @@ namespace cherrydev
     {
         [SerializeField] private Sentence _sentence;
 
-        [Space(10)]
-        public Node ParentNode;
+        [SerializeField] private string _characterNameKey;
+        [SerializeField] private string _sentenceTextKey;
+
+        [Space(10)] public Node ParentNode;
         public Node ChildNode;
 
-        [Space(7)]
-        [SerializeField] private bool _isExternalFunc;
+        [Space(7)] [SerializeField] private bool _isExternalFunc;
         [SerializeField] private string _externalFunctionName;
 
         private string _externalButtonLabel;
 
         private const float LabelFieldSpace = 47f;
         private const float TextFieldWidth = 100f;
-        
+
         private const float ExternalNodeHeight = 155f;
+
+        public string GetLocalizedCharacterName()
+        {
+            if (!string.IsNullOrEmpty(_characterNameKey))
+            {
+                try
+                {
+                    string tableName = GetTableNameFromNodeGraph();
+                    
+                    string localizedValue = LocalizationSettings.StringDatabase.GetLocalizedString(
+                        tableName, _characterNameKey);
+                    
+                    if (!string.IsNullOrEmpty(localizedValue))
+                        return localizedValue;
+                    else
+                        Debug.LogWarning($"Localized name was empty for key: {_characterNameKey}");
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"Name localization error: {ex.Message}");
+                }
+            }
+
+            return _sentence.CharacterName;
+        }
+
+        /// <summary>
+        /// Returns localized sentence text or falls back to the original if localization fails
+        /// </summary>
+        /// <returns>Localized sentence text</returns>
+        public string GetLocalizedText()
+        {
+            if (!string.IsNullOrEmpty(_sentenceTextKey))
+            {
+                try
+                {
+                    string tableName = GetTableNameFromNodeGraph();
+
+                    Debug.Log($"Trying to get localized text for key: {_sentenceTextKey} from table: {tableName}");
+
+                    string localizedValue = LocalizationSettings.StringDatabase.GetLocalizedString(
+                        tableName, _sentenceTextKey);
+
+                    Debug.Log($"Localized text result: {localizedValue}");
+
+                    if (!string.IsNullOrEmpty(localizedValue))
+                        return localizedValue;
+                    else
+                        Debug.LogWarning($"Localized string was empty for key: {_sentenceTextKey}");
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"Localization error: {ex.Message}");
+                }
+            }
+
+            return _sentence.Text;
+        }
 
         /// <summary>
         /// Returning external function name
@@ -34,13 +94,6 @@ namespace cherrydev
         /// </summary>
         /// <returns></returns>
         public string GetSentenceCharacterName() => _sentence.CharacterName;
-
-        /// <summary>
-        /// Setting sentence text
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public void SetSentenceText(string text) => _sentence.Text = text;
 
         /// <summary>
         /// Returning sentence text
@@ -83,7 +136,6 @@ namespace cherrydev
             if (GUILayout.Button(_externalButtonLabel))
             {
                 _isExternalFunc = !_isExternalFunc;
-
             }
 
             GUILayout.EndArea();
@@ -96,7 +148,8 @@ namespace cherrydev
         {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField($"Name ", GUILayout.Width(LabelFieldSpace));
-            _sentence.CharacterName = EditorGUILayout.TextField(_sentence.CharacterName, GUILayout.Width(TextFieldWidth));
+            _sentence.CharacterName =
+                EditorGUILayout.TextField(_sentence.CharacterName, GUILayout.Width(TextFieldWidth));
             EditorGUILayout.EndHorizontal();
         }
 
@@ -153,7 +206,7 @@ namespace cherrydev
         public void CheckNodeSize(float width, float height)
         {
             Rect.width = width;
-            
+
             if (StandardHeight == 0)
             {
                 StandardHeight = height;

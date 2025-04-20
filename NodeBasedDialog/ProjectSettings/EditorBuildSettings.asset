@@ -8,4 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/DialogNodeBasedSystem/DemoScenes/DialogDemoScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 6a3fdb30b7ea0b144a1367ba80044d0e, type: 2}
+    com.unity.localization.settings: {fileID: 11400000, guid: 3fad1293d933f00468b04881485a5284, type: 2}

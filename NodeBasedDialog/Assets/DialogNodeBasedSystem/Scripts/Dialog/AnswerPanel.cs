@@ -15,6 +15,12 @@ namespace cherrydev
         private readonly List<TextMeshProUGUI> _buttonTexts = new();
 
         /// <summary>
+        /// Returns the total number of buttons
+        /// </summary>
+        /// <returns>The number of buttons</returns>
+        public int GetButtonCount() => _buttons.Count;
+        
+        /// <summary>
         /// Instantiate answer buttons based on max amount of answer buttons
         /// </summary>
         /// <param name="maxAmountOfAnswerButtons"></param>

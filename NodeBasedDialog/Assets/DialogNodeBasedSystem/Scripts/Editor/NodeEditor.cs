@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 
+
 namespace cherrydev
 {
     public class NodeEditor : EditorWindow
@@ -14,6 +15,10 @@ namespace cherrydev
         private GUIStyle _nodeStyle;
         private GUIStyle _selectedNodeStyle;
 
+        private Color _headerColor = new(0.15f, 0.15f, 0.15f);
+        private GUIStyle _toolbarButtonStyle;
+        private GUIStyle _headerLabelStyle;
+        
         private GUIStyle _labelStyle;
 
         private Rect _selectionRect;
@@ -24,6 +29,8 @@ namespace cherrydev
 
         private const float NodeWidth = 190f;
         private const float NodeHeight = 135f;
+        
+        private const float ToolbarHeight = 30f;
 
         private const float ConnectingLineWidth = 2f;
         private const float ConnectingLineArrowSize = 4f;
@@ -45,6 +52,8 @@ namespace cherrydev
         {
             Selection.selectionChanged += ChangeEditorWindowOnSelection;
 
+            InitializeToolbarStyles();
+            
             _nodeStyle = new GUIStyle();
             _nodeStyle.normal.background = EditorGUIUtility.Load(StringConstants.Node) as Texture2D;
             _nodeStyle.padding = new RectOffset(NodePadding, NodePadding, NodePadding, NodePadding);
@@ -97,7 +106,7 @@ namespace cherrydev
             return false;
         }
 
-        public static void SetCurrentNodeGraph(DialogNodeGraph nodeGraph) => 
+        public static void SetCurrentNodeGraph(DialogNodeGraph nodeGraph) =>
             _currentNodeGraph = nodeGraph;
 
         /// <summary>
@@ -109,7 +118,6 @@ namespace cherrydev
             NodeEditor window = (NodeEditor)GetWindow(typeof(NodeEditor));
             window.titleContent = new GUIContent("Dialog Graph Editor");
             window.Show();
-
         }
 
         /// <summary>
@@ -117,8 +125,12 @@ namespace cherrydev
         /// </summary>
         private void OnGUI()
         {
+            DrawToolbar();
+            GUI.BeginGroup(new Rect(0, ToolbarHeight, position.width, position.height - ToolbarHeight));
+            
             if (_currentNodeGraph != null)
             {
+                
                 DrawDraggedLine();
                 DrawNodeConnection();
                 DrawGridBackground(GridSmallLineSpacing, 0.2f, Color.gray);
@@ -127,6 +139,8 @@ namespace cherrydev
                 DrawNodes(Event.current);
             }
 
+            GUI.EndGroup();
+            
             if (GUI.changed)
                 Repaint();
         }
@@ -144,6 +158,7 @@ namespace cherrydev
                     answerNode.CalculateAmountOfAnswers();
                     answerNode.CalculateAnswerNodeHeight();
                 }
+
                 if (node.GetType() == typeof(SentenceNode))
                 {
                     SentenceNode sentenceNode = (SentenceNode)node;
@@ -152,6 +167,51 @@ namespace cherrydev
             }
         }
 
+        private void InitializeToolbarStyles()
+        {
+            _toolbarButtonStyle = new GUIStyle(EditorStyles.toolbarButton);
+            _toolbarButtonStyle.normal.textColor = Color.white;
+            _toolbarButtonStyle.fontSize = 11;
+            _toolbarButtonStyle.alignment = TextAnchor.MiddleCenter;
+            _toolbarButtonStyle.fixedHeight = ToolbarHeight - 4;
+            _toolbarButtonStyle.margin = new RectOffset(2, 2, 2, 2);
+            _toolbarButtonStyle.padding = new RectOffset(6, 6, 2, 2);
+    
+            _headerLabelStyle = new GUIStyle(EditorStyles.label);
+            _headerLabelStyle.normal.textColor = Color.white;
+            _headerLabelStyle.fontStyle = FontStyle.Bold;
+            _headerLabelStyle.fontSize = 12;
+            _headerLabelStyle.alignment = TextAnchor.MiddleLeft;
+            _headerLabelStyle.padding = new RectOffset(10, 10, 0, 0);
+        }
+        
+        private void DrawToolbar()
+        {
+            EditorGUI.DrawRect(new Rect(0, 0, position.width, ToolbarHeight), _headerColor);
+    
+            GUILayout.BeginArea(new Rect(0, 0, position.width, ToolbarHeight));
+            GUILayout.BeginHorizontal();
+    
+            string graphName = _currentNodeGraph != null ? _currentNodeGraph.name : "No Graph Loaded";
+            GUILayout.Label(graphName, _headerLabelStyle, GUILayout.Width(200));
+    
+            GUILayout.FlexibleSpace();
+    
+            if (GUILayout.Button("Find My Nodes", _toolbarButtonStyle, GUILayout.Width(100)))
+                CenterWindowOnNodes(null);
+            
+            if (GUILayout.Button("Localization", _toolbarButtonStyle, GUILayout.Width(100)))
+            {
+                GenericMenu localizationMenu = new GenericMenu();
+                localizationMenu.AddItem(new GUIContent("Setup Localization Table"), false, () => SetupLocalizationTable(null));
+                localizationMenu.AddItem(new GUIContent("Update Keys"), false, () => UpdateLocalizationKeys(null));
+                localizationMenu.DropDown(new Rect(position.width - 100, ToolbarHeight - 20, 150, 20));
+            }
+    
+            GUILayout.EndHorizontal();
+            GUILayout.EndArea();
+        }
+        
         /// <summary>
         /// Draw connection line when we drag it
         /// </summary>
@@ -160,8 +220,8 @@ namespace cherrydev
             if (_currentNodeGraph.LinePosition != Vector2.zero)
             {
                 Handles.DrawBezier(_currentNodeGraph.NodeToDrawLineFrom.Rect.center, _currentNodeGraph.LinePosition,
-                   _currentNodeGraph.NodeToDrawLineFrom.Rect.center, _currentNodeGraph.LinePosition,
-                   Color.white, null, ConnectingLineWidth);
+                    _currentNodeGraph.NodeToDrawLineFrom.Rect.center, _currentNodeGraph.LinePosition,
+                    Color.white, null, ConnectingLineWidth);
             }
         }
 
@@ -172,7 +232,7 @@ namespace cherrydev
         {
             if (_currentNodeGraph.NodesList == null)
                 return;
-            
+
 
             foreach (Node node in _currentNodeGraph.NodesList)
             {
@@ -222,8 +282,10 @@ namespace cherrydev
             Vector2 midPosition = (startPosition + endPosition) / 2;
             Vector2 direction = endPosition - startPosition;
 
-            Vector2 arrowTailPoint1 = midPosition - new Vector2(-direction.y, direction.x).normalized * ConnectingLineArrowSize;
-            Vector2 arrowTailPoint2 = midPosition + new Vector2(-direction.y, direction.x).normalized * ConnectingLineArrowSize;
+            Vector2 arrowTailPoint1 =
+                midPosition - new Vector2(-direction.y, direction.x).normalized * ConnectingLineArrowSize;
+            Vector2 arrowTailPoint2 =
+                midPosition + new Vector2(-direction.y, direction.x).normalized * ConnectingLineArrowSize;
 
             Vector2 arrowHeadPoint = midPosition + direction.normalized * ConnectingLineArrowSize;
 
@@ -256,14 +318,14 @@ namespace cherrydev
             Vector3 gridOffset = new Vector3(_graphOffset.x % gridSize, _graphOffset.y % gridSize, 0);
 
             for (int i = 0; i < verticalLineCount; i++)
-                Handles.DrawLine(new Vector3(gridSize * i, -gridSize, 0) + gridOffset, 
+                Handles.DrawLine(new Vector3(gridSize * i, -gridSize, 0) + gridOffset,
                     new Vector3(gridSize * i, position.height + gridSize, 0f) + gridOffset);
-            
+
 
             for (int j = 0; j < horizontalLineCount; j++)
-                Handles.DrawLine(new Vector3(-gridSize, gridSize * j, 0) + gridOffset, 
+                Handles.DrawLine(new Vector3(-gridSize, gridSize * j, 0) + gridOffset,
                     new Vector3(position.width + gridSize, gridSize * j, 0f) + gridOffset);
-            
+
             Handles.color = Color.white;
         }
 
@@ -272,9 +334,9 @@ namespace cherrydev
         /// </summary>
         private void DrawNodes(Event currentEvent)
         {
-            if (_currentNodeGraph.NodesList == null) 
+            if (_currentNodeGraph.NodesList == null)
                 return;
-            
+
             foreach (Node node in _currentNodeGraph.NodesList)
             {
                 if (!node.IsSelected)
@@ -282,7 +344,7 @@ namespace cherrydev
                 else
                     node.Draw(_selectedNodeStyle, _labelStyle);
             }
-            
+
             if (_isScrollWheelDragging)
                 SelectNodesBySelectionRect(currentEvent.mousePosition);
 
@@ -305,7 +367,7 @@ namespace cherrydev
 
             if (_currentNode == null || _currentNode.IsDragging == false)
                 _currentNode = GetHighlightedNode(currentEvent.mousePosition);
-            
+
             if (_currentNode == null || _currentNodeGraph.NodeToDrawLineFrom != null)
                 ProcessNodeEditorEvents(currentEvent);
             else
@@ -357,7 +419,7 @@ namespace cherrydev
         /// Process left mouse click event
         /// </summary>
         /// <param name="currentEvent"></param>
-        private void ProcessLeftMouseDownEvent(Event currentEvent) => 
+        private void ProcessLeftMouseDownEvent(Event currentEvent) =>
             ProcessNodeSelection(currentEvent.mousePosition);
 
         /// <summary>
@@ -438,9 +500,9 @@ namespace cherrydev
         /// Drag connecting line from the node
         /// </summary>
         /// <param name="delta"></param>
-        private void DragConnectionLine(Vector2 delta) => 
+        private void DragConnectionLine(Vector2 delta) =>
             _currentNodeGraph.LinePosition += delta;
-        
+
         /// <summary>
         /// Check line connect when right mouse up
         /// </summary>
@@ -482,7 +544,7 @@ namespace cherrydev
             {
                 foreach (Node node in _currentNodeGraph.NodesList)
                 {
-                    if (node.IsSelected) 
+                    if (node.IsSelected)
                         node.IsSelected = false;
                 }
             }
@@ -512,7 +574,7 @@ namespace cherrydev
                 else
                     node.IsSelected = false;
             }
-            
+
             GUI.color = new Color(0, 0, 0, 0.5f);
             GUI.DrawTexture(_selectionRect, Texture2D.whiteTexture);
             GUI.color = Color.white;
@@ -527,7 +589,7 @@ namespace cherrydev
         {
             if (_currentNodeGraph.NodesList.Count == 0)
                 return null;
-            
+
             foreach (Node node in _currentNodeGraph.NodesList)
             {
                 if (node.Rect.Contains(mousePosition))
@@ -553,7 +615,34 @@ namespace cherrydev
             contextMenu.AddItem(new GUIContent("Remove Connections"), false, RemoveAllConnections, mousePosition);
             contextMenu.AddSeparator("");
             contextMenu.AddItem(new GUIContent("Find My Nodes"), false, CenterWindowOnNodes, mousePosition);
+            contextMenu.AddSeparator("");
+            contextMenu.AddItem(new GUIContent("Localization/Setup Localization Table"), false, SetupLocalizationTable,
+                mousePosition);
             contextMenu.ShowAsContext();
+        }
+        
+        private void SetupLocalizationTable(object userData)
+        {
+            if (_currentNodeGraph == null)
+            {
+                EditorUtility.DisplayDialog("Localization Setup", "No dialog graph selected.", "OK");
+                return;
+            }
+    
+            // Use the separate handler
+            DialogLocalizationHandler.Instance.SetupLocalization(_currentNodeGraph);
+        }
+
+        private void UpdateLocalizationKeys(object userData)
+        {
+            if (_currentNodeGraph == null)
+            {
+                EditorUtility.DisplayDialog("Localization Update", "No dialog graph selected.", "OK");
+                return;
+            }
+    
+            // Use the separate handler
+            DialogLocalizationHandler.Instance.UpdateLocalization(_currentNodeGraph);
         }
 
         /// <summary>
@@ -584,7 +673,7 @@ namespace cherrydev
         {
             foreach (Node node in _currentNodeGraph.NodesList)
                 node.IsSelected = true;
-            
+
             GUI.changed = true;
         }
 
@@ -667,7 +756,7 @@ namespace cherrydev
                 }
             }
         }
-        
+
         /// <summary>
         /// Center the node editor window on all nodes
         /// </summary>
@@ -680,10 +769,10 @@ namespace cherrydev
 
             foreach (var node in _currentNodeGraph.NodesList)
                 node.DragNode(offset);
-            
+
             GUI.changed = true;
         }
-        
+
         /// <summary>
         /// Calculate the center of all nodes
         /// </summary>

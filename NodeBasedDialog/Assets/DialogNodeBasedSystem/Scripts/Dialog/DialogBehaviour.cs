@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 namespace cherrydev
 {
@@ -11,6 +13,7 @@ namespace cherrydev
         [SerializeField] private float _dialogCharDelay;
         [SerializeField] private List<KeyCode> _nextSentenceKeyCodes;
         [SerializeField] private bool _isCanSkippingText = true;
+        [SerializeField] private bool _reloadTextOnLanguageChange = true;
 
         [Space(10)]
         [SerializeField] private UnityEvent _onDialogStarted;
@@ -18,11 +21,17 @@ namespace cherrydev
 
         private DialogNodeGraph _currentNodeGraph;
         private Node _currentNode;
-
+        
+        public AnswerNode CurrentAnswerNode { get; private set; }
+        public SentenceNode CurrentSentenceNode { get; private set; }
+        
+        public event Action LanguageChanged;
+        
         private int _maxAmountOfAnswerButtons;
 
         private bool _isDialogStarted;
         private bool _isCurrentSentenceSkipped;
+        private bool _isCurrentSentenceTyping;
 
         public bool IsCanSkippingText
         {
@@ -30,20 +39,59 @@ namespace cherrydev
             set => _isCanSkippingText = value;
         }
 
-        public event Action OnSentenceNodeActive;
-        public event Action<string, string, Sprite> OnSentenceNodeActiveWithParameter;
-        public event Action OnAnswerNodeActive;
-        public event Action<int, AnswerNode> OnAnswerButtonSetUp;
-        public event Action<int> OnMaxAmountOfAnswerButtonsCalculated;
-        public event Action<int> OnAnswerNodeActiveWithParameter;
-        public event Action<int, string> OnAnswerNodeSetUp;
-        public event Action OnDialogTextCharWrote;
-        public event Action<string> OnDialogTextSkipped;
+        public event Action SentenceNodeActivated;
+        public event Action<string, string, Sprite> SentenceNodeActivatedWithParameter;
+        public event Action AnswerNodeActivated;
+        public event Action<int, AnswerNode> AnswerButtonSetUp;
+        public event Action<int> MaxAmountOfAnswerButtonsCalculated;
+        public event Action<int> AnswerNodeActivatedWithParameter;
+        public event Action<int, string> AnswerNodeSetUp;
+        public event Action DialogTextCharWrote;
+        public event Action<string> DialogTextSkipped;
 
         public DialogExternalFunctionsHandler ExternalFunctionsHandler { get; private set; }
 
         private void Awake() => ExternalFunctionsHandler = new DialogExternalFunctionsHandler();
 
+        private void OnEnable()
+        {
+            if (_reloadTextOnLanguageChange)
+                LocalizationSettings.SelectedLocaleChanged += OnSelectedLocaleChanged;
+        }
+
+        private void OnSelectedLocaleChanged(Locale obj)
+        {
+            if (_isDialogStarted && _currentNode != null)
+            {
+                LanguageChanged?.Invoke();
+
+                if (_currentNode is SentenceNode sentenceNode)
+                {
+                    string updatedText = sentenceNode.GetLocalizedText();
+                    string updatedCharName = sentenceNode.GetLocalizedCharacterName();
+
+                    SentenceNodeActivatedWithParameter?.Invoke(updatedCharName, updatedText,
+                        sentenceNode.GetCharacterSprite());
+
+                    if (_isCurrentSentenceTyping)
+                    {
+                        StopAllCoroutines();
+                        WriteDialogText(updatedText);
+                    }
+                    else
+                        DialogTextSkipped?.Invoke(updatedText);
+                }
+                else if (_currentNode is AnswerNode)
+                    HandleAnswerNode(_currentNode);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (_reloadTextOnLanguageChange)
+                LocalizationSettings.SelectedLocaleChanged -= OnSelectedLocaleChanged;
+        }
+        
         private void Update() => HandleSentenceSkipping();
 
         /// <summary>
@@ -128,17 +176,22 @@ namespace cherrydev
         private void HandleSentenceNode(Node currentNode)
         {
             SentenceNode sentenceNode = (SentenceNode)currentNode;
+            CurrentSentenceNode = sentenceNode;
 
             _isCurrentSentenceSkipped = false;
 
-            OnSentenceNodeActive?.Invoke();
-            OnSentenceNodeActiveWithParameter?.Invoke(sentenceNode.GetSentenceCharacterName(), sentenceNode.GetSentenceText(),
+            SentenceNodeActivated?.Invoke();
+    
+            string localizedCharName = sentenceNode.GetLocalizedCharacterName();
+            string localizedText = sentenceNode.GetLocalizedText();
+            
+            SentenceNodeActivatedWithParameter?.Invoke(localizedCharName, localizedText,
                 sentenceNode.GetCharacterSprite());
 
             if (sentenceNode.IsExternalFunc())
                 ExternalFunctionsHandler.CallExternalFunction(sentenceNode.GetExternalFunctionName());
-            
-            WriteDialogText(sentenceNode.GetSentenceText());
+    
+            WriteDialogText(localizedText);
         }
 
         /// <summary>
@@ -148,17 +201,18 @@ namespace cherrydev
         private void HandleAnswerNode(Node currentNode)
         {
             AnswerNode answerNode = (AnswerNode)currentNode;
-
+            CurrentAnswerNode = answerNode;
+        
             int amountOfActiveButtons = 0;
 
-            OnAnswerNodeActive?.Invoke();
+            AnswerNodeActivated?.Invoke();
 
             for (int i = 0; i < answerNode.ChildSentenceNodes.Count; i++)
             {
                 if (answerNode.ChildSentenceNodes[i])
                 {
-                    OnAnswerNodeSetUp?.Invoke(i, answerNode.Answers[i]);
-                    OnAnswerButtonSetUp?.Invoke(i, answerNode);
+                    AnswerNodeSetUp?.Invoke(i, answerNode.Answers[i]);
+                    AnswerButtonSetUp?.Invoke(i, answerNode);
 
                     amountOfActiveButtons++;
                 }
@@ -174,7 +228,7 @@ namespace cherrydev
                 return;
             }
 
-            OnAnswerNodeActiveWithParameter?.Invoke(amountOfActiveButtons);
+            AnswerNodeActivatedWithParameter?.Invoke(amountOfActiveButtons);
         }
 
         /// <summary>
@@ -222,19 +276,23 @@ namespace cherrydev
         /// <returns></returns>
         private IEnumerator WriteDialogTextRoutine(string text)
         {
+            _isCurrentSentenceTyping = true;
+            
             foreach (char textChar in text)
             {
                 if (_isCurrentSentenceSkipped)
                 {
-                    OnDialogTextSkipped?.Invoke(text);
+                    DialogTextSkipped?.Invoke(text);
+                    _isCurrentSentenceTyping = false;
                     break;
                 }
 
-                OnDialogTextCharWrote?.Invoke();
+                DialogTextCharWrote?.Invoke();
 
                 yield return new WaitForSeconds(_dialogCharDelay);
             }
 
+            _isCurrentSentenceTyping = false;
             yield return new WaitUntil(CheckNextSentenceKeyCodes);
 
             CheckForDialogNextNode();
@@ -279,7 +337,7 @@ namespace cherrydev
                 }
             }
 
-            OnMaxAmountOfAnswerButtonsCalculated?.Invoke(_maxAmountOfAnswerButtons);
+            MaxAmountOfAnswerButtonsCalculated?.Invoke(_maxAmountOfAnswerButtons);
         }
 
         /// <summary>

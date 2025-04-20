@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 namespace cherrydev
 {
@@ -14,6 +17,8 @@ namespace cherrydev
         public SentenceNode ParentSentenceNode;
         public List<SentenceNode> ChildSentenceNodes = new();
 
+        [SerializeField] private List<string> _answerKeys = new();
+
         private const float LabelFieldSpace = 18f;
         private const float TextFieldWidth = 120f;
 
@@ -22,6 +27,32 @@ namespace cherrydev
 
         private float _currentAnswerNodeHeight = 115f;
         private const float AdditionalAnswerNodeHeight = 20f;
+
+        public string GetLocalizedAnswer(int index)
+        {
+            if (index < 0 || index >= Answers.Count)
+                return string.Empty;
+
+            if (index < _answerKeys.Count && !string.IsNullOrEmpty(_answerKeys[index]))
+            {
+                try
+                {
+                    string tableName = GetTableNameFromNodeGraph();
+
+                    string localizedValue = LocalizationSettings.StringDatabase.GetLocalizedString(
+                        tableName, _answerKeys[index]);
+
+                    if (!string.IsNullOrEmpty(localizedValue))
+                        return localizedValue;
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning($"Failed to get localized answer: {ex.Message}");
+                }
+            }
+
+            return Answers[index];
+        }
 
 #if UNITY_EDITOR
 
@@ -57,7 +88,7 @@ namespace cherrydev
 
             for (int i = 0; i < _amountOfAnswers; i++)
                 DrawAnswerLine(i + 1, StringConstants.GreenDot);
-            
+
             DrawAnswerNodeButtons();
 
             GUILayout.EndArea();
@@ -86,13 +117,13 @@ namespace cherrydev
         {
             EditorGUILayout.BeginHorizontal();
 
-            EditorGUILayout.LabelField($"{answerNumber}. ", 
+            EditorGUILayout.LabelField($"{answerNumber}. ",
                 GUILayout.Width(LabelFieldSpace));
 
-            Answers[answerNumber - 1] = EditorGUILayout.TextField(Answers[answerNumber - 1], 
+            Answers[answerNumber - 1] = EditorGUILayout.TextField(Answers[answerNumber - 1],
                 GUILayout.Width(TextFieldWidth));
 
-            EditorGUILayout.LabelField(EditorGUIUtility.IconContent(iconPathOrName), 
+            EditorGUILayout.LabelField(EditorGUIUtility.IconContent(iconPathOrName),
                 GUILayout.Width(LabelFieldSpace));
 
             EditorGUILayout.EndHorizontal();
@@ -102,7 +133,7 @@ namespace cherrydev
         {
             if (GUILayout.Button("Add answer"))
                 IncreaseAmountOfAnswers();
-            
+
             if (GUILayout.Button("Remove answer"))
                 DecreaseAmountOfAnswers();
         }
@@ -124,7 +155,7 @@ namespace cherrydev
         {
             if (Answers.Count == 1)
                 return;
-            
+
             Answers.RemoveAt(_amountOfAnswers - 1);
 
             if (ChildSentenceNodes.Count == _amountOfAnswers)
@@ -166,7 +197,7 @@ namespace cherrydev
                 sentenceNodeToAdd = (SentenceNode)nodeToAdd;
             else
                 return false;
-            
+
             if (IsCanAddToChildConnectedNode(sentenceNodeToAdd))
             {
                 ChildSentenceNodes.Add(sentenceNodeToAdd);
@@ -191,9 +222,9 @@ namespace cherrydev
 
         private bool IsCanAddToChildConnectedNode(SentenceNode sentenceNodeToAdd)
         {
-            return sentenceNodeToAdd.ParentNode == null 
-                && ChildSentenceNodes.Count < _amountOfAnswers 
-                && sentenceNodeToAdd.ChildNode != this;
+            return sentenceNodeToAdd.ParentNode == null
+                   && ChildSentenceNodes.Count < _amountOfAnswers
+                   && sentenceNodeToAdd.ChildNode != this;
         }
 
 #endif

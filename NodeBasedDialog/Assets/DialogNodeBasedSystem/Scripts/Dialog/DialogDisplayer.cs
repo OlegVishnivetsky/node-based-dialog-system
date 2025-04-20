@@ -15,44 +15,46 @@ namespace cherrydev
         {
             _dialogBehaviour.AddListenerToDialogFinishedEvent(DisableDialogPanel);
 
-            _dialogBehaviour.OnAnswerButtonSetUp += SetUpAnswerButtonsClickEvent;
+            _dialogBehaviour.AnswerButtonSetUp += SetUpAnswerButtonsClickEvent;
 
-            _dialogBehaviour.OnDialogTextCharWrote += _dialogSentencePanel.IncreaseMaxVisibleCharacters;
-            _dialogBehaviour.OnDialogTextSkipped += _dialogSentencePanel.ShowFullDialogText;
+            _dialogBehaviour.DialogTextCharWrote += _dialogSentencePanel.IncreaseMaxVisibleCharacters;
+            _dialogBehaviour.DialogTextSkipped += _dialogSentencePanel.ShowFullDialogText;
 
-            _dialogBehaviour.OnSentenceNodeActive += EnableDialogSentencePanel;
-            _dialogBehaviour.OnSentenceNodeActive += DisableDialogAnswerPanel;
-            _dialogBehaviour.OnSentenceNodeActive += _dialogSentencePanel.ResetDialogText;
-            _dialogBehaviour.OnSentenceNodeActiveWithParameter += _dialogSentencePanel.Setup;
+            _dialogBehaviour.SentenceNodeActivated += EnableDialogSentencePanel;
+            _dialogBehaviour.SentenceNodeActivated += DisableDialogAnswerPanel;
+            _dialogBehaviour.SentenceNodeActivated += _dialogSentencePanel.ResetDialogText;
+            _dialogBehaviour.SentenceNodeActivatedWithParameter += _dialogSentencePanel.Setup;
 
-            _dialogBehaviour.OnAnswerNodeActive += EnableDialogAnswerPanel;
-            _dialogBehaviour.OnAnswerNodeActive += DisableDialogSentencePanel;
+            _dialogBehaviour.AnswerNodeActivated += EnableDialogAnswerPanel;
+            _dialogBehaviour.AnswerNodeActivated += DisableDialogSentencePanel;
 
-            _dialogBehaviour.OnAnswerNodeActiveWithParameter += _dialogAnswerPanel.EnableCertainAmountOfButtons;
-            _dialogBehaviour.OnMaxAmountOfAnswerButtonsCalculated += _dialogAnswerPanel.SetUpButtons;
+            _dialogBehaviour.AnswerNodeActivatedWithParameter += _dialogAnswerPanel.EnableCertainAmountOfButtons;
+            _dialogBehaviour.MaxAmountOfAnswerButtonsCalculated += _dialogAnswerPanel.SetUpButtons;
 
-            _dialogBehaviour.OnAnswerNodeSetUp += SetUpAnswerDialogPanel;
+            _dialogBehaviour.AnswerNodeSetUp += SetUpAnswerDialogPanel;
+            _dialogBehaviour.LanguageChanged += HandleLanguageChanged;
         }
 
         private void OnDisable()
         {
-            _dialogBehaviour.OnAnswerButtonSetUp -= SetUpAnswerButtonsClickEvent;
+            _dialogBehaviour.AnswerButtonSetUp -= SetUpAnswerButtonsClickEvent;
 
-            _dialogBehaviour.OnDialogTextCharWrote -= _dialogSentencePanel.IncreaseMaxVisibleCharacters;
-            _dialogBehaviour.OnDialogTextSkipped -= _dialogSentencePanel.ShowFullDialogText;
+            _dialogBehaviour.DialogTextCharWrote -= _dialogSentencePanel.IncreaseMaxVisibleCharacters;
+            _dialogBehaviour.DialogTextSkipped -= _dialogSentencePanel.ShowFullDialogText;
 
-            _dialogBehaviour.OnSentenceNodeActive -= EnableDialogSentencePanel;
-            _dialogBehaviour.OnSentenceNodeActive -= DisableDialogAnswerPanel;
-            _dialogBehaviour.OnSentenceNodeActive += _dialogSentencePanel.ResetDialogText;
-            _dialogBehaviour.OnSentenceNodeActiveWithParameter -= _dialogSentencePanel.Setup;
+            _dialogBehaviour.SentenceNodeActivated -= EnableDialogSentencePanel;
+            _dialogBehaviour.SentenceNodeActivated -= DisableDialogAnswerPanel;
+            _dialogBehaviour.SentenceNodeActivated += _dialogSentencePanel.ResetDialogText;
+            _dialogBehaviour.SentenceNodeActivatedWithParameter -= _dialogSentencePanel.Setup;
 
-            _dialogBehaviour.OnAnswerNodeActive -= EnableDialogAnswerPanel;
-            _dialogBehaviour.OnAnswerNodeActive -= DisableDialogSentencePanel;
+            _dialogBehaviour.AnswerNodeActivated -= EnableDialogAnswerPanel;
+            _dialogBehaviour.AnswerNodeActivated -= DisableDialogSentencePanel;
 
-            _dialogBehaviour.OnAnswerNodeActiveWithParameter -= _dialogAnswerPanel.EnableCertainAmountOfButtons;
-            _dialogBehaviour.OnMaxAmountOfAnswerButtonsCalculated -= _dialogAnswerPanel.SetUpButtons;
+            _dialogBehaviour.AnswerNodeActivatedWithParameter -= _dialogAnswerPanel.EnableCertainAmountOfButtons;
+            _dialogBehaviour.MaxAmountOfAnswerButtonsCalculated -= _dialogAnswerPanel.SetUpButtons;
 
-            _dialogBehaviour.OnAnswerNodeSetUp -= SetUpAnswerDialogPanel;
+            _dialogBehaviour.AnswerNodeSetUp -= SetUpAnswerDialogPanel;
+            _dialogBehaviour.LanguageChanged -= HandleLanguageChanged;
         }
 
         /// <summary>
@@ -129,7 +131,43 @@ namespace cherrydev
         /// </summary>
         /// <param name="index"></param>
         /// <param name="answerText"></param>
-        public void SetUpAnswerDialogPanel(int index, string answerText) => 
-            _dialogAnswerPanel.GetButtonTextByIndex(index).text = answerText;
+        public void SetUpAnswerDialogPanel(int index, string answerText)
+        {
+            AnswerNode currentAnswerNode = _dialogBehaviour.CurrentAnswerNode;
+            
+            if (currentAnswerNode != null)
+            {
+                _dialogAnswerPanel.GetButtonTextByIndex(index).text = 
+                    currentAnswerNode.GetLocalizedAnswer(index);
+            }
+            else
+            {
+                _dialogAnswerPanel.GetButtonTextByIndex(index).text = answerText;
+            }
+        }
+
+        private void HandleLanguageChanged()
+        {
+            if (_dialogBehaviour.CurrentAnswerNode != null)
+                RefreshAnswerButtons();
+        }
+        
+        /// <summary>
+        /// Refresh all answer buttons with updated localized text
+        /// </summary>
+        private void RefreshAnswerButtons()
+        {
+            AnswerNode currentAnswerNode = _dialogBehaviour.CurrentAnswerNode;
+            
+            if (currentAnswerNode != null)
+            {
+                for (int i = 0; i < currentAnswerNode.Answers.Count; i++)
+                {
+                    if (i < _dialogAnswerPanel.GetButtonCount() &&
+                        _dialogAnswerPanel.GetButtonByIndex(i).gameObject.activeSelf)
+                        _dialogAnswerPanel.GetButtonTextByIndex(i).text = currentAnswerNode.GetLocalizedAnswer(i);
+                }
+            }
+        }
     }
 }
