@@ -47,6 +47,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a0437d9824051ba4f9fcf692c96a8051, type: 2}
   - {fileID: 11400000, guid: 50e70e16b4d00b745b082898f412f4c2, type: 2}
   - {fileID: 11400000, guid: bc7abe6cf80cefa4083f1ba83dcbab83, type: 2}
+  - {fileID: 11400000, guid: 45a92028612ad9a4bac408abd8a48f6c, type: 2}
   - {fileID: 11400000, guid: cf61a09a3b6b907419a8bc4280526e2c, type: 2}
   - {fileID: 11400000, guid: 198fcc34caa60924caf70105b18c0e89, type: 2}
   - {fileID: 11400000, guid: bc08138146cb4fc45abc234d22de7792, type: 2}
@@ -96,6 +97,7 @@ MonoBehaviour:
     - Locale-uk-UA
     - Locale-en-GB
     - Locale-en-US
+    - Locale-de-DE
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 266f6079403be0a4ab739c6c93bb2443, type: 2}

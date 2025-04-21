@@ -10,7 +10,7 @@ namespace cherrydev
     {
         [HideInInspector] public List<Node> ConnectedNodesList;
         [HideInInspector] public DialogNodeGraph NodeGraph;
-        [HideInInspector] public Rect Rect = new Rect();
+        [HideInInspector] public Rect Rect;
 
         [HideInInspector] public bool IsDragging;
         [HideInInspector] public bool IsSelected;

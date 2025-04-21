@@ -120,24 +120,41 @@ namespace cherrydev
         /// </summary>
         /// <param name="nodeStyle"></param>
         /// <param name="lableStyle"></param>
-        public override void Draw(GUIStyle nodeStyle, GUIStyle lableStyle)
+        public override void Draw(GUIStyle nodeStyle, GUIStyle labelStyle)
         {
-            base.Draw(nodeStyle, lableStyle);
+            base.Draw(nodeStyle, labelStyle);
 
             GUILayout.BeginArea(Rect, nodeStyle);
 
-            EditorGUILayout.LabelField("Sentence Node", lableStyle);
-
-            DrawCharacterNameFieldHorizontal();
-            DrawSentenceTextFieldHorizontal();
-            DrawCharacterSpriteHorizontal();
-            DrawExternalFunctionTextField();
-
-            if (GUILayout.Button(_externalButtonLabel))
+            EditorGUILayout.LabelField("Sentence Node", labelStyle);
+    
+            if (DialogNodeGraph.ShowLocalizationKeys)
             {
-                _isExternalFunc = !_isExternalFunc;
+                EditorGUILayout.Space(5);
+                EditorGUILayout.LabelField("Localization Keys", EditorStyles.boldLabel);
+        
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("Name Key", GUILayout.Width(LabelFieldSpace));
+                _characterNameKey = EditorGUILayout.TextField(_characterNameKey, GUILayout.Width(TextFieldWidth));
+                EditorGUILayout.EndHorizontal();
+        
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("Text Key", GUILayout.Width(LabelFieldSpace));
+                _sentenceTextKey = EditorGUILayout.TextField(_sentenceTextKey, GUILayout.Width(TextFieldWidth));
+                EditorGUILayout.EndHorizontal();
             }
-
+            else
+            {
+                DrawCharacterNameFieldHorizontal();
+                DrawSentenceTextFieldHorizontal();
+                DrawCharacterSpriteHorizontal();
+                
+                DrawExternalFunctionTextField();
+                
+                if (GUILayout.Button(_externalButtonLabel))
+                    _isExternalFunc = !_isExternalFunc;
+            }
+            
             GUILayout.EndArea();
         }
 

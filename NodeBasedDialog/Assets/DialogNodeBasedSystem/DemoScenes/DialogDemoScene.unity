@@ -224,6 +224,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1896025583}
   - component: {fileID: 1896025582}
+  - component: {fileID: 1896025584}
   m_Layer: 0
   m_Name: Test Dialog Starter
   m_TagString: Untagged
@@ -244,7 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dialogBehaviour: {fileID: 6258486368699249023}
-  _dialogGraph: {fileID: 11400000, guid: e4e045132f4bfb241afc2dc2152de195, type: 2}
+  _dialogGraph: {fileID: 11400000, guid: e06e2a04039d154478dbbc59f71552be, type: 2}
 --- !u!4 &1896025583
 Transform:
   m_ObjectHideFlags: 0
@@ -260,6 +261,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1896025584
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1896025581}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 681cd07d907d34a49adbc3549edf91e0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &3622971407683063308
 PrefabInstance:
   m_ObjectHideFlags: 0

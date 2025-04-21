@@ -75,19 +75,35 @@ namespace cherrydev
         /// </summary>
         /// <param name = "nodeStyle" ></ param >
         /// < param name="lableStyle"></param>
-        public override void Draw(GUIStyle nodeStyle, GUIStyle lableStyle)
+        public override void Draw(GUIStyle nodeStyle, GUIStyle labelStyle)
         {
-            base.Draw(nodeStyle, lableStyle);
+            base.Draw(nodeStyle, labelStyle);
 
             ChildSentenceNodes.RemoveAll(item => item == null);
 
-            Rect.size = new Vector2(AnswerNodeWidth, _currentAnswerNodeHeight);
+            // Adjust height if showing localization keys
+            float additionalHeight = DialogNodeGraph.ShowLocalizationKeys ? _amountOfAnswers * 20f : 0;
+            Rect.size = new Vector2(AnswerNodeWidth, _currentAnswerNodeHeight + additionalHeight);
 
             GUILayout.BeginArea(Rect, nodeStyle);
-            EditorGUILayout.LabelField("Answer Node", lableStyle);
+            EditorGUILayout.LabelField("Answer Node", labelStyle);
 
             for (int i = 0; i < _amountOfAnswers; i++)
+            {
                 DrawAnswerLine(i + 1, StringConstants.GreenDot);
+        
+                if (DialogNodeGraph.ShowLocalizationKeys)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField("Key: ", GUILayout.Width(25));
+                    
+                    while (_answerKeys.Count <= i)
+                        _answerKeys.Add(string.Empty);
+                
+                    _answerKeys[i] = EditorGUILayout.TextField(_answerKeys[i], GUILayout.Width(TextFieldWidth + 13));
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
 
             DrawAnswerNodeButtons();
 

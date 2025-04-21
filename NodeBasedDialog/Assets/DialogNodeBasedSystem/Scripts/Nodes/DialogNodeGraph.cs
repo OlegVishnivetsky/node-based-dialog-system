@@ -13,6 +13,8 @@ namespace cherrydev
         [HideInInspector] public Node NodeToDrawLineFrom = null;
         [HideInInspector] public Vector2 LinePosition = Vector2.zero;
 
+        public static bool ShowLocalizationKeys { get; set; }
+        
         /// <summary>
         /// Assigning values to nodeToDrawLineFrom and linePosition fields
         /// </summary>
@@ -20,8 +22,8 @@ namespace cherrydev
         /// <param name="linePosition"></param>
         public void SetNodeToDrawLineFromAndLinePosition(Node nodeToDrawLineFrom, Vector2 linePosition)
         {
-            this.NodeToDrawLineFrom = nodeToDrawLineFrom;
-            this.LinePosition = linePosition;
+            NodeToDrawLineFrom = nodeToDrawLineFrom;
+            LinePosition = linePosition;
         }
 
         /// <summary>
@@ -30,7 +32,7 @@ namespace cherrydev
         /// <param name="delta"></param>
         public void DragAllSelectedNodes(Vector2 delta)
         {
-            foreach (var node in NodesList)
+            foreach (Node node in NodesList)
             {
                 if (node.IsSelected)
                     node.DragNode(delta);
