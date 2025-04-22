@@ -17,8 +17,8 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 1f1fc93697faf8d47bc52d3833b22f4f
   m_SerializeEntries:
-  - m_GUID: c1dda0eda40a8c7478beeb41763f38a9
-    m_Address: New_Node_Graph_en-US
+  - m_GUID: d6a20731197a2d94dbd044ab6d996298
+    m_Address: NewGraph_en-US
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en-US

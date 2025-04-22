@@ -9,37 +9,40 @@ namespace cherrydev
     {
         [SerializeField] private Sentence _sentence;
 
-        [SerializeField] private string _characterNameKey;
-        [SerializeField] private string _sentenceTextKey;
-
-        [Space(10)] public Node ParentNode;
+        [Space(10)] 
+        public Node ParentNode;
         public Node ChildNode;
 
-        [Space(7)] [SerializeField] private bool _isExternalFunc;
+        [Space(7)] 
+        [SerializeField] private bool _isExternalFunc;
         [SerializeField] private string _externalFunctionName;
 
+        [HideInInspector]
+        public string CharacterNameKey;
+        [HideInInspector]
+        public string SentenceTextKey;
+        
         private string _externalButtonLabel;
 
         private const float LabelFieldSpace = 47f;
         private const float TextFieldWidth = 100f;
-
         private const float ExternalNodeHeight = 155f;
 
         public string GetLocalizedCharacterName()
         {
-            if (!string.IsNullOrEmpty(_characterNameKey))
+            if (!string.IsNullOrEmpty(CharacterNameKey))
             {
                 try
                 {
                     string tableName = GetTableNameFromNodeGraph();
                     
                     string localizedValue = LocalizationSettings.StringDatabase.GetLocalizedString(
-                        tableName, _characterNameKey);
+                        tableName, CharacterNameKey);
                     
                     if (!string.IsNullOrEmpty(localizedValue))
                         return localizedValue;
                     else
-                        Debug.LogWarning($"Localized name was empty for key: {_characterNameKey}");
+                        Debug.LogWarning($"Localized name was empty for key: {CharacterNameKey}");
                 }
                 catch (System.Exception ex)
                 {
@@ -56,23 +59,23 @@ namespace cherrydev
         /// <returns>Localized sentence text</returns>
         public string GetLocalizedText()
         {
-            if (!string.IsNullOrEmpty(_sentenceTextKey))
+            if (!string.IsNullOrEmpty(SentenceTextKey))
             {
                 try
                 {
                     string tableName = GetTableNameFromNodeGraph();
 
-                    Debug.Log($"Trying to get localized text for key: {_sentenceTextKey} from table: {tableName}");
+                    Debug.Log($"Trying to get localized text for key: {SentenceTextKey} from table: {tableName}");
 
                     string localizedValue = LocalizationSettings.StringDatabase.GetLocalizedString(
-                        tableName, _sentenceTextKey);
+                        tableName, SentenceTextKey);
 
                     Debug.Log($"Localized text result: {localizedValue}");
 
                     if (!string.IsNullOrEmpty(localizedValue))
                         return localizedValue;
                     else
-                        Debug.LogWarning($"Localized string was empty for key: {_sentenceTextKey}");
+                        Debug.LogWarning($"Localized string was empty for key: {SentenceTextKey}");
                 }
                 catch (System.Exception ex)
                 {
@@ -135,12 +138,12 @@ namespace cherrydev
         
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("Name Key", GUILayout.Width(LabelFieldSpace));
-                _characterNameKey = EditorGUILayout.TextField(_characterNameKey, GUILayout.Width(TextFieldWidth));
+                CharacterNameKey = EditorGUILayout.TextField(CharacterNameKey, GUILayout.Width(TextFieldWidth));
                 EditorGUILayout.EndHorizontal();
         
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("Text Key", GUILayout.Width(LabelFieldSpace));
-                _sentenceTextKey = EditorGUILayout.TextField(_sentenceTextKey, GUILayout.Width(TextFieldWidth));
+                SentenceTextKey = EditorGUILayout.TextField(SentenceTextKey, GUILayout.Width(TextFieldWidth));
                 EditorGUILayout.EndHorizontal();
             }
             else

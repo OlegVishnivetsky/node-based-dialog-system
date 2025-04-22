@@ -10,47 +10,43 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
-  m_Name: New_Node_Graph Shared Data
+  m_Name: NewGraph Shared Data
   m_EditorClassIdentifier: 
-  m_TableCollectionName: New_Node_Graph
-  m_TableCollectionNameGuidString: 1a33b85b6f073b0439a37721de83ed15
+  m_TableCollectionName: NewGraph
+  m_TableCollectionNameGuidString: 468a87eb1ba46bc43800ba03849d68bb
   m_Entries:
-  - m_Id: 526098432
-    m_Key: char_1_162CB78D
+  - m_Id: 58390716416
+    m_Key: CustomNameKey
     m_Metadata:
       m_Items: []
-  - m_Id: 584818688
-    m_Key: text_asdasd_606EEB0E
+  - m_Id: 58390716417
+    m_Key: CustomKey
     m_Metadata:
       m_Items: []
-  - m_Id: 584818689
-    m_Key: char_2_162CB790
+  - m_Id: 58390716418
+    m_Key: YesAsnwerKey
     m_Metadata:
       m_Items: []
-  - m_Id: 584818690
-    m_Key: text_werwerwerwer_51375402
+  - m_Id: 58390716419
+    m_Key: Answer_3ef986d9-0b4c-4b82-92c2-07d3ebb67c81
     m_Metadata:
       m_Items: []
-  - m_Id: 584818691
-    m_Key: char_3_162CB78F
+  - m_Id: 58390716420
+    m_Key: SentenceName_749eed05-8b76-48ce-b56c-2463d7d7e926
     m_Metadata:
       m_Items: []
-  - m_Id: 584818692
-    m_Key: text_sdfsdfgfdghfg_613B5297
-    m_Metadata:
-      m_Items: []
-  - m_Id: 584818693
-    m_Key: ans_First_Option_696D7847
+  - m_Id: 58390716421
+    m_Key: SentenceText_1ef88c39-8665-44d4-97a3-f2236d7193ad
     m_Metadata:
       m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
-    rid: 5515509258931404860
+    rid: 5515509279785484330
   references:
     version: 2
     RefIds:
-    - rid: 5515509258931404860
+    - rid: 5515509279785484330
       type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
       data:
-        m_CustomEpoch: 1745264004761
+        m_CustomEpoch: 1745344171520

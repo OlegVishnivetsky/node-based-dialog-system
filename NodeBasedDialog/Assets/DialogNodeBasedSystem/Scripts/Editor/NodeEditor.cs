@@ -196,7 +196,6 @@ namespace cherrydev
         private void DrawToolbar()
         {
             EditorGUI.DrawRect(new Rect(0, 0, position.width, ToolbarHeight), _headerColor);
-
             GUILayout.BeginArea(new Rect(0, 0, position.width, ToolbarHeight));
             GUILayout.BeginHorizontal();
 
@@ -218,8 +217,10 @@ namespace cherrydev
             if (GUILayout.Button("Localization", _toolbarButtonStyle, GUILayout.Width(100)))
             {
                 GenericMenu localizationMenu = new GenericMenu();
-                localizationMenu.AddItem(new GUIContent("Setup Localization Table"), false, () => SetupLocalizationTable(null));
-                localizationMenu.AddItem(new GUIContent("Update Keys"), false, () => UpdateLocalizationKeys(_currentNodeGraph));
+                localizationMenu.AddItem(new GUIContent("Set Up Localization Table"), false, 
+                    () => DialogLocalizationHandler.Instance.SetupLocalization(_currentNodeGraph));
+                localizationMenu.AddItem(new GUIContent("Update Keys"), false, 
+                    () => DialogLocalizationHandler.Instance.SetupLocalization(_currentNodeGraph, false));
                 localizationMenu.DropDown(new Rect(position.width - 100, ToolbarHeight - 20, 150, 20));
             }
 
@@ -578,7 +579,9 @@ namespace cherrydev
             }
 
             Node node = GetHighlightedNode(currentEvent.mousePosition);
-            node.DragNode(currentEvent.delta);   
+            
+            if (node != null)
+                node.DragNode(currentEvent.delta);   
         }
 
         /// <summary>
@@ -712,28 +715,6 @@ namespace cherrydev
             contextMenu.AddSeparator("");
             contextMenu.AddItem(new GUIContent("Find My Nodes"), false, CenterWindowOnNodes, mousePosition);
             contextMenu.ShowAsContext();
-        }
-        
-        private void SetupLocalizationTable(object userData)
-        {
-            if (_currentNodeGraph == null)
-            {
-                EditorUtility.DisplayDialog("Localization Setup", "No dialog graph selected.", "OK");
-                return;
-            }
-    
-            DialogLocalizationHandler.Instance.UpdateLocalization(_currentNodeGraph, false);
-        }
-
-        private void UpdateLocalizationKeys(object userData)
-        {
-            if (_currentNodeGraph == null)
-            {
-                EditorUtility.DisplayDialog("Localization Update", "No dialog graph selected.", "OK");
-                return;
-            }
-    
-            DialogLocalizationHandler.Instance.UpdateLocalization(_currentNodeGraph, true);
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
+using UnityEngine.Serialization;
 
 namespace cherrydev
 {
@@ -13,11 +14,10 @@ namespace cherrydev
         private int _amountOfAnswers = 1;
 
         public List<string> Answers = new();
+        public List<string> AnswerKeys = new();
 
         public SentenceNode ParentSentenceNode;
         public List<SentenceNode> ChildSentenceNodes = new();
-
-        [SerializeField] private List<string> _answerKeys = new();
 
         private const float LabelFieldSpace = 18f;
         private const float TextFieldWidth = 120f;
@@ -33,14 +33,14 @@ namespace cherrydev
             if (index < 0 || index >= Answers.Count)
                 return string.Empty;
 
-            if (index < _answerKeys.Count && !string.IsNullOrEmpty(_answerKeys[index]))
+            if (index < AnswerKeys.Count && !string.IsNullOrEmpty(AnswerKeys[index]))
             {
                 try
                 {
                     string tableName = GetTableNameFromNodeGraph();
 
                     string localizedValue = LocalizationSettings.StringDatabase.GetLocalizedString(
-                        tableName, _answerKeys[index]);
+                        tableName, AnswerKeys[index]);
 
                     if (!string.IsNullOrEmpty(localizedValue))
                         return localizedValue;
@@ -97,10 +97,10 @@ namespace cherrydev
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.LabelField("Key: ", GUILayout.Width(25));
                     
-                    while (_answerKeys.Count <= i)
-                        _answerKeys.Add(string.Empty);
+                    while (AnswerKeys.Count <= i)
+                        AnswerKeys.Add(string.Empty);
                 
-                    _answerKeys[i] = EditorGUILayout.TextField(_answerKeys[i], GUILayout.Width(TextFieldWidth + 13));
+                    AnswerKeys[i] = EditorGUILayout.TextField(AnswerKeys[i], GUILayout.Width(TextFieldWidth + 13));
                     EditorGUILayout.EndHorizontal();
                 }
             }

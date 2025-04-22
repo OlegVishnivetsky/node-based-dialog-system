@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5be51871efa6c3e4eae1703925c8f5ac, type: 3}
-  m_Name: New_Node_Graph
+  m_Name: NewGraph
   m_EditorClassIdentifier: 
-  m_SharedTableData: {fileID: 11400000, guid: 1a33b85b6f073b0439a37721de83ed15, type: 2}
+  m_SharedTableData: {fileID: 11400000, guid: 468a87eb1ba46bc43800ba03849d68bb, type: 2}
   m_Tables:
-  - {fileID: 11400000, guid: c1dda0eda40a8c7478beeb41763f38a9, type: 2}
-  - {fileID: 11400000, guid: 0c231d0fc21ac0a41870d5dade8af220, type: 2}
-  - {fileID: 11400000, guid: c4cf8649bff6a4d4db10fd942578f93d, type: 2}
+  - {fileID: 11400000, guid: d6a20731197a2d94dbd044ab6d996298, type: 2}
+  - {fileID: 11400000, guid: 1c51662a70be2ac49a0732b8e1010cb9, type: 2}
+  - {fileID: 11400000, guid: 42e6a5bf16e03514e946f02b0efbd2cf, type: 2}
   m_Extensions: []
   m_Group: String Table
   references:

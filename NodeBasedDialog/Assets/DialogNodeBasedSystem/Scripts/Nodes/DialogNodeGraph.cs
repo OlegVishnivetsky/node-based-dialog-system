@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
+using UnityEngine.Localization.Tables;
 
 namespace cherrydev
 {
@@ -13,8 +15,31 @@ namespace cherrydev
         [HideInInspector] public Node NodeToDrawLineFrom = null;
         [HideInInspector] public Vector2 LinePosition = Vector2.zero;
 
-        public static bool ShowLocalizationKeys { get; set; }
+        private string _localizationTableName;
+        public string LocalizationTableName => _localizationTableName;
         
+        public bool IsLocalizationSetUp { get; private set; }
+        public static bool ShowLocalizationKeys { get; set; }
+
+        public void AddLocalizationTable(string name)
+        {
+            IsLocalizationSetUp = true;
+            _localizationTableName = name;
+        }
+
+        public StringTable GetLocalizationTable()
+        {
+            StringTable table = LocalizationSettings.StringDatabase.GetTable("MyTable", LocalizationSettings.SelectedLocale);
+
+            if (table == null)
+            {
+                IsLocalizationSetUp = false;
+                return null;
+            }
+
+            return table;
+        }
+
         /// <summary>
         /// Assigning values to nodeToDrawLineFrom and linePosition fields
         /// </summary>
