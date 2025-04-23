@@ -193,9 +193,7 @@ Click on any node in the list to instantly **center** and **select** it in the g
 Quickly find specific dialog content:
 
 - Type text into the **search field** to locate nodes containing that text  
-- Click the **Search** button to find and center on matching nodes  
 - As you type, matching nodes are **automatically highlighted**  
-- Click the **Clear (×)** button to reset your search
 
 ---
 
@@ -208,7 +206,7 @@ Helpful when nodes are **scattered** across the canvas.
 ### 🌐 **Localization Tools**  
 Integrates with Unity’s **Localization** package:
 
-- **Edit Table Keys** – Toggle editing mode to customize localization keys  
+- **Edit Table Keys** – Toggle editing mode to customize localization keys. After you finish editing your keys, don't forget to press "Update Keys" button.
 - **Localization** – Access all localization options from the dropdown
 
 ---
