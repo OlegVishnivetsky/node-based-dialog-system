@@ -15,6 +15,12 @@ namespace cherrydev
 
         protected float StandardHeight;
 
+        /// <summary>
+        /// Gets the table name from the node graph asset name
+        /// </summary>
+        /// <returns>The table name for this node's graph</returns>
+        protected string GetTableNameFromNodeGraph() => NodeGraph.LocalizationTableName;
+        
 #if UNITY_EDITOR
 
         /// <summary>
@@ -41,12 +47,6 @@ namespace cherrydev
         public virtual bool AddToParentConnectedNode(Node nodeToAdd) => true;
 
         public virtual bool AddToChildConnectedNode(Node nodeToAdd) => true;
-
-        /// <summary>
-        /// Gets the table name from the node graph asset name
-        /// </summary>
-        /// <returns>The table name for this node's graph</returns>
-        protected string GetTableNameFromNodeGraph() => NodeGraph.LocalizationTableName;
 
         /// <summary>
         /// Process node events

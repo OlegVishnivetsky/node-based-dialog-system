@@ -15,20 +15,21 @@ namespace cherrydev
     {
         public List<Node> NodesList = new();
 
-#if UNITY_EDITOR
-
-        [HideInInspector] public Node NodeToDrawLineFrom;
-        [HideInInspector] public Vector2 LinePosition = Vector2.zero;
-
         [Space(7f)]
         [SerializeField] private string _localizationTableName;
         [SerializeField] private string _characterNamesLocalizationName;
+        
+        [HideInInspector] public Node NodeToDrawLineFrom;
+        [HideInInspector] public Vector2 LinePosition = Vector2.zero;
         
         public string LocalizationTableName => _localizationTableName;
         public string CharacterNamesLocalizationName => _characterNamesLocalizationName;
 
         [HideInInspector]
         public bool IsLocalizationSetUp;
+        
+#if UNITY_EDITOR
+        
         public static bool ShowLocalizationKeys;
 
         public void AddLocalizationTable(string name)
