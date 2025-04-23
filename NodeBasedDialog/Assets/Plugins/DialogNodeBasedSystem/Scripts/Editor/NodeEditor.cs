@@ -57,7 +57,6 @@ namespace cherrydev
         
         // Search functionality
         private string _searchText = "";
-        private bool _isSearching = false;
 
         /// <summary>
         /// Define nodes and label style parameters on enable
@@ -279,10 +278,7 @@ namespace cherrydev
                 if (!string.IsNullOrEmpty(_searchText))
                 {
                     if (GUILayout.Button("×", _toolbarButtonStyle, GUILayout.Width(20)))
-                    {
                         _searchText = "";
-                        _isSearching = false;
-                    }
                 }
             }
             
@@ -321,7 +317,6 @@ namespace cherrydev
             if (string.IsNullOrEmpty(searchText) || _currentNodeGraph == null || _currentNodeGraph.NodesList == null)
                 return;
 
-            _isSearching = true;
             searchText = searchText.ToLower();
             
             foreach (Node node in _currentNodeGraph.NodesList)
