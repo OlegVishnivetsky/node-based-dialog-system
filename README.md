@@ -1,6 +1,6 @@
 #  	:speech_balloon: Dialog Node Based System (Unity asset tool) 	:speech_balloon:
 
-**Last Updated:** 02/24/2024 
+**Last Updated:** 04/23/2025 
 
 **Publisher: cherrydev (Oleg Vishnivetsky)** 
 
@@ -22,18 +22,27 @@ You can check video tutorial on youtube, but this **video is little outdated**: 
 
 # 1️⃣ Node Editor
 
-# STEP 1: How to open node editor window
+## STEP 1: How to open node editor window
 
 1. Right-click to the **assets folder**.
 2. Go to ***Create/ScribtableObjects/Nodes/NodeGraph**.*
 3. Double click on your new **DialogNodeGraph** assets and you are done!
 4. You can also go to **Window/DialogNodeBasedEditor**, but you still have to create **NodeGraph** SO and click on it.
 
-# STEP 2: Orientation
+## STEP 2: Orientation
 
-1. By holding the **left mouse button** you can **move** around the window.
-2. **Right mouse** button opens **context menu**. It has options such as “Create sentence node”, “**Create answer node**”, “**Select all nodes**” and “**Remove selected nodes**”.
-3. To **connect** nodes together, hold down the right mouse button on the node and drag it to.
+## Mouse Controls
+1. **Left Mouse Button**:
+   - On node: Select and move nodes
+   - On empty space + drag: Create selection rectangle to select multiple nodes
+   - On empty space + click: Deselect all nodes
+
+2. **Middle Mouse Button**:
+   - On empty space + drag: Pan/move around the editor view
+   - On node + drag: Create connection between nodes
+
+3. **Right Mouse Button**:
+   - Click: Open context menu with options like "Create Sentence Node", "Create Answer Node", "Select All Nodes", "Remove Selected Nodes", and "Remove Connections"
 
 # 2️⃣ Sentence Node
 
@@ -91,7 +100,7 @@ public class TestDialogStarter : MonoBehaviour
  }
 ```
 
-1. You can bind **external functions** to use them in **sentence node**. There is a method for this called **BindExternalFunction**. It takes as parameters the name of the function and the function itself. This method can then be used in a sentence node, it will be called along with this node.
+2. You can bind **external functions** to use them in **sentence node**. There is a method for this called **BindExternalFunction**. It takes as parameters the name of the function and the function itself. This method can then be used in a sentence node, it will be called along with this node.
 
 💡 You need to bind an external function before calling it.
 
@@ -121,19 +130,90 @@ public class TestDialogStarter : MonoBehaviour
 }
 ```
 
-1. In the inspector you can configure **parameters** such as:
-- **Dialog Char Dalay** (float) - delay before printing characters or text printing speed
+3. In the inspector you can configure **parameters** such as:
+- **Dialog Char Delay** (float) - delay before printing characters or text printing speed
 - **Next Sentence Key Codes** (List<enum>) - keys when pressed that load the next sentence
-- Is Can Skipping Text (bool) - If true - when you press the keys, instantly print the current sentence
-- OnDialogStarted and OnDialogEnded events.
+- **Is Can Skipping Text** (bool) - If true - when you press the keys, instantly print the current sentence
+- **OnDialogStarted** and **OnDialogEnded** events
 
 💡 You can assign all these parameters in code
 
 ![Untitled 1](https://github.com/OlegVishnivetsky/node-based-dialog-system/assets/98222611/7ec4fb1b-3a24-466e-b58c-976738d9eb18)
 
+# 🌐 Localization Integration
+
+This asset integrates with the Unity Localization system for easy multi-language support:
+
+💡 The asset includes Unity Localization as a dependency. If you don't need localization, you can delete this package.
+
+### Setting Up Localization:
+
+1. **First**, set up localization in **Player Settings**:
+   - Create **Local Settings**
+   - Set up your desired **Locales**
+
+2. In the **Dialog Node Editor**, click **Localization → Set Up Localization**:
+   - This creates a **Localization** folder in **Assets**
+   - All localization data for each graph will be stored here
+   - A **localization table collection** is automatically created with pre-configured entries
+
+### Edit Your Translations:
+
+- Add text for other languages in the generated **table collection**
+- The system works with **auto-generated keys**, but you can customize them
+
+### Managing Localization Keys:
+
+- Click **Edit Table Keys** button to toggle key editing mode
+- Auto-created keys are random and might not be readable
+- You can **edit keys** to be more descriptive
+- Click **Localization → Update Keys** to apply your custom keys
+
+✅ Auto-generated keys work fine if you prefer not to customize them
+
+# 🧭 Tool Bar Navigation
+
+The editor toolbar provides quick access to various functions to enhance your workflow:
+
+![Image](https://github.com/user-attachments/assets/97524a86-aac9-4c89-b274-3218e1f759c7)
+
 ---
 
-:star::star::star::star::star: Feel free to edit any code to suit your needs. If you find any bugs or have any questions, you can write about it to me by email, github or in reviews in the Unity Asset Store. I will also be pleased if you visit my itchio page.  😄
+### 🔽 **Nodes Dropdown**
+Access a list of all nodes in your graph. Each node is prefixed with:
+
+- `S:` for **Sentence** nodes – shows the first part of the dialog text  
+- `A:` for **Answer** nodes – shows the first answer option  
+
+Click on any node in the list to instantly **center** and **select** it in the graph.
+
+---
+
+### 🔍 **Search Functionality**
+Quickly find specific dialog content:
+
+- Type text into the **search field** to locate nodes containing that text  
+- Click the **Search** button to find and center on matching nodes  
+- As you type, matching nodes are **automatically highlighted**  
+- Click the **Clear (×)** button to reset your search
+
+---
+
+### 🧲 **Find My Nodes**
+Automatically centers the view on all nodes in your graph.  
+Helpful when nodes are **scattered** across the canvas.
+
+---
+
+### 🌐 **Localization Tools**  
+Integrates with Unity’s **Localization** package:
+
+- **Edit Table Keys** – Toggle editing mode to customize localization keys  
+- **Localization** – Access all localization options from the dropdown
+
+---
+
+:star::star::star::star::star: Feel free to edit any code to suit your needs. If you find any bugs or have any questions, you can write about it to me by email, github or in reviews in the Unity Asset Store. I will also be pleased if you visit my itchio page. 😄
 
 Gmail: olegmroleg@gmail.com
 
