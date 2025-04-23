@@ -13,48 +13,48 @@ MonoBehaviour:
   m_Name: DemoNodeGraph Shared Data
   m_EditorClassIdentifier: 
   m_TableCollectionName: DemoNodeGraph
-  m_TableCollectionNameGuidString: b738d17ec4de58445aa5c81219a31b6c
+  m_TableCollectionNameGuidString: b0b4f013d92a24643a998f8bffdd3a64
   m_Entries:
-  - m_Id: 618373120
+  - m_Id: 1817944064
     m_Key: SentenceText_42a408bd-2c5e-4e63-a2f0-eca43065b219
     m_Metadata:
       m_Items: []
-  - m_Id: 668704768
+  - m_Id: 2031853568
     m_Key: SentenceName_a7438c5b-3859-41ed-8496-020bbf206e16
     m_Metadata:
       m_Items: []
-  - m_Id: 668704769
+  - m_Id: 2040242176
     m_Key: Answer_73419b8d-b28a-4be9-9f73-2e4967cd3077
     m_Metadata:
       m_Items: []
-  - m_Id: 668704770
+  - m_Id: 2040242177
     m_Key: Answer_4c5f4b30-a1d1-4e26-a6ac-5c099d6e344e
     m_Metadata:
       m_Items: []
-  - m_Id: 668704771
+  - m_Id: 2052825088
     m_Key: SentenceText_f37ff077-24b6-4c9d-a879-e263578bcd14
     m_Metadata:
       m_Items: []
-  - m_Id: 668704772
+  - m_Id: 2052825089
     m_Key: SentenceText_427b31d9-4863-4514-be39-1b9540e9211f
     m_Metadata:
       m_Items: []
-  - m_Id: 668704773
+  - m_Id: 2052825090
     m_Key: Answer_f0ce8366-c6c4-4e60-8a72-f79ae2e1cf4c
     m_Metadata:
       m_Items: []
-  - m_Id: 668704774
+  - m_Id: 2052825091
     m_Key: SentenceText_986442a6-d397-4b8f-8c82-f43ec1b37fcc
     m_Metadata:
       m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
-    rid: 5515509297851924553
+    rid: 5515509301028847616
   references:
     version: 2
     RefIds:
-    - rid: 5515509297851924553
+    - rid: 5515509301028847616
       type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
       data:
-        m_CustomEpoch: 1745414230760
+        m_CustomEpoch: 1745421260297

@@ -20,14 +20,16 @@ namespace cherrydev
         [HideInInspector] public Node NodeToDrawLineFrom;
         [HideInInspector] public Vector2 LinePosition = Vector2.zero;
 
-        private string _localizationTableName;
-        private string _characterNamesLocalizationName;
+        [Space(7f)]
+        [SerializeField] private string _localizationTableName;
+        [SerializeField] private string _characterNamesLocalizationName;
         
         public string LocalizationTableName => _localizationTableName;
         public string CharacterNamesLocalizationName => _characterNamesLocalizationName;
-        
-        public bool IsLocalizationSetUp { get; private set; }
-        public static bool ShowLocalizationKeys { get; set; }
+
+        [HideInInspector]
+        public bool IsLocalizationSetUp;
+        public static bool ShowLocalizationKeys;
 
         public void AddLocalizationTable(string name)
         {

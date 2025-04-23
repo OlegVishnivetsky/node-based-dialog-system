@@ -17,7 +17,7 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: b75c93caf7548db4a9eefb8840924af7
   m_SerializeEntries:
-  - m_GUID: b738d17ec4de58445aa5c81219a31b6c
+  - m_GUID: b0b4f013d92a24643a998f8bffdd3a64
     m_Address: Assets/Localization/DemoNodeGraph/DemoNodeGraph Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []

@@ -14,39 +14,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LocaleId:
     m_Code: fr-FR
-  m_SharedData: {fileID: 11400000, guid: b738d17ec4de58445aa5c81219a31b6c, type: 2}
+  m_SharedData: {fileID: 11400000, guid: b0b4f013d92a24643a998f8bffdd3a64, type: 2}
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 618373120
-    m_Localized: "Bonjour, voici un graphe de n\u0153uds de d\xE9monstration!"
+  - m_Id: 1817944064
+    m_Localized: "Bonjour, voici le graphe de n\u0153uds de d\xE9monstration!"
     m_Metadata:
       m_Items: []
-  - m_Id: 668704768
+  - m_Id: 2031853568
     m_Localized: cherrydev
     m_Metadata:
       m_Items: []
-  - m_Id: 668704769
-    m_Localized: "Allez \xE0 la premi\xE8re phrase"
+  - m_Id: 2040242176
+    m_Localized: " Aller \xE0 la premi\xE8re phrase"
     m_Metadata:
       m_Items: []
-  - m_Id: 668704770
-    m_Localized: "Allez \xE0 la deuxi\xE8me phrase"
+  - m_Id: 2040242177
+    m_Localized: " Aller \xE0 la deuxi\xE8me phrase"
     m_Metadata:
       m_Items: []
-  - m_Id: 668704771
-    m_Localized: "Bienvenue \xE0 la premi\xE8re phrase"
+  - m_Id: 2052825088
+    m_Localized: " Bienvenue \xE0 la premi\xE8re phrase"
     m_Metadata:
       m_Items: []
-  - m_Id: 668704772
-    m_Localized: "Bienvenue \xE0 la deuxi\xE8me phrase"
+  - m_Id: 2052825089
+    m_Localized: " Bienvenue \xE0 la deuxi\xE8me phrase"
     m_Metadata:
       m_Items: []
-  - m_Id: 668704773
-    m_Localized: "Fin de la bo\xEEte de dialogue"
+  - m_Id: 2052825090
+    m_Localized: " Fin de la bo\xEEte de dialogue"
     m_Metadata:
       m_Items: []
-  - m_Id: 668704774
+  - m_Id: 2052825091
     m_Localized: Fin <3
     m_Metadata:
       m_Items: []
