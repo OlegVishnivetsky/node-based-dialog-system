@@ -36,11 +36,12 @@ namespace cherrydev
             EditorUtility.SetDirty(this);
         }
 
-        public void AddCharacterNamesTable(string name)
-        {
-            _characterNamesLocalizationName = name;
-            EditorUtility.SetDirty(this);
-        }
+        // TODO: Save character names to separate localization table. Since dialogues will most likely use many identical names. And it would be convenient to have a separate table just for names. 
+        // public void AddCharacterNamesTable(string name)
+        // {
+        //     _characterNamesLocalizationName = name;
+        //     EditorUtility.SetDirty(this);
+        // }
 
         /// <summary>
         /// Assigning values to nodeToDrawLineFrom and linePosition fields
@@ -52,37 +53,6 @@ namespace cherrydev
             NodeToDrawLineFrom = nodeToDrawLineFrom;
             LinePosition = linePosition;
         }
-
-        /// <summary>
-        /// Draging all selected nodes
-        /// </summary>
-        /// <param name="delta"></param>
-        public void DragAllSelectedNodes(Vector2 delta)
-        {
-            foreach (Node node in NodesList)
-            {
-                if (node.IsSelected)
-                    node.DragNode(delta);
-            }
-        }
-
-        /// <summary>
-        /// Returning amount of selected nodes
-        /// </summary>
-        /// <returns></returns>
-        public int GetAmountOfSelectedNodes()
-        {
-            int amount = 0;
-
-            foreach (Node node in NodesList)
-            {
-                if (node.IsSelected)
-                    amount++;
-            }
-
-            return amount;
-        }
-
 #endif
     }
 }

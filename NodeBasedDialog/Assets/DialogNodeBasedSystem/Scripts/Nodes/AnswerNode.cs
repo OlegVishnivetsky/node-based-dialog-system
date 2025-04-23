@@ -67,9 +67,9 @@ namespace cherrydev
         /// <param name="rect"></param>
         /// <param name="nodeName"></param>
         /// <param name="nodeGraph"></param>
-        public override void Initialise(Rect rect, string nodeName, DialogNodeGraph nodeGraph)
+        public override void Initialize(Rect rect, string nodeName, DialogNodeGraph nodeGraph)
         {
-            base.Initialise(rect, nodeName, nodeGraph);
+            base.Initialize(rect, nodeName, nodeGraph);
 
             CalculateAmountOfAnswers();
             ChildSentenceNodes = new List<SentenceNode>(_amountOfAnswers);
@@ -240,13 +240,17 @@ namespace cherrydev
                 _currentAnswerNodeHeight += AdditionalAnswerNodeHeight;
         }
 
+        /// <summary>
+        /// Checks if sentence node can be added as child of answer node
+        /// </summary>
+        /// <param name="sentenceNodeToAdd"></param>
+        /// <returns></returns>
         private bool IsCanAddToChildConnectedNode(SentenceNode sentenceNodeToAdd)
         {
             return sentenceNodeToAdd.ParentNode == null
                    && ChildSentenceNodes.Count < _amountOfAnswers
                    && sentenceNodeToAdd.ChildNode != this;
         }
-
 #endif
     }
 }

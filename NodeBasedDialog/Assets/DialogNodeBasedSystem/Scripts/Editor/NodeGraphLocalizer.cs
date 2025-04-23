@@ -4,7 +4,6 @@ using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 #if UNITY_LOCALIZATION
-using System.Collections.Generic;
 using UnityEditor.Localization;
 using UnityEngine.Localization.Tables;
 #endif

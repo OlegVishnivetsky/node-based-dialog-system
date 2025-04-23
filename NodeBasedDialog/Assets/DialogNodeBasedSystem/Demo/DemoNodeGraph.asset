@@ -16,8 +16,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 916.8002
-    y: 276.40002
+    x: 1136.5996
+    y: 416.09988
     width: 190
     height: 135
   IsDragging: 1
@@ -48,8 +48,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 456.00006
-    y: 324.40005
+    x: 674.1992
+    y: 463.30008
     width: 190
     height: 135
   IsDragging: 1
@@ -57,7 +57,7 @@ MonoBehaviour:
   _sentence:
     CharacterName: cherrydev
     Text: Welcome to the second sentence
-    CharacterSprite: {fileID: 0}
+    CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
   ParentNode: {fileID: -7983766367039425753}
   ChildNode: {fileID: 3744781970286011628}
   _isExternalFunc: 0
@@ -80,8 +80,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 239.20007
-    y: 205.19998
+    x: 457.3994
+    y: 344.10013
     width: 190
     height: 135
   IsDragging: 1
@@ -112,8 +112,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: -24.799904
-    y: 141.2
+    x: 193.40039
+    y: 280.1001
     width: 190
     height: 135
   IsDragging: 1
@@ -165,8 +165,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 688.8001
-    y: 203.59999
+    x: 906.9995
+    y: 342.50003
     width: 190
     height: 115
   IsDragging: 1
@@ -194,8 +194,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 470.40015
-    y: 87.59999
+    x: 688.5991
+    y: 226.49998
     width: 190
     height: 135
   IsDragging: 1
@@ -203,7 +203,7 @@ MonoBehaviour:
   _sentence:
     CharacterName: cherrydev
     Text: Welcome to first the sentence
-    CharacterSprite: {fileID: 0}
+    CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
   ParentNode: {fileID: -7983766367039425753}
   ChildNode: {fileID: 3744781970286011628}
   _isExternalFunc: 0

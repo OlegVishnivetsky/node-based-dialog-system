@@ -23,7 +23,7 @@ namespace cherrydev
         /// <param name="rect"></param>
         /// <param name="nodeName"></param>
         /// <param name="nodeGraph"></param>
-        public virtual void Initialise(Rect rect, string nodeName, DialogNodeGraph nodeGraph)
+        public virtual void Initialize(Rect rect, string nodeName, DialogNodeGraph nodeGraph)
         {
             name = nodeName;
             StandardHeight = rect.height;

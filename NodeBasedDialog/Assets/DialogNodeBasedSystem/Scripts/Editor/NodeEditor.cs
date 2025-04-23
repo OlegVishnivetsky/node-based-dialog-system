@@ -21,6 +21,8 @@ namespace cherrydev
         
         private GUIStyle _toolbarButtonStyle;
         private GUIStyle _headerLabelStyle;
+        private GUIStyle _dropdownStyle;
+        private GUIStyle _searchFieldStyle;
         
         private GUIStyle _labelStyle;
 
@@ -51,6 +53,11 @@ namespace cherrydev
         private bool _isLeftMouseDragFromEmpty;
         private bool _showLocalizationKeys;
         private bool _isMiddleMouseClickedOnNode;
+        private bool _showNodesDropdown;
+        
+        // Search functionality
+        private string _searchText = "";
+        private bool _isSearching = false;
 
         /// <summary>
         /// Define nodes and label style parameters on enable
@@ -199,6 +206,22 @@ namespace cherrydev
             _headerLabelStyle.fontSize = 12;
             _headerLabelStyle.alignment = TextAnchor.MiddleLeft;
             _headerLabelStyle.padding = new RectOffset(10, 10, 0, 0);
+            
+            _dropdownStyle = new GUIStyle(EditorStyles.popup);
+            _dropdownStyle.normal.textColor = Color.white;
+            _dropdownStyle.fontSize = 11;
+            _dropdownStyle.alignment = TextAnchor.MiddleLeft;
+            _dropdownStyle.fixedHeight = ToolbarHeight - 4;
+            _dropdownStyle.margin = new RectOffset(2, 2, 2, 2);
+            _dropdownStyle.padding = new RectOffset(6, 6, 2, 2);
+            
+            _searchFieldStyle = new GUIStyle(EditorStyles.toolbarTextField);
+            _searchFieldStyle.normal.textColor = Color.white;
+            _searchFieldStyle.fontSize = 11;
+            _searchFieldStyle.alignment = TextAnchor.MiddleLeft;
+            _searchFieldStyle.fixedHeight = ToolbarHeight - 4;
+            _searchFieldStyle.margin = new RectOffset(2, 2, 2, 2);
+            _searchFieldStyle.padding = new RectOffset(6, 6, 2, 2);
         }
 
         /// <summary>
@@ -206,6 +229,9 @@ namespace cherrydev
         /// </summary>
         private void CleanUpUnusedAssets()
         {
+            if (_currentNodeGraph == null)
+                return;
+                
             UnityEngine.Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(
                 AssetDatabase.GetAssetPath(_currentNodeGraph));
             
@@ -229,10 +255,37 @@ namespace cherrydev
             EditorGUI.DrawRect(new Rect(0, 0, position.width, ToolbarHeight), _headerColor);
             GUILayout.BeginArea(new Rect(0, 0, position.width, ToolbarHeight));
             GUILayout.BeginHorizontal();
-
-            string graphName = _currentNodeGraph != null ? _currentNodeGraph.name : "No Graph Loaded";
-            GUILayout.Label(graphName, _headerLabelStyle, GUILayout.Width(200));
-
+            
+            if (_currentNodeGraph != null && _currentNodeGraph.NodesList != null && _currentNodeGraph.NodesList.Count > 0)
+            {
+                Rect nodesButtonRect = GUILayoutUtility.GetRect(new GUIContent("Nodes"), _toolbarButtonStyle, GUILayout.Width(100));
+                if (GUI.Button(nodesButtonRect, "Nodes", _toolbarButtonStyle))
+                    DrawNodesDropdown(nodesButtonRect);
+                
+                GUILayout.Space(10f);
+                
+                string newSearchText = EditorGUILayout.TextField(_searchText, _searchFieldStyle, GUILayout.Width(200));
+                
+                if (newSearchText != _searchText)
+                {
+                    _searchText = newSearchText;
+                    if (!string.IsNullOrEmpty(_searchText))
+                        SearchAndSelectNode(_searchText);
+                }
+                
+                if (GUILayout.Button("Search", _toolbarButtonStyle, GUILayout.Width(60)))
+                    SearchAndSelectNode(_searchText);
+                    
+                if (!string.IsNullOrEmpty(_searchText))
+                {
+                    if (GUILayout.Button("×", _toolbarButtonStyle, GUILayout.Width(20)))
+                    {
+                        _searchText = "";
+                        _isSearching = false;
+                    }
+                }
+            }
+            
             GUILayout.FlexibleSpace();
 
             if (GUILayout.Button("Find My Nodes", _toolbarButtonStyle, GUILayout.Width(100)))
@@ -252,11 +305,133 @@ namespace cherrydev
                     () => NodeGraphLocalizer.Instance.SetupLocalization(_currentNodeGraph));
                 localizationMenu.AddItem(new GUIContent("Update Keys"), false, 
                     () => NodeGraphLocalizer.Instance.SetupLocalization(_currentNodeGraph, false));
-                localizationMenu.DropDown(new Rect(position.width - 100, ToolbarHeight - 20, 150, 20));
+                localizationMenu.DropDown(new Rect(position.width - 100, ToolbarHeight, 150, 0));
             }
 
             GUILayout.EndHorizontal();
             GUILayout.EndArea();
+        }
+        
+        /// <summary>
+        /// Searches for a node containing the search text and selects it
+        /// </summary>
+        /// <param name="searchText">The text to search for</param>
+        private void SearchAndSelectNode(string searchText)
+        {
+            if (string.IsNullOrEmpty(searchText) || _currentNodeGraph == null || _currentNodeGraph.NodesList == null)
+                return;
+
+            _isSearching = true;
+            searchText = searchText.ToLower();
+            
+            foreach (Node node in _currentNodeGraph.NodesList)
+            {
+                if (node.GetType() == typeof(SentenceNode))
+                {
+                    SentenceNode sentenceNode = (SentenceNode)node;
+                    string nodeText = sentenceNode.Sentence.Text?.ToLower() ?? "";
+                    
+                    if (nodeText.Contains(searchText))
+                    {
+                        CenterAndSelectNode(node);
+                        return;
+                    }
+                }
+                else if (node.GetType() == typeof(AnswerNode))
+                {
+                    AnswerNode answerNode = (AnswerNode)node;
+                    bool found = false;
+                    
+                    if (answerNode.Answers != null)
+                    {
+                        foreach (string answer in answerNode.Answers)
+                        {
+                            if (!string.IsNullOrEmpty(answer) && answer.ToLower().Contains(searchText))
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (found)
+                    {
+                        CenterAndSelectNode(node);
+                        return;
+                    }
+                }
+            }
+            
+            // If we got here, no node was found
+            Debug.Log($"No node containing '{searchText}' was found.");
+        }
+        
+        /// <summary>
+        /// Draws the nodes dropdown in the toolbar
+        /// </summary>
+        /// <param name="buttonRect">The rectangle of the button that triggered the dropdown</param>
+        private void DrawNodesDropdown(Rect buttonRect)
+        {
+            GenericMenu nodesMenu = new GenericMenu();
+            
+            foreach (Node node in _currentNodeGraph.NodesList)
+            {
+                string prefix;
+                string nodeText;
+                
+                if (node.GetType() == typeof(SentenceNode))
+                {
+                    SentenceNode sentenceNode = (SentenceNode)node;
+                    prefix = "S";
+                    nodeText = !string.IsNullOrEmpty(sentenceNode.Sentence.Text) ? sentenceNode.Sentence.Text : "Empty";
+                    
+                    if (nodeText.Length > 20)
+                        nodeText = nodeText.Substring(0, 20) + "...";
+                }
+                else
+                {
+                    AnswerNode answerNode = (AnswerNode)node;
+                    prefix = "A";
+                    
+                    if (answerNode.Answers != null && answerNode.Answers.Count > 0 && !string.IsNullOrEmpty(answerNode.Answers[0]))
+                        nodeText = answerNode.Answers[0];
+                    else
+                        nodeText = "Empty";
+                    
+                    if (nodeText.Length > 20)
+                        nodeText = nodeText.Substring(0, 20) + "...";
+                }
+                
+                string menuItemName = $"{prefix}: {nodeText}";
+                nodesMenu.AddItem(new GUIContent(menuItemName), false, () => CenterAndSelectNode(node));
+            }
+            
+            Rect dropDownRect = new Rect(buttonRect.x, buttonRect.y + buttonRect.height, 150, 0);
+            nodesMenu.DropDown(dropDownRect);
+        }
+        
+        /// <summary>
+        /// Centers the view on a specific node and selects it
+        /// </summary>
+        /// <param name="nodeToCenter">The node to center on and select</param>
+        private void CenterAndSelectNode(Node nodeToCenter)
+        {
+            if (nodeToCenter == null)
+                return;
+                
+            Vector2 windowCenter = new Vector2(position.width / 2, (position.height - ToolbarHeight) / 2);
+            Vector2 offset = windowCenter - nodeToCenter.Rect.center;
+            
+            foreach (Node node in _currentNodeGraph.NodesList)
+                node.DragNode(offset);
+                
+            foreach (Node node in _currentNodeGraph.NodesList)
+                node.IsSelected = false;
+                
+            nodeToCenter.IsSelected = true;
+            _currentNode = nodeToCenter;
+            
+            GUI.changed = true;
         }
         
         /// <summary>
@@ -759,7 +934,7 @@ namespace cherrydev
         private void CreateSentenceNode(object mousePositionObject)
         {
             SentenceNode sentenceNode = CreateInstance<SentenceNode>();
-            InitialiseNode(mousePositionObject, sentenceNode, "Sentence Node");
+            InitializeNode(mousePositionObject, sentenceNode, "Sentence Node");
         }
 
         /// <summary>
@@ -769,7 +944,7 @@ namespace cherrydev
         private void CreateAnswerNode(object mousePositionObject)
         {
             AnswerNode answerNode = CreateInstance<AnswerNode>();
-            InitialiseNode(mousePositionObject, answerNode, "Answer Node");
+            InitializeNode(mousePositionObject, answerNode, "Answer Node");
         }
 
         /// <summary>
@@ -826,13 +1001,13 @@ namespace cherrydev
         /// <param name="mousePositionObject"></param>
         /// <param name="node"></param>
         /// <param name="nodeName"></param>
-        private void InitialiseNode(object mousePositionObject, Node node, string nodeName)
+        private void InitializeNode(object mousePositionObject, Node node, string nodeName)
         {
             Vector2 mousePosition = (Vector2)mousePositionObject;
 
             _currentNodeGraph.NodesList.Add(node);
 
-            node.Initialise(new Rect(mousePosition, new Vector2(NodeWidth, NodeHeight)), nodeName, _currentNodeGraph);
+            node.Initialize(new Rect(mousePosition, new Vector2(NodeWidth, NodeHeight)), nodeName, _currentNodeGraph);
 
             AssetDatabase.AddObjectToAsset(node, _currentNodeGraph);
             AssetDatabase.SaveAssets();
