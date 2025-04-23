@@ -1,6 +1,8 @@
 using UnityEditor;
 using UnityEngine;
+#if UNITY_LOCALIZATION
 using UnityEngine.Localization.Settings;
+#endif
 
 namespace cherrydev
 {
@@ -9,81 +11,78 @@ namespace cherrydev
     {
         [SerializeField] private Sentence _sentence;
 
-        [Space(10)] 
-        public Node ParentNode;
+        [Space(10)] public Node ParentNode;
         public Node ChildNode;
 
-        [Space(7)] 
-        [SerializeField] private bool _isExternalFunc;
+        [Space(7)] [SerializeField] private bool _isExternalFunc;
         [SerializeField] private string _externalFunctionName;
 
-        [HideInInspector]
-        public string CharacterNameKey;
-        [HideInInspector]
-        public string SentenceTextKey;
-        
+        [HideInInspector] public string CharacterNameKey;
+        [HideInInspector] public string SentenceTextKey;
+
+        public Sentence Sentence => _sentence;
+
         private string _externalButtonLabel;
 
         private const float LabelFieldSpace = 47f;
         private const float TextFieldWidth = 100f;
         private const float ExternalNodeHeight = 155f;
 
-        public string GetLocalizedCharacterName()
+        /// <summary>
+        /// Returns character name, using localization if available
+        /// </summary>
+        /// <returns>Character name (localized if possible)</returns>
+        public string GetCharacterName()
         {
-            if (!string.IsNullOrEmpty(CharacterNameKey))
-            {
-                try
-                {
-                    string tableName = GetTableNameFromNodeGraph();
-                    
-                    string localizedValue = LocalizationSettings.StringDatabase.GetLocalizedString(
-                        tableName, CharacterNameKey);
-                    
-                    if (!string.IsNullOrEmpty(localizedValue))
-                        return localizedValue;
-                    else
-                        Debug.LogWarning($"Localized name was empty for key: {CharacterNameKey}");
-                }
-                catch (System.Exception ex)
-                {
-                    Debug.LogError($"Name localization error: {ex.Message}");
-                }
-            }
-
-            return _sentence.CharacterName;
+            string localizedName = TryGetLocalizedString(NodeGraph.CharacterNamesLocalizationName, "Localized name");
+            return !string.IsNullOrEmpty(localizedName) ? localizedName : _sentence.CharacterName;
         }
 
         /// <summary>
-        /// Returns localized sentence text or falls back to the original if localization fails
+        /// Returns sentence text, using localization if available
         /// </summary>
-        /// <returns>Localized sentence text</returns>
-        public string GetLocalizedText()
+        /// <returns>Sentence text (localized if possible)</returns>
+        public string GetText()
         {
-            if (!string.IsNullOrEmpty(SentenceTextKey))
+            string localizedText = TryGetLocalizedString(SentenceTextKey, "Localized string");
+            return !string.IsNullOrEmpty(localizedText) ? localizedText : _sentence.Text;
+        }
+
+
+        /// <summary>
+        /// Try to get localized string for a given key, returns empty if failed
+        /// </summary>
+        /// <param name="key">Localization key</param>
+        /// <param name="errorPrefix">Prefix for error message</param>
+        /// <returns>Localized string or empty</returns>
+        private string TryGetLocalizedString(string key, string errorPrefix)
+        {
+            if (string.IsNullOrEmpty(key))
+                return string.Empty;
+
+#if UNITY_LOCALIZATION
+            try
             {
-                try
-                {
-                    string tableName = GetTableNameFromNodeGraph();
-
-                    Debug.Log($"Trying to get localized text for key: {SentenceTextKey} from table: {tableName}");
-
-                    string localizedValue = LocalizationSettings.StringDatabase.GetLocalizedString(
-                        tableName, SentenceTextKey);
-
-                    Debug.Log($"Localized text result: {localizedValue}");
-
-                    if (!string.IsNullOrEmpty(localizedValue))
-                        return localizedValue;
-                    else
-                        Debug.LogWarning($"Localized string was empty for key: {SentenceTextKey}");
-                }
-                catch (System.Exception ex)
-                {
-                    Debug.LogError($"Localization error: {ex.Message}");
-                }
+                string tableName = GetTableNameFromNodeGraph();
+                if (string.IsNullOrEmpty(tableName))
+                    return string.Empty;
+                
+                string localizedValue = LocalizationSettings.StringDatabase.GetLocalizedString(
+                    tableName, key);
+        
+                if (string.IsNullOrEmpty(localizedValue))
+                    Debug.LogWarning($"{errorPrefix} was empty for key: {key}");
+            
+                return localizedValue;
             }
-
-            return _sentence.Text;
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"{errorPrefix} error: {ex.Message}");
+                return string.Empty;
+            }
+#else
+            return string.Empty;
+#endif
         }
 
         /// <summary>
@@ -91,18 +90,6 @@ namespace cherrydev
         /// </summary>
         /// <returns></returns>
         public string GetExternalFunctionName() => _externalFunctionName;
-
-        /// <summary>
-        /// Returning sentence character name
-        /// </summary>
-        /// <returns></returns>
-        public string GetSentenceCharacterName() => _sentence.CharacterName;
-
-        /// <summary>
-        /// Returning sentence text
-        /// </summary>
-        /// <returns></returns>
-        public string GetSentenceText() => _sentence.Text;
 
         /// <summary>
         /// Returning sentence character sprite
@@ -122,7 +109,7 @@ namespace cherrydev
         /// Draw Sentence Node method
         /// </summary>
         /// <param name="nodeStyle"></param>
-        /// <param name="lableStyle"></param>
+        /// <param name="labelStyle"></param>
         public override void Draw(GUIStyle nodeStyle, GUIStyle labelStyle)
         {
             base.Draw(nodeStyle, labelStyle);
@@ -130,17 +117,17 @@ namespace cherrydev
             GUILayout.BeginArea(Rect, nodeStyle);
 
             EditorGUILayout.LabelField("Sentence Node", labelStyle);
-    
+
             if (DialogNodeGraph.ShowLocalizationKeys)
             {
                 EditorGUILayout.Space(5);
                 EditorGUILayout.LabelField("Localization Keys", EditorStyles.boldLabel);
-        
+
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("Name Key", GUILayout.Width(LabelFieldSpace));
                 CharacterNameKey = EditorGUILayout.TextField(CharacterNameKey, GUILayout.Width(TextFieldWidth));
                 EditorGUILayout.EndHorizontal();
-        
+
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("Text Key", GUILayout.Width(LabelFieldSpace));
                 SentenceTextKey = EditorGUILayout.TextField(SentenceTextKey, GUILayout.Width(TextFieldWidth));
@@ -151,13 +138,13 @@ namespace cherrydev
                 DrawCharacterNameFieldHorizontal();
                 DrawSentenceTextFieldHorizontal();
                 DrawCharacterSpriteHorizontal();
-                
+
                 DrawExternalFunctionTextField();
-                
+
                 if (GUILayout.Button(_externalButtonLabel))
                     _isExternalFunc = !_isExternalFunc;
             }
-            
+
             GUILayout.EndArea();
         }
 
@@ -245,8 +232,6 @@ namespace cherrydev
         /// <returns></returns>
         public override bool AddToChildConnectedNode(Node nodeToAdd)
         {
-            SentenceNode sentenceNodeToAdd;
-
             if (nodeToAdd.GetType() == typeof(SentenceNode))
             {
                 nodeToAdd = (SentenceNode)nodeToAdd;
@@ -257,7 +242,7 @@ namespace cherrydev
 
             if (nodeToAdd.GetType() == typeof(SentenceNode))
             {
-                sentenceNodeToAdd = (SentenceNode)nodeToAdd;
+                SentenceNode sentenceNodeToAdd = (SentenceNode)nodeToAdd;
 
                 if (sentenceNodeToAdd != null && sentenceNodeToAdd.ChildNode == this)
                     return false;
@@ -274,8 +259,6 @@ namespace cherrydev
         /// <returns></returns>
         public override bool AddToParentConnectedNode(Node nodeToAdd)
         {
-            SentenceNode sentenceNodeToAdd;
-
             if (nodeToAdd.GetType() == typeof(AnswerNode))
             {
                 return false;
@@ -295,16 +278,12 @@ namespace cherrydev
 
             if (nodeToAdd.GetType() == typeof(SentenceNode))
             {
-                sentenceNodeToAdd = (SentenceNode)nodeToAdd;
+                SentenceNode sentenceNodeToAdd = (SentenceNode)nodeToAdd;
 
                 if (sentenceNodeToAdd.ChildNode == this)
-                {
                     return true;
-                }
-                else
-                {
-                    ParentNode = null;
-                }
+
+                ParentNode = null;
             }
 
             return true;

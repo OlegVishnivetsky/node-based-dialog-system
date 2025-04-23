@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/DialogNodeBasedSystem/DemoScenes/DialogDemoScene.unity
+    path: Assets/DialogNodeBasedSystem/Demo/Scene/DialogDemoScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 6a3fdb30b7ea0b144a1367ba80044d0e, type: 2}

@@ -17,8 +17,8 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: b75c93caf7548db4a9eefb8840924af7
   m_SerializeEntries:
-  - m_GUID: 468a87eb1ba46bc43800ba03849d68bb
-    m_Address: Assets/Localization/NewGraph/NewGraph Shared Data.asset
+  - m_GUID: b738d17ec4de58445aa5c81219a31b6c
+    m_Address: Assets/Localization/DemoNodeGraph/DemoNodeGraph Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

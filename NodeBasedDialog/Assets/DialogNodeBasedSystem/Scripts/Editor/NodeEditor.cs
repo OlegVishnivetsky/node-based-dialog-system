@@ -15,7 +15,10 @@ namespace cherrydev
         private GUIStyle _nodeStyle;
         private GUIStyle _selectedNodeStyle;
 
-        private Color _headerColor = new(0.15f, 0.15f, 0.15f);
+        private readonly Color _headerColor = new(0.235f, 0.235f, 0.235f);
+        private readonly Color _backgroundColor = new(0.165f, 0.165f, 0.165f);
+        private readonly Color _backgroundLinesColor = new(0.113f, 0.113f, 0.113f);
+        
         private GUIStyle _toolbarButtonStyle;
         private GUIStyle _headerLabelStyle;
         
@@ -50,7 +53,7 @@ namespace cherrydev
         private bool _isMiddleMouseClickedOnNode;
 
         /// <summary>
-        /// Define nodes and lable style parameters on enable
+        /// Define nodes and label style parameters on enable
         /// </summary>
         private void OnEnable()
         {
@@ -73,12 +76,13 @@ namespace cherrydev
             _labelStyle.fontSize = LabelFontSize;
             _labelStyle.normal.textColor = Color.white;
         }
-
+        
         /// <summary>
         /// Saving all changes and unsubscribing from events
         /// </summary>
         private void OnDisable()
         {
+            CleanUpUnusedAssets();
             Selection.selectionChanged -= ChangeEditorWindowOnSelection;
             AssetDatabase.SaveAssets();
             SaveChanges();
@@ -129,16 +133,17 @@ namespace cherrydev
         /// </summary>
         private void OnGUI()
         {
+            EditorGUI.DrawRect(new Rect(0, 0, position.width, position.height), _backgroundColor);
             DrawToolbar();
             GUI.BeginGroup(new Rect(0, ToolbarHeight, position.width, position.height - ToolbarHeight));
             
             if (_currentNodeGraph != null)
             {
-                
+                Undo.RecordObject(_currentNodeGraph, "Changed Value");
                 DrawDraggedLine();
                 DrawNodeConnection();
-                DrawGridBackground(GridSmallLineSpacing, 0.2f, Color.gray);
-                DrawGridBackground(GridLargeLineSpacing, 0.2f, Color.gray);
+                DrawGridBackground(GridSmallLineSpacing, 0.3f, _backgroundLinesColor);
+                DrawGridBackground(GridLargeLineSpacing, 0.3f, _backgroundLinesColor);
                 ProcessEvents(Event.current);
                 DrawNodes(Event.current);
             }
@@ -171,6 +176,9 @@ namespace cherrydev
             }
         }
 
+        /// <summary>
+        /// Initializes toolbar styles
+        /// </summary>
         private void InitializeToolbarStyles()
         {
             _toolbarButtonStyle = new GUIStyle(EditorStyles.toolbarButton);
@@ -192,7 +200,30 @@ namespace cherrydev
             _headerLabelStyle.alignment = TextAnchor.MiddleLeft;
             _headerLabelStyle.padding = new RectOffset(10, 10, 0, 0);
         }
+
+        /// <summary>
+        /// Clean up orphaned node assets that are sub-assets of the graph but not in the NodesList
+        /// </summary>
+        private void CleanUpUnusedAssets()
+        {
+            UnityEngine.Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(
+                AssetDatabase.GetAssetPath(_currentNodeGraph));
+            
+            foreach (UnityEngine.Object subAsset in subAssets)
+            {
+                Node nodeAsset = subAsset as Node;
+                
+                if (nodeAsset == null) 
+                    continue;
+            
+                if (!_currentNodeGraph.NodesList.Contains(nodeAsset))
+                    DestroyImmediate(nodeAsset, true);
+            }
+        }
         
+        /// <summary>
+        /// Draws toolbar with helper buttons
+        /// </summary>
         private void DrawToolbar()
         {
             EditorGUI.DrawRect(new Rect(0, 0, position.width, ToolbarHeight), _headerColor);
@@ -204,23 +235,23 @@ namespace cherrydev
 
             GUILayout.FlexibleSpace();
 
+            if (GUILayout.Button("Find My Nodes", _toolbarButtonStyle, GUILayout.Width(100)))
+                CenterWindowOnNodes();
+            
             if (GUILayout.Button("Edit Table Keys", _showLocalizationKeys ? _activeToolbarButtonStyle : _toolbarButtonStyle, GUILayout.Width(100)))
             {
                 _showLocalizationKeys = !_showLocalizationKeys;
                 DialogNodeGraph.ShowLocalizationKeys = _showLocalizationKeys;
                 GUI.changed = true;
             }
-            
-            if (GUILayout.Button("Find My Nodes", _toolbarButtonStyle, GUILayout.Width(100)))
-                CenterWindowOnNodes(null);
     
             if (GUILayout.Button("Localization", _toolbarButtonStyle, GUILayout.Width(100)))
             {
                 GenericMenu localizationMenu = new GenericMenu();
                 localizationMenu.AddItem(new GUIContent("Set Up Localization Table"), false, 
-                    () => DialogLocalizationHandler.Instance.SetupLocalization(_currentNodeGraph));
+                    () => NodeGraphLocalizer.Instance.SetupLocalization(_currentNodeGraph));
                 localizationMenu.AddItem(new GUIContent("Update Keys"), false, 
-                    () => DialogLocalizationHandler.Instance.SetupLocalization(_currentNodeGraph, false));
+                    () => NodeGraphLocalizer.Instance.SetupLocalization(_currentNodeGraph, false));
                 localizationMenu.DropDown(new Rect(position.width - 100, ToolbarHeight - 20, 150, 20));
             }
 
@@ -248,7 +279,6 @@ namespace cherrydev
         {
             if (_currentNodeGraph.NodesList == null)
                 return;
-
 
             foreach (Node node in _currentNodeGraph.NodesList)
             {
@@ -295,23 +325,38 @@ namespace cherrydev
             Vector2 startPosition = parentNode.Rect.center;
             Vector2 endPosition = childNode.Rect.center;
 
-            Vector2 midPosition = (startPosition + endPosition) / 2;
-            Vector2 direction = endPosition - startPosition;
+            float distance = Vector2.Distance(startPosition, endPosition);
 
-            Vector2 arrowTailPoint1 =
-                midPosition - new Vector2(-direction.y, direction.x).normalized * ConnectingLineArrowSize;
-            Vector2 arrowTailPoint2 =
-                midPosition + new Vector2(-direction.y, direction.x).normalized * ConnectingLineArrowSize;
+            Vector2 startTangent = startPosition + Vector2.right * (distance * 0.5f);
+            Vector2 endTangent = endPosition + Vector2.left * (distance * 0.5f);
 
-            Vector2 arrowHeadPoint = midPosition + direction.normalized * ConnectingLineArrowSize;
+            Handles.DrawBezier(
+                startPosition,
+                endPosition,
+                startTangent,
+                endTangent,
+                Color.white,
+                null,
+                ConnectingLineWidth
+            );
 
-            Handles.DrawBezier(arrowHeadPoint, arrowTailPoint1, arrowHeadPoint, arrowTailPoint1,
-                Color.white, null, ConnectingLineWidth);
-            Handles.DrawBezier(arrowHeadPoint, arrowTailPoint2, arrowHeadPoint, arrowTailPoint2,
-                Color.white, null, ConnectingLineWidth);
+            Vector3[] bezierPoints = Handles.MakeBezierPoints(
+                startPosition,
+                endPosition,
+                startTangent,
+                endTangent,
+                20 // resolution
+            );
 
-            Handles.DrawBezier(startPosition, endPosition, startPosition, endPosition,
-                Color.white, null, ConnectingLineWidth);
+            Vector2 midPosition = bezierPoints[bezierPoints.Length / 2];            
+            Vector2 direction = (endPosition - startPosition).normalized;
+
+            Vector2 arrowTail1 = midPosition - new Vector2(-direction.y, direction.x).normalized * ConnectingLineArrowSize;
+            Vector2 arrowTail2 = midPosition + new Vector2(-direction.y, direction.x).normalized * ConnectingLineArrowSize;
+            Vector2 arrowHead = midPosition + direction * ConnectingLineArrowSize;
+
+            Handles.DrawBezier(arrowHead, arrowTail1, arrowHead, arrowTail1, Color.white, null, ConnectingLineWidth);
+            Handles.DrawBezier(arrowHead, arrowTail2, arrowHead, arrowTail2, Color.white, null, ConnectingLineWidth);
 
             GUI.changed = true;
         }
@@ -322,26 +367,37 @@ namespace cherrydev
         /// <param name="gridSize"></param>
         /// <param name="gridOpacity"></param>
         /// <param name="color"></param>
-        private void DrawGridBackground(float gridSize, float gridOpacity, Color color)
+        /// <param name="lineWidth"></param>
+        private void DrawGridBackground(float gridSize, float gridOpacity, Color color, float lineWidth = 4f)
         {
             int verticalLineCount = Mathf.CeilToInt((position.width + gridSize) / gridSize);
             int horizontalLineCount = Mathf.CeilToInt((position.height + gridSize) / gridSize);
 
-            Handles.color = new Color(color.r, color.g, color.b, gridOpacity);
+            Color finalColor = new Color(color.r, color.g, color.b, gridOpacity);
+            Handles.color = finalColor;
 
             _graphOffset += _graphDrag * 0.5f;
-
             Vector3 gridOffset = new Vector3(_graphOffset.x % gridSize, _graphOffset.y % gridSize, 0);
 
-            for (int i = 0; i < verticalLineCount; i++)
-                Handles.DrawLine(new Vector3(gridSize * i, -gridSize, 0) + gridOffset,
-                    new Vector3(gridSize * i, position.height + gridSize, 0f) + gridOffset);
+            Handles.BeginGUI();
 
+            for (int i = 0; i < verticalLineCount; i++)
+            {
+                Vector3 p1 = new Vector3(gridSize * i, -gridSize, 0) + gridOffset;
+                Vector3 p2 = new Vector3(gridSize * i, position.height + gridSize, 0) + gridOffset;
+
+                Handles.DrawAAPolyLine(lineWidth, p1, p2);
+            }
 
             for (int j = 0; j < horizontalLineCount; j++)
-                Handles.DrawLine(new Vector3(-gridSize, gridSize * j, 0) + gridOffset,
-                    new Vector3(position.width + gridSize, gridSize * j, 0f) + gridOffset);
+            {
+                Vector3 p1 = new Vector3(-gridSize, gridSize * j, 0) + gridOffset;
+                Vector3 p2 = new Vector3(position.width + gridSize, gridSize * j, 0f) + gridOffset;
 
+                Handles.DrawAAPolyLine(lineWidth, p1, p2);
+            }
+
+            Handles.EndGUI();
             Handles.color = Color.white;
         }
 
@@ -354,12 +410,7 @@ namespace cherrydev
                 return;
 
             foreach (Node node in _currentNodeGraph.NodesList)
-            {
-                if (!node.IsSelected)
-                    node.Draw(_nodeStyle, _labelStyle);
-                else
-                    node.Draw(_selectedNodeStyle, _labelStyle);
-            }
+                node.Draw(!node.IsSelected ? _nodeStyle : _selectedNodeStyle, _labelStyle);
 
             if (_isLeftMouseDragFromEmpty)
                 SelectNodesBySelectionRect(currentEvent.mousePosition);
@@ -377,9 +428,6 @@ namespace cherrydev
 
             if (currentEvent.type == EventType.MouseUp)
                 ProcessMouseUpEvent(currentEvent);
-            
-            // if (_currentNode == null && currentEvent.button != 2)
-            //     _currentNode = GetHighlightedNode(currentEvent.mousePosition);
 
             if (_currentNode == null || _currentNodeGraph.NodeToDrawLineFrom != null || currentEvent.button == 2)
                 ProcessNodeEditorEvents(currentEvent);
@@ -508,18 +556,7 @@ namespace cherrydev
                 ProcessNodeSelection(currentEvent.mousePosition);
             }
         }
-
-        /// <summary>
-        /// Process scroll wheel down event
-        /// </summary>
-        /// <param name="currentEvent"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private void ProcessScrollWheelDownEvent(Event currentEvent)
-        {
-            _mouseScrollClickPosition = currentEvent.mousePosition;
-            _isLeftMouseDragFromEmpty = true;
-        }
-
+        
         /// <summary>
         /// Process right mouse up event
         /// </summary>
@@ -712,8 +749,6 @@ namespace cherrydev
             contextMenu.AddItem(new GUIContent("Select All Nodes"), false, SelectAllNodes, mousePosition);
             contextMenu.AddItem(new GUIContent("Remove Selected Nodes"), false, RemoveSelectedNodes, mousePosition);
             contextMenu.AddItem(new GUIContent("Remove Connections"), false, RemoveAllConnections, mousePosition);
-            contextMenu.AddSeparator("");
-            contextMenu.AddItem(new GUIContent("Find My Nodes"), false, CenterWindowOnNodes, mousePosition);
             contextMenu.ShowAsContext();
         }
 
@@ -846,7 +881,7 @@ namespace cherrydev
         /// <summary>
         /// Center the node editor window on all nodes
         /// </summary>
-        private void CenterWindowOnNodes(object userData)
+        private void CenterWindowOnNodes()
         {
             Vector2 nodesCenter = CalculateNodesCenter();
             Vector2 canvasCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);

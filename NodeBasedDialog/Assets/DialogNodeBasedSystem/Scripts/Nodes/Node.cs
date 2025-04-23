@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -48,31 +46,8 @@ namespace cherrydev
         /// Gets the table name from the node graph asset name
         /// </summary>
         /// <returns>The table name for this node's graph</returns>
-        protected string GetTableNameFromNodeGraph()
-        {
-            if (NodeGraph != null)
-            {
-                string assetPath = "";
-                
-#if UNITY_EDITOR
-                assetPath = UnityEditor.AssetDatabase.GetAssetPath(NodeGraph);
-#endif
-                
-                if (!string.IsNullOrEmpty(assetPath))
-                {
-                    string fileName = Path.GetFileNameWithoutExtension(assetPath);
-                    string safeName = Regex.Replace(fileName, @"[^a-zA-Z0-9_]", "_");
-                    
-                    if (string.IsNullOrEmpty(safeName))
-                        safeName = "Dialog";
-                        
-                    return safeName;
-                }
-            }
-            
-            return "Dialog";
-        }
-        
+        protected string GetTableNameFromNodeGraph() => NodeGraph.LocalizationTableName;
+
         /// <summary>
         /// Process node events
         /// </summary>
@@ -109,8 +84,7 @@ namespace cherrydev
         /// Process node left click event
         /// </summary>
         /// <param name="currentEvent"></param>
-        private void ProcessLeftMouseDownEvent(Event currentEvent) => 
-            OnNodeLeftClick();
+        private void ProcessLeftMouseDownEvent(Event currentEvent) => OnNodeLeftClick();
 
         /// <summary>
         /// Process node right click down event
@@ -133,8 +107,7 @@ namespace cherrydev
         /// Process node left click up event
         /// </summary>
         /// <param name="currentEvent"></param>
-        private void ProcessLeftMouseUpEvent(Event currentEvent) => 
-            IsDragging = false;
+        private void ProcessLeftMouseUpEvent(Event currentEvent) => IsDragging = false;
 
         /// <summary>
         /// Process node mouse drag event

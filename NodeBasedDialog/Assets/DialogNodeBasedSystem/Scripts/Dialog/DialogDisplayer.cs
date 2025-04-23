@@ -32,7 +32,9 @@ namespace cherrydev
             _dialogBehaviour.MaxAmountOfAnswerButtonsCalculated += _dialogAnswerPanel.SetUpButtons;
 
             _dialogBehaviour.AnswerNodeSetUp += SetUpAnswerDialogPanel;
+#if UNITY_LOCALIZATION
             _dialogBehaviour.LanguageChanged += HandleLanguageChanged;
+#endif
         }
 
         private void OnDisable()
@@ -54,7 +56,9 @@ namespace cherrydev
             _dialogBehaviour.MaxAmountOfAnswerButtonsCalculated -= _dialogAnswerPanel.SetUpButtons;
 
             _dialogBehaviour.AnswerNodeSetUp -= SetUpAnswerDialogPanel;
+#if UNITY_LOCALIZATION
             _dialogBehaviour.LanguageChanged -= HandleLanguageChanged;
+#endif
         }
 
         /// <summary>
@@ -78,8 +82,7 @@ namespace cherrydev
         /// <summary>
         /// Disable dialog answer panel
         /// </summary>
-        public void DisableDialogAnswerPanel() => 
-            ActiveGameObject(_dialogAnswerPanel.gameObject, false);
+        public void DisableDialogAnswerPanel() => ActiveGameObject(_dialogAnswerPanel.gameObject, false);
 
         /// <summary>
         /// Enable dialog sentence panel
@@ -93,8 +96,7 @@ namespace cherrydev
         /// <summary>
         /// Disable dialog sentence panel
         /// </summary>
-        public void DisableDialogSentencePanel() =>
-            ActiveGameObject(_dialogSentencePanel.gameObject, false);
+        public void DisableDialogSentencePanel() => ActiveGameObject(_dialogSentencePanel.gameObject, false);
 
         /// <summary>
         /// Enable or disable game object depends on isActive bool flag
@@ -120,10 +122,8 @@ namespace cherrydev
         public void SetUpAnswerButtonsClickEvent(int index, AnswerNode answerNode)
         {
             _dialogAnswerPanel.GetButtonByIndex(index).onClick.RemoveAllListeners();
-            _dialogAnswerPanel.AddButtonOnClickListener(index, () =>
-            {
-                _dialogBehaviour.SetCurrentNodeAndHandleDialogGraph(answerNode.ChildSentenceNodes[index]);
-            });
+            _dialogAnswerPanel.AddButtonOnClickListener(index, 
+                () => _dialogBehaviour.SetCurrentNodeAndHandleDialogGraph(answerNode.ChildSentenceNodes[index]));
         }
 
         /// <summary>
@@ -136,14 +136,9 @@ namespace cherrydev
             AnswerNode currentAnswerNode = _dialogBehaviour.CurrentAnswerNode;
             
             if (currentAnswerNode != null)
-            {
-                _dialogAnswerPanel.GetButtonTextByIndex(index).text = 
-                    currentAnswerNode.GetLocalizedAnswer(index);
-            }
+                _dialogAnswerPanel.GetButtonTextByIndex(index).text = currentAnswerNode.GetAnswerText(index);
             else
-            {
                 _dialogAnswerPanel.GetButtonTextByIndex(index).text = answerText;
-            }
         }
 
         private void HandleLanguageChanged()
@@ -165,7 +160,7 @@ namespace cherrydev
                 {
                     if (i < _dialogAnswerPanel.GetButtonCount() &&
                         _dialogAnswerPanel.GetButtonByIndex(i).gameObject.activeSelf)
-                        _dialogAnswerPanel.GetButtonTextByIndex(i).text = currentAnswerNode.GetLocalizedAnswer(i);
+                        _dialogAnswerPanel.GetButtonTextByIndex(i).text = currentAnswerNode.GetAnswerText(i);
                 }
             }
         }

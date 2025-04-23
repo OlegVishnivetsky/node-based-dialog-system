@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+#if UNITY_LOCALIZATION
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+#endif
 
 namespace cherrydev
 {
@@ -13,7 +15,9 @@ namespace cherrydev
         [SerializeField] private float _dialogCharDelay;
         [SerializeField] private List<KeyCode> _nextSentenceKeyCodes;
         [SerializeField] private bool _isCanSkippingText = true;
+#if UNITY_LOCALIZATION
         [SerializeField] private bool _reloadTextOnLanguageChange = true;
+#endif
 
         [Space(10)]
         [SerializeField] private UnityEvent _onDialogStarted;
@@ -25,7 +29,9 @@ namespace cherrydev
         public AnswerNode CurrentAnswerNode { get; private set; }
         public SentenceNode CurrentSentenceNode { get; private set; }
         
+#if UNITY_LOCALIZATION
         public event Action LanguageChanged;
+#endif
         
         private int _maxAmountOfAnswerButtons;
 
@@ -55,10 +61,13 @@ namespace cherrydev
 
         private void OnEnable()
         {
+#if UNITY_LOCALIZATION
             if (_reloadTextOnLanguageChange)
                 LocalizationSettings.SelectedLocaleChanged += OnSelectedLocaleChanged;
+#endif
         }
 
+#if UNITY_LOCALIZATION
         private void OnSelectedLocaleChanged(Locale obj)
         {
             if (_isDialogStarted && _currentNode != null)
@@ -67,8 +76,8 @@ namespace cherrydev
 
                 if (_currentNode is SentenceNode sentenceNode)
                 {
-                    string updatedText = sentenceNode.GetLocalizedText();
-                    string updatedCharName = sentenceNode.GetLocalizedCharacterName();
+                    string updatedText = sentenceNode.GetText();
+                    string updatedCharName = sentenceNode.GetCharacterName();
 
                     SentenceNodeActivatedWithParameter?.Invoke(updatedCharName, updatedText,
                         sentenceNode.GetCharacterSprite());
@@ -85,11 +94,14 @@ namespace cherrydev
                     HandleAnswerNode(_currentNode);
             }
         }
+#endif
 
         private void OnDestroy()
         {
+#if UNITY_LOCALIZATION
             if (_reloadTextOnLanguageChange)
                 LocalizationSettings.SelectedLocaleChanged -= OnSelectedLocaleChanged;
+#endif
         }
         
         private void Update() => HandleSentenceSkipping();
@@ -182,8 +194,8 @@ namespace cherrydev
 
             SentenceNodeActivated?.Invoke();
     
-            string localizedCharName = sentenceNode.GetLocalizedCharacterName();
-            string localizedText = sentenceNode.GetLocalizedText();
+            string localizedCharName = sentenceNode.GetCharacterName();
+            string localizedText = sentenceNode.GetText();
             
             SentenceNodeActivatedWithParameter?.Invoke(localizedCharName, localizedText,
                 sentenceNode.GetCharacterSprite());

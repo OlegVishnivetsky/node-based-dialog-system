@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
+#if UNITY_LOCALIZATION
 using UnityEngine.Localization.Settings;
-using UnityEngine.Serialization;
+#endif
 
 namespace cherrydev
 {
@@ -28,28 +27,34 @@ namespace cherrydev
         private float _currentAnswerNodeHeight = 115f;
         private const float AdditionalAnswerNodeHeight = 20f;
 
-        public string GetLocalizedAnswer(int index)
+        public string GetAnswerText(int index)
         {
             if (index < 0 || index >= Answers.Count)
                 return string.Empty;
 
+#if UNITY_LOCALIZATION
             if (index < AnswerKeys.Count && !string.IsNullOrEmpty(AnswerKeys[index]))
             {
                 try
                 {
                     string tableName = GetTableNameFromNodeGraph();
-
+                    if (string.IsNullOrEmpty(tableName))
+                        return Answers[index];
+                
                     string localizedValue = LocalizationSettings.StringDatabase.GetLocalizedString(
                         tableName, AnswerKeys[index]);
 
                     if (!string.IsNullOrEmpty(localizedValue))
                         return localizedValue;
+                    else
+                        Debug.LogWarning($"Localized answer was empty for key: {AnswerKeys[index]}");
                 }
                 catch (System.Exception ex)
                 {
                     Debug.LogWarning($"Failed to get localized answer: {ex.Message}");
                 }
             }
+#endif
 
             return Answers[index];
         }
@@ -73,15 +78,14 @@ namespace cherrydev
         /// <summary>
         /// Draw Answer Node method
         /// </summary>
-        /// <param name = "nodeStyle" ></ param >
-        /// < param name="lableStyle"></param>
+        /// <param name = "nodeStyle" ></param>
+        /// < param name="labelStyle"></param>
         public override void Draw(GUIStyle nodeStyle, GUIStyle labelStyle)
         {
             base.Draw(nodeStyle, labelStyle);
 
             ChildSentenceNodes.RemoveAll(item => item == null);
 
-            // Adjust height if showing localization keys
             float additionalHeight = DialogNodeGraph.ShowLocalizationKeys ? _amountOfAnswers * 20f : 0;
             Rect.size = new Vector2(AnswerNodeWidth, _currentAnswerNodeHeight + additionalHeight);
 
@@ -118,7 +122,7 @@ namespace cherrydev
             if (Answers.Count == 0)
             {
                 _amountOfAnswers = 1;
-                Answers = new List<string>() { string.Empty };
+                Answers = new List<string> { string.Empty };
             }
             else
                 _amountOfAnswers = Answers.Count;

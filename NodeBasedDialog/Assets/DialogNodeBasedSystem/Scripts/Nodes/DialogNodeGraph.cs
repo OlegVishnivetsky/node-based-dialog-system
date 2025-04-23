@@ -1,7 +1,12 @@
 using System.Collections.Generic;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
+#if UNITY_LOCALIZATION
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
+#endif
 
 namespace cherrydev
 {
@@ -12,11 +17,14 @@ namespace cherrydev
 
 #if UNITY_EDITOR
 
-        [HideInInspector] public Node NodeToDrawLineFrom = null;
+        [HideInInspector] public Node NodeToDrawLineFrom;
         [HideInInspector] public Vector2 LinePosition = Vector2.zero;
 
         private string _localizationTableName;
+        private string _characterNamesLocalizationName;
+        
         public string LocalizationTableName => _localizationTableName;
+        public string CharacterNamesLocalizationName => _characterNamesLocalizationName;
         
         public bool IsLocalizationSetUp { get; private set; }
         public static bool ShowLocalizationKeys { get; set; }
@@ -25,19 +33,13 @@ namespace cherrydev
         {
             IsLocalizationSetUp = true;
             _localizationTableName = name;
+            EditorUtility.SetDirty(this);
         }
 
-        public StringTable GetLocalizationTable()
+        public void AddCharacterNamesTable(string name)
         {
-            StringTable table = LocalizationSettings.StringDatabase.GetTable("MyTable", LocalizationSettings.SelectedLocale);
-
-            if (table == null)
-            {
-                IsLocalizationSetUp = false;
-                return null;
-            }
-
-            return table;
+            _characterNamesLocalizationName = name;
+            EditorUtility.SetDirty(this);
         }
 
         /// <summary>
