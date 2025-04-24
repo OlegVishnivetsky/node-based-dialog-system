@@ -16,12 +16,12 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 1154.9995
-    y: 416.0998
+    x: 1044.5997
+    y: 102.499954
     width: 190
     height: 135
   IsDragging: 1
-  IsSelected: 0
+  IsSelected: 1
   _sentence:
     CharacterName: cherrydev
     Text: End <3
@@ -48,8 +48,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 692.59924
-    y: 463.3
+    x: 540.5993
+    y: 343.30017
     width: 190
     height: 135
   IsDragging: 1
@@ -80,8 +80,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 475.7995
-    y: 344.10004
+    x: 280.59958
+    y: 200.10011
     width: 190
     height: 135
   IsDragging: 1
@@ -112,8 +112,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 211.80045
-    y: 280.10004
+    x: 35.80052
+    y: 324.9001
     width: 190
     height: 135
   IsDragging: 1
@@ -147,10 +147,10 @@ MonoBehaviour:
   - {fileID: -8813047481145087756}
   - {fileID: 3744781970286011628}
   - {fileID: -9074106610206620859}
-  NodeToDrawLineFrom: {fileID: 0}
-  LinePosition: {x: 0, y: 0}
   _localizationTableName: DemoNodeGraph
   _characterNamesLocalizationName: 
+  NodeToDrawLineFrom: {fileID: 0}
+  LinePosition: {x: 0, y: 0}
   IsLocalizationSetUp: 1
 --- !u!114 &3744781970286011628
 MonoBehaviour:
@@ -168,8 +168,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 925.3995
-    y: 342.49994
+    x: 794.1996
+    y: 244.90001
     width: 190
     height: 115
   IsDragging: 1
@@ -197,8 +197,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 706.99915
-    y: 226.4999
+    x: 533.39923
+    y: 134.49992
     width: 190
     height: 135
   IsDragging: 1

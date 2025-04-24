@@ -72,9 +72,7 @@ namespace cherrydev
             }
 
             for (int i = 0; i < amount; i++)
-            {
                 _buttons[i].gameObject.SetActive(true);
-            }
         }
 
         /// <summary>

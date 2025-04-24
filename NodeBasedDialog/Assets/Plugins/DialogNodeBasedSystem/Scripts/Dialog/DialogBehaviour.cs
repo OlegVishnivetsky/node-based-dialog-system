@@ -45,6 +45,8 @@ namespace cherrydev
             set => _isCanSkippingText = value;
         }
 
+        public event Action SentenceStarted;
+        public event Action SentenceEnded;
         public event Action SentenceNodeActivated;
         public event Action<string, string, Sprite> SentenceNodeActivatedWithParameter;
         public event Action AnswerNodeActivated;
@@ -133,7 +135,6 @@ namespace cherrydev
             }
 
             _onDialogStarted?.Invoke();
-
             _currentNodeGraph = dialogNodeGraph;
 
             DefineFirstNode(dialogNodeGraph);
@@ -252,7 +253,6 @@ namespace cherrydev
             if (dialogNodeGraph.NodesList.Count == 0)
             {
                 Debug.LogWarning("The list of nodes in the DialogNodeGraph is empty");
-
                 return;
             }
 
@@ -289,6 +289,7 @@ namespace cherrydev
         private IEnumerator WriteDialogTextRoutine(string text)
         {
             _isCurrentSentenceTyping = true;
+            SentenceStarted?.Invoke();
             
             foreach (char textChar in text)
             {
@@ -305,6 +306,8 @@ namespace cherrydev
             }
 
             _isCurrentSentenceTyping = false;
+            SentenceEnded?.Invoke();
+            
             yield return new WaitUntil(CheckNextSentenceKeyCodes);
 
             CheckForDialogNextNode();
@@ -327,7 +330,6 @@ namespace cherrydev
                 else
                 {
                     _isDialogStarted = false;
-
                     _onDialogFinished?.Invoke();
                 }
             }

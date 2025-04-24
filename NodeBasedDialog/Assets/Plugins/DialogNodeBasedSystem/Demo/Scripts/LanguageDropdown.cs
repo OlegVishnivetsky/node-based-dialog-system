@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+#if UNITY_LOCALIZATION
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+#endif
 
 namespace DialogNodeBasedSystem.Demo.Scripts
 {
@@ -10,8 +12,10 @@ namespace DialogNodeBasedSystem.Demo.Scripts
     {
         [SerializeField] private TMP_Dropdown _languageDropdown;
         
+#if UNITY_LOCALIZATION
         private readonly List<Locale> _availableLocales = new();
-
+#endif
+        
         private void Start() => Initialize();
 
         private void Initialize()

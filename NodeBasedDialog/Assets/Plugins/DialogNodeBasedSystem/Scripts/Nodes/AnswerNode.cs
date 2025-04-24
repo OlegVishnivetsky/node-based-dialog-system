@@ -135,17 +135,20 @@ namespace cherrydev
         /// <param name="iconPathOrName"></param>
         private void DrawAnswerLine(int answerNumber, string iconPathOrName)
         {
+            GUIContent iconContent = EditorGUIUtility.IconContent(iconPathOrName);
+            Texture2D fallbackTexture = Resources.Load<Texture2D>("Dot");
+            
             EditorGUILayout.BeginHorizontal();
-
-            EditorGUILayout.LabelField($"{answerNumber}. ",
-                GUILayout.Width(LabelFieldSpace));
+            EditorGUILayout.LabelField($"{answerNumber}. ", GUILayout.Width(LabelFieldSpace));
 
             Answers[answerNumber - 1] = EditorGUILayout.TextField(Answers[answerNumber - 1],
                 GUILayout.Width(TextFieldWidth));
 
-            EditorGUILayout.LabelField(EditorGUIUtility.IconContent(iconPathOrName),
-                GUILayout.Width(LabelFieldSpace));
-
+            if (fallbackTexture == null)
+                EditorGUILayout.LabelField(iconContent, GUILayout.Width(LabelFieldSpace));
+            else
+                GUILayout.Label(fallbackTexture, GUILayout.Width(LabelFieldSpace), GUILayout.Height(LabelFieldSpace));
+            
             EditorGUILayout.EndHorizontal();
         }
 
