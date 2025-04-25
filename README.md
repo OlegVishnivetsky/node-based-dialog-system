@@ -1,6 +1,6 @@
 #  	:speech_balloon: Dialog Node Based System (Unity asset tool) 	:speech_balloon:
 
-**Last Updated:** 04/23/2025 
+**Last Updated:** 04/25/2025 
 
 **Publisher: cherrydev (Oleg Vishnivetsky)** 
 
