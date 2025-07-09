@@ -17,10 +17,10 @@ You can check the video tutorial on YouTube (note: the video is slightly outdate
 - [4. Answer Node ✍️](#4️⃣-answer-node)
 - [5. Modify Variable Node 🔧](#5️⃣-modify-variable-node)
 - [6. Variable Condition Node 🔍](#6️⃣-variable-condition-node)
-- [7. How to Use and Technical Part 💻](#🔧-how-to-use-and-technical-part)
-- [8. Localization Integration 🌐](#🌐-localization-integration)
-- [9. Timeline Integration ⏱️](#⏱️-timeline-integration)
-- [10. Tool Bar Navigation 🧭](#🧭-tool-bar-navigation)
+- [7. How to Use and Technical Part 💻](#7️⃣-how-to-use-and-technical-part)
+- [8. Localization Integration 🌐](#8️⃣-localization-integration)
+- [9. Timeline Integration ⏱️](#9️⃣-timeline-integration)
+- [10. Tool Bar Navigation 🧭](#🔟-tool-bar-navigation)
 
 ## 1️⃣ Node Editor
 
@@ -80,7 +80,7 @@ dialogBehaviour.SetVariableValue("isDoorOpen", true);
    - **Name**
    - **Sentence**
    - **Sprite** (optional, can be left **null**).
-3. Click the "**Add External Function**" button to add a field for a previously bound function (see [How to Use and Technical Part](#🔧-how-to-use-and-technical-part)).
+3. Click the "**Add External Function**" button to add a field for a previously bound function (see [How to Use and Technical Part](#7️⃣-how-to-use-and-technical-part)).
 4. Click the "**Remove External Function**" button to remove it.
 
 ## 4️⃣ Answer Node
@@ -115,7 +115,7 @@ Used to check variable values and branch dialog flow based on conditions.
 3. Enter the value to compare against.
 4. Connect to different nodes for **TRUE** and **FALSE** outcomes.
 
-## 🔧 How to Use and Technical Part
+## 7️⃣ How to Use and Technical Part
 
 1. Drag and drop the **Dialog Prefab** from the **Prefab folder** and call the **StartDialog** method from the **DialogBehaviour** script attached to the prefab.
 
@@ -193,7 +193,7 @@ public class TestDialogStarter : MonoBehaviour
 
 ![Inspector Parameters](https://github.com/OlegVishnivetsky/node-based-dialog-system/assets/98222611/7ec4fb1b-3a24-466e-b58c-976738d9eb18)
 
-## 🌐 Localization Integration
+## 8️⃣ Localization Integration
 
 This asset integrates with Unity's Localization system for multi-language support.
 
@@ -219,7 +219,7 @@ This asset integrates with Unity's Localization system for multi-language suppor
 
 > ✅ Auto-generated keys work fine if you don't want to customize them.
 
-## ⏱️ Timeline Integration
+## 9️⃣ Timeline Integration
 
 Integrate **Dialog Behaviour** with Unity's Timeline system for cutscenes and scripted sequences.
 
@@ -233,7 +233,7 @@ Integrate **Dialog Behaviour** with Unity's Timeline system for cutscenes and sc
 - Ensure methods are **bound** before using them in timeline clips.
 - Use the **exact method name** used during binding.
 
-## 🧭 Tool Bar Navigation
+## 🔟 Tool Bar Navigation
 
 The editor toolbar enhances your workflow with quick-access functions.
 
