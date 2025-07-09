@@ -58,7 +58,7 @@ The variable system allows dialogs to dynamically react to game state, player ch
 
 Variables are stored in a **Variable Config** (ScriptableObject). Create one and attach it to the **DialogNodeGraph**, or it will be automatically created when you add a variable node.
 
-> 💡 Variables can be marked as "着头 to Prefs" to persist changes in **PlayerPrefs**.
+> 💡 Variables can be marked as "Save to Prefs" to persist changes in **PlayerPrefs**.
 
 ### Usage in Sentence/Answer Nodes
 Variables can be embedded in dialog text using placeholders:
