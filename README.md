@@ -11,16 +11,16 @@ You can check the video tutorial on YouTube (note: the video is slightly outdate
 
 ## 📋 Navigation
 
-- [Node Editor](#1️⃣-node-editor)
-- [Variables](#2️⃣-variables)
-- [Sentence Node](#3️⃣-sentence-node)
-- [Answer Node](#4️⃣-answer-node)
-- [Modify Variable Node](#5️⃣-modify-variable-node)
-- [Variable Condition Node](#6️⃣-variable-condition-node)
-- [How to Use and Technical Part](#🔧-how-to-use-and-technical-part)
-- [Localization Integration](#🌐-localization-integration)
-- [Timeline Integration](#⏱️-timeline-integration)
-- [Tool Bar Navigation](#🧭-tool-bar-navigation)
+- [Node Editor](#node-editor)
+- [Variables](#variables)
+- [Sentence Node](#sentence-node)
+- [Answer Node](#answer-node)
+- [Modify Variable Node](#modify-variable-node)
+- [Variable Condition Node](#variable-condition-node)
+- [How to Use and Technical Part](#how-to-use-and-technical-part)
+- [Localization Integration](#localization-integration)
+- [Timeline Integration](#timeline-integration)
+- [Tool Bar Navigation](#tool-bar-navigation)
 
 ## 1️⃣ Node Editor
 
@@ -48,6 +48,8 @@ You can check the video tutorial on YouTube (note: the video is slightly outdate
 
 The variable system allows dialogs to dynamically react to game state, player choices, or external triggers by reading and modifying values during conversations.
 
+<img src="https://github.com/user-attachments/assets/fb7286f1-af70-470e-8c8a-1ee20e495136" alt="VariableConfig" width="300">
+
 ### Supported Variable Types
 - **Bool**
 - **Int**
@@ -62,8 +64,6 @@ Variables are stored in a **Variable Config** (ScriptableObject). Create one and
 Variables can be embedded in dialog text using placeholders:
 - Example: `"You have {coinCount} coins!"` — Use the variable name inside `{}`.
 - Handled by `DialogTextProcessor.ProcessText(text, handler)` for automatic replacement during dialog display.
-
-<img src="https://github.com/user-attachments/assets/fb7286f1-af70-470e-8c8a-1ee20e495136" alt="VariableConfig" width="300">
 
 ### Accessing/Getting Variables in Code
 ```csharp
@@ -80,7 +80,7 @@ dialogBehaviour.SetVariableValue("isDoorOpen", true);
    - **Name**
    - **Sentence**
    - **Sprite** (optional, can be left **null**).
-3. Click the "**Add External Function**" button to add a field for a previously bound function (see [How to Use and Technical Part](#🔧-how-to-use-and-technical-part)).
+3. Click the "**Add External Function**" button to add a field for a previously bound function (see [How to Use and Technical Part](#how-to-use-and-technical-part)).
 4. Click the "**Remove External Function**" button to remove it.
 
 ## 4️⃣ Answer Node
