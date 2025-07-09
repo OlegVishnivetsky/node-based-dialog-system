@@ -14,40 +14,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LocaleId:
     m_Code: de-DE
-  m_SharedData: {fileID: 11400000, guid: b0b4f013d92a24643a998f8bffdd3a64, type: 2}
+  m_SharedData: {fileID: 11400000, guid: f5475e6fe92ef8b4e84387af526257a0, type: 2}
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 1817944064
-    m_Localized: 'Hallo, dies ist ein Demo-Knotendiagramm! '
+  - m_Id: 539014605807616
+    m_Localized: Willkommen zur Demo des Dialogsystems!
     m_Metadata:
       m_Items: []
-  - m_Id: 2031853568
+  - m_Id: 539014664527872
     m_Localized: cherrydev
     m_Metadata:
       m_Items: []
-  - m_Id: 2040242176
-    m_Localized: Zum ersten Satz
+  - m_Id: 539014664527873
+    m_Localized: "Sie k\xF6nnen Variablen erstellen und sie im Dialog \xE4ndern/anzeigen!"
     m_Metadata:
       m_Items: []
-  - m_Id: 2040242177
-    m_Localized: Zum zweiten Satz
+  - m_Id: 539014664527875
+    m_Localized: "Ihr Ruf ist <color=yellow>{Reputation}</color>. M\xF6gen Sie dieses
+      Werkzeug?"
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825088
-    m_Localized: Willkommen zum ersten Satz
+  - m_Id: 539014664527876
+    m_Localized: Ja
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825089
-    m_Localized: Willkommen zum zweiten Satz
+  - m_Id: 539014664527877
+    m_Localized: Nein
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825090
-    m_Localized: Dialog beenden
+  - m_Id: 539014664527878
+    m_Localized: 'Ich freue mich sehr, Ihr Ruf ist jetzt: <color=yellow>{Reputation}</color>'
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825091
-    m_Localized: Ende <3
+  - m_Id: 539014664527879
+    m_Localized: 'Es ist schade, Ihr Ruf ist jetzt: <color=red>{Reputation}</color>'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539014664527880
+    m_Localized: "Vielen Dank, dass Sie den Demo-Dialogknotengraphen abgeschlossen
+      haben. Lassen Sie uns den letzten Knoten \xFCberpr\xFCfen, der von Ihrem Ruf
+      abh\xE4ngt."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539014664527881
+    m_Localized: "Gutes Ergebnis! Ihr Ruf ist \xFCber null."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539014664527882
+    m_Localized: 'Schlechtes Ergebnis! Ihr Ruf ist unter null '
     m_Metadata:
       m_Items: []
   references:

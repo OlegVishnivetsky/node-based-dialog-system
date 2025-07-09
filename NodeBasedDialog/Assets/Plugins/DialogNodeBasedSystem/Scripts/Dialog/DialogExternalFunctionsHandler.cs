@@ -26,17 +26,6 @@ namespace cherrydev
             }
         }
 
-        public void BindExternalFunctionBase(string funcName, ExternalFunction externalFunction)
-        {
-            if (_externals.ContainsKey(funcName))
-            {
-                Debug.LogWarning($"This function ({funcName}) is already binded");
-                return;
-            }
-
-            _externals[funcName] = externalFunction;
-        }
-
         public void BindExternalFunction(string funcName, Action function)
         {
             BindExternalFunctionBase(funcName, () =>
@@ -44,6 +33,20 @@ namespace cherrydev
                 function();
                 return null;
             });
+        }
+
+        public void UnbindExternalFunction(string funcName)
+        {
+            if (_externals.ContainsKey(funcName))
+                _externals.Remove(funcName);
+        }
+
+        private void BindExternalFunctionBase(string funcName, ExternalFunction externalFunction)
+        {
+            if (_externals.ContainsKey(funcName))
+                _externals.Remove(funcName);
+
+            _externals[funcName] = externalFunction;
         }
     }
 }

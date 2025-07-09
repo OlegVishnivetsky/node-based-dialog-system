@@ -6,7 +6,6 @@ namespace cherrydev
 {
     public class Node : ScriptableObject
     {
-        [HideInInspector] public List<Node> ConnectedNodesList;
         [HideInInspector] public DialogNodeGraph NodeGraph;
         [HideInInspector] public Rect Rect;
 
@@ -19,8 +18,14 @@ namespace cherrydev
         /// Gets the table name from the node graph asset name
         /// </summary>
         /// <returns>The table name for this node's graph</returns>
-        protected string GetTableNameFromNodeGraph() => NodeGraph.LocalizationTableName;
-        
+        protected string GetTableNameFromNodeGraph()
+        {
+            if (NodeGraph == null)
+                return string.Empty;
+            
+            return NodeGraph.LocalizationTableName;
+        }
+
 #if UNITY_EDITOR
 
         /// <summary>
@@ -67,6 +72,12 @@ namespace cherrydev
                     break;
             }
         }
+
+        /// <summary>
+        /// Called by the context menu "RemoveAllConnections",
+        /// must be implemented to properly remove connections.
+        /// </summary>
+		public virtual void RemoveAllConnections() {}
 
         /// <summary>
         /// Process node mouse down event

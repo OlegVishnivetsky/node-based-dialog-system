@@ -6,17 +6,20 @@ using UnityEngine.Localization.Settings;
 
 namespace cherrydev
 {
-    [CreateAssetMenu(menuName = "Scriptable Objects/Nodes/Sentence Node", fileName = "New Sentence Node")]
+    [CreateAssetMenu(menuName = "Scriptable Objects/Node Graph/Nodes/Sentence Node", fileName = "New Sentence Node")]
     public class SentenceNode : Node
     {
         [SerializeField] private Sentence _sentence;
 
-        [Space(10)] public Node ParentNode;
+        [Space(10)] 
+        public Node ParentNode;
         public Node ChildNode;
 
-        [Space(7)] [SerializeField] private bool _isExternalFunc;
+        [Space(7)] 
+        [SerializeField] private bool _isExternalFunc;
         [SerializeField] private string _externalFunctionName;
 
+        [Space(7)]
         [HideInInspector] public string CharacterNameKey;
         [HideInInspector] public string SentenceTextKey;
 
@@ -34,6 +37,9 @@ namespace cherrydev
         /// <returns>Character name (localized if possible)</returns>
         public string GetCharacterName()
         {
+            if (NodeGraph == null)
+                return _sentence.CharacterName;
+            
             string localizedName = TryGetLocalizedString(NodeGraph.CharacterNamesLocalizationName, "Localized name");
             return !string.IsNullOrEmpty(localizedName) ? localizedName : _sentence.CharacterName;
         }
@@ -44,11 +50,13 @@ namespace cherrydev
         /// <returns>Sentence text (localized if possible)</returns>
         public string GetText()
         {
+            if (NodeGraph == null)
+                return _sentence.Text;
+            
             string localizedText = TryGetLocalizedString(SentenceTextKey, "Localized string");
             return !string.IsNullOrEmpty(localizedText) ? localizedText : _sentence.Text;
         }
-
-
+        
         /// <summary>
         /// Try to get localized string for a given key, returns empty if failed
         /// </summary>
@@ -64,6 +72,7 @@ namespace cherrydev
             try
             {
                 string tableName = GetTableNameFromNodeGraph();
+                
                 if (string.IsNullOrEmpty(tableName))
                     return string.Empty;
                 
@@ -146,6 +155,15 @@ namespace cherrydev
             }
 
             GUILayout.EndArea();
+        }
+
+        /// <summary>
+        /// Removes all connections in a sentence node
+        /// </summary>
+        public override void RemoveAllConnections()
+        {
+            ParentNode = null;
+            ChildNode = null;
         }
 
         /// <summary>

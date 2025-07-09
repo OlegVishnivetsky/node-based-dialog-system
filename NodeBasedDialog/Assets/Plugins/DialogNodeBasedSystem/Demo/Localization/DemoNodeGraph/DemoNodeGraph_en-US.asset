@@ -14,40 +14,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LocaleId:
     m_Code: en-US
-  m_SharedData: {fileID: 11400000, guid: b0b4f013d92a24643a998f8bffdd3a64, type: 2}
+  m_SharedData: {fileID: 11400000, guid: f5475e6fe92ef8b4e84387af526257a0, type: 2}
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 1817944064
-    m_Localized: Hello, this is demo node graph!
+  - m_Id: 539014605807616
+    m_Localized: Welcome to the Dialog System Demo!
     m_Metadata:
       m_Items: []
-  - m_Id: 2031853568
+  - m_Id: 539014664527872
     m_Localized: cherrydev
     m_Metadata:
       m_Items: []
-  - m_Id: 2040242176
-    m_Localized: Go to first sentence
+  - m_Id: 539014664527873
+    m_Localized: You can create variables and change/show them in the dialog!
     m_Metadata:
       m_Items: []
-  - m_Id: 2040242177
-    m_Localized: Go to second sentence
+  - m_Id: 539014664527875
+    m_Localized: Your reputation is <color=yellow>{Reputation}</color>. Do you like
+      this tool?
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825088
-    m_Localized: Welcome to first the sentence
+  - m_Id: 539014664527876
+    m_Localized: Yes
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825089
-    m_Localized: Welcome to the second sentence
+  - m_Id: 539014664527877
+    m_Localized: No
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825090
-    m_Localized: End dialog
+  - m_Id: 539014664527878
+    m_Localized: 'I am very glad, your reputation is now: <color=yellow>{Reputation}</color>'
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825091
-    m_Localized: End <3
+  - m_Id: 539014664527879
+    m_Localized: 'It''s a pity, your reputation is now: <color=red>{Reputation}</color>'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539014664527880
+    m_Localized: Thank you for completing demo dialog node graph. Let's check the
+      final node, which depends on your reputation.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539014664527881
+    m_Localized: Good outcome! Your reputation is above zero.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539014664527882
+    m_Localized: 'Bad outcome! Your reputation is below zero '
     m_Metadata:
       m_Items: []
   references:

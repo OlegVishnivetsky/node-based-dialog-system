@@ -7,7 +7,8 @@ using UnityEngine.Localization.Settings;
 
 namespace cherrydev
 {
-    [CreateAssetMenu(menuName = "Scriptable Objects/Nodes/Answer Node", fileName = "New Answer Node")]
+    [CreateAssetMenu(menuName = "Scriptable Objects/Node Graph/Nodes/Answer Node", 
+        fileName = "New Answer Node")]
     public class AnswerNode : Node
     {
         private int _amountOfAnswers = 1;
@@ -15,8 +16,8 @@ namespace cherrydev
         public List<string> Answers = new();
         public List<string> AnswerKeys = new();
 
-        public SentenceNode ParentSentenceNode;
-        public List<SentenceNode> ChildSentenceNodes = new();
+        public Node ParentNode;
+        public List<Node> ChildNodes = new();
 
         private const float LabelFieldSpace = 18f;
         private const float TextFieldWidth = 120f;
@@ -72,7 +73,7 @@ namespace cherrydev
             base.Initialize(rect, nodeName, nodeGraph);
 
             CalculateAmountOfAnswers();
-            ChildSentenceNodes = new List<SentenceNode>(_amountOfAnswers);
+            ChildNodes = new List<Node>(_amountOfAnswers);
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace cherrydev
         {
             base.Draw(nodeStyle, labelStyle);
 
-            ChildSentenceNodes.RemoveAll(item => item == null);
+            ChildNodes.RemoveAll(item => item == null);
 
             float additionalHeight = DialogNodeGraph.ShowLocalizationKeys ? _amountOfAnswers * 20f : 0;
             Rect.size = new Vector2(AnswerNodeWidth, _currentAnswerNodeHeight + additionalHeight);
@@ -114,6 +115,15 @@ namespace cherrydev
             GUILayout.EndArea();
         }
 
+        /// <summary>
+        /// Removes all connections in a answer node
+        /// </summary>
+        public override void RemoveAllConnections()
+        {
+            ParentNode = null;
+            ChildNodes.Clear();
+        }
+        
         /// <summary>
         /// Determines the number of answers depending on answers list count
         /// </summary>
@@ -181,10 +191,18 @@ namespace cherrydev
 
             Answers.RemoveAt(_amountOfAnswers - 1);
 
-            if (ChildSentenceNodes.Count == _amountOfAnswers)
+            if (ChildNodes.Count == _amountOfAnswers)
             {
-                ChildSentenceNodes[_amountOfAnswers - 1].ParentNode = null;
-                ChildSentenceNodes.RemoveAt(_amountOfAnswers - 1);
+                Node nodeToRemove = ChildNodes[_amountOfAnswers - 1];
+                
+                if (nodeToRemove is SentenceNode sentenceNode)
+                    sentenceNode.ParentNode = null;
+                else if (nodeToRemove is ModifyVariableNode modifyVariableNode)
+                    modifyVariableNode.ParentNode = null;
+                else if (nodeToRemove is VariableConditionNode variableConditionNode)
+                    variableConditionNode.ParentNode = null;
+                
+                ChildNodes.RemoveAt(_amountOfAnswers - 1);
             }
 
             _amountOfAnswers--;
@@ -198,9 +216,14 @@ namespace cherrydev
         /// <returns></returns>
         public override bool AddToParentConnectedNode(Node nodeToAdd)
         {
-            if (nodeToAdd.GetType() == typeof(SentenceNode))
+            if (nodeToAdd == this)
+                return false;
+
+            if (nodeToAdd.GetType() == typeof(SentenceNode) 
+                || nodeToAdd.GetType() == typeof(ModifyVariableNode)
+                || nodeToAdd.GetType() == typeof(VariableConditionNode))
             {
-                ParentSentenceNode = (SentenceNode)nodeToAdd;
+                ParentNode = nodeToAdd;
                 return true;
             }
 
@@ -208,23 +231,25 @@ namespace cherrydev
         }
 
         /// <summary>
-        /// Adding nodeToAdd Node to the childSentenceNodes array
+        /// Adding nodeToAdd Node to the child nodes list (supports all node types)
         /// </summary>
         /// <param name="nodeToAdd"></param>
         /// <returns></returns>
         public override bool AddToChildConnectedNode(Node nodeToAdd)
         {
-            SentenceNode sentenceNodeToAdd;
-
-            if (nodeToAdd.GetType() != typeof(AnswerNode))
-                sentenceNodeToAdd = (SentenceNode)nodeToAdd;
-            else
+            if (nodeToAdd.GetType() == typeof(AnswerNode))
                 return false;
 
-            if (IsCanAddToChildConnectedNode(sentenceNodeToAdd))
+            if (IsCanAddToChildConnectedNode(nodeToAdd))
             {
-                ChildSentenceNodes.Add(sentenceNodeToAdd);
-                sentenceNodeToAdd.ParentNode = this;
+                ChildNodes.Add(nodeToAdd);
+                
+                if (nodeToAdd is SentenceNode sentenceNode)
+                    sentenceNode.ParentNode = this;
+                else if (nodeToAdd is ModifyVariableNode modifyVariableNode)
+                    modifyVariableNode.ParentNode = this;
+                else if (nodeToAdd is VariableConditionNode variableConditionNode)
+                    variableConditionNode.ParentNode = this;
 
                 return true;
             }
@@ -244,15 +269,28 @@ namespace cherrydev
         }
 
         /// <summary>
-        /// Checks if sentence node can be added as child of answer node
+        /// Checks if node can be added as child of answer node
         /// </summary>
-        /// <param name="sentenceNodeToAdd"></param>
+        /// <param name="nodeToAdd"></param>
         /// <returns></returns>
-        private bool IsCanAddToChildConnectedNode(SentenceNode sentenceNodeToAdd)
+        private bool IsCanAddToChildConnectedNode(Node nodeToAdd)
         {
-            return sentenceNodeToAdd.ParentNode == null
-                   && ChildSentenceNodes.Count < _amountOfAnswers
-                   && sentenceNodeToAdd.ChildNode != this;
+            if (ChildNodes.Count >= _amountOfAnswers)
+                return false;
+
+            if (nodeToAdd == this)
+                return false;
+
+            if (nodeToAdd is SentenceNode sentenceNode)
+                return sentenceNode.ParentNode == null && sentenceNode.ChildNode != this;
+            if (nodeToAdd is ModifyVariableNode modifyVariableNode)
+                return modifyVariableNode.ParentNode == null && modifyVariableNode.ChildNode != this;
+            if (nodeToAdd is VariableConditionNode variableConditionNode)
+                return variableConditionNode.ParentNode == null && 
+                       variableConditionNode.TrueChildNode != this && 
+                       variableConditionNode.FalseChildNode != this;
+
+            return false;
         }
 #endif
     }

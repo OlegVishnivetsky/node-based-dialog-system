@@ -2,7 +2,6 @@
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
-using UnityEngine;
 #if UNITY_LOCALIZATION
 using UnityEditor.Localization;
 using UnityEngine.Localization.Tables;
@@ -34,22 +33,6 @@ namespace cherrydev
             Type.GetType("UnityEngine.Localization.Tables.StringTable, Unity.Localization") != null;
 
         /// <summary>
-        /// Adds UNITY_LOCALIZATION to the Scripting Define Symbols for the active build target group.
-        /// </summary>
-        private void AddLocalizationDefineSymbol()
-        {
-            BuildTargetGroup buildTargetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
-            string defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
-
-            if (!defines.Contains(LocalizationDefineSymbol))
-            {
-                defines = defines.Length > 0 ? $"{defines};{LocalizationDefineSymbol}" : LocalizationDefineSymbol;
-                PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, defines);
-                Debug.Log($"[NodeGraphLocalizer] Added {LocalizationDefineSymbol} to Scripting Define Symbols for {buildTargetGroup}.");
-            }
-        }
-
-        /// <summary>
         /// Creates localization tables based on the dialog graph.
         /// </summary>
         public void SetupLocalization(DialogNodeGraph dialogGraph, bool createNew = true)
@@ -60,12 +43,16 @@ namespace cherrydev
                 return;
             }
 
-            if (IsLocalizationPackageInstalled() && !IsLocalizationDefineSymbolSet())
+            if (!IsLocalizationPackageInstalled())
             {
-                AddLocalizationDefineSymbol();
-                EditorUtility.DisplayDialog("Define Symbol Added",
-                    "The UNITY_LOCALIZATION define symbol has been added. Please wait for scripts to recompile and try again.",
-                    "OK");
+                bool installPackage = EditorUtility.DisplayDialog(
+                    "Localization Package Required",
+                    "The Unity Localization package is required for this feature. Would you like to install it now?",
+                    "Install", "Cancel");
+
+                if (installPackage)
+                    InstallLocalizationPackage();
+
                 return;
             }
 
@@ -83,11 +70,13 @@ namespace cherrydev
 
                 table = LocalizationEditorSettings.CreateStringTableCollection(dialogGraph.name,
                     $"Assets/Localization/{dialogGraph.name}");
+                
                 if (table == null)
                 {
                     EditorUtility.DisplayDialog("Error", "Failed to create localization table.", "OK");
                     return;
                 }
+                
                 table.ClearAllEntries();
                 dialogGraph.AddLocalizationTable(table.name);
             }
@@ -101,6 +90,7 @@ namespace cherrydev
                 }
 
                 table = LocalizationEditorSettings.GetStringTableCollection(dialogGraph.LocalizationTableName);
+                
                 if (table == null)
                 {
                     EditorUtility.DisplayDialog("Error", "Localization table not found.", "OK");
@@ -124,13 +114,10 @@ namespace cherrydev
                 EditorUtility.DisplayDialog("Update Keys",
                     $"The keys in table [{dialogGraph.LocalizationTableName}] have been updated successfully", "OK");
 #else
-            bool installPackage = EditorUtility.DisplayDialog(
-                "Localization Package Required",
-                "The Unity Localization package is required for this feature. Would you like to install it now?",
-                "Install", "Cancel");
-
-            if (installPackage)
-                InstallLocalizationPackage();
+            EditorUtility.DisplayDialog(
+                "Localization Define Missing",
+                "UNITY_LOCALIZATION define symbol is not set. Localization features will not work properly.",
+                "OK");
 #endif
         }
 
@@ -147,9 +134,6 @@ namespace cherrydev
         }
 
 #if UNITY_LOCALIZATION
-        /// <summary>
-        /// Adds a new entry and generates keys for each field in each sentence node.
-        /// </summary>
         private void SetUpSentenceNodeKeys(Node node, StringTableCollection table)
         {
             SentenceNode sentenceNode = (SentenceNode)node;
@@ -194,9 +178,6 @@ namespace cherrydev
             }
         }
 
-        /// <summary>
-        /// Adds a new entry and generates keys for each answer in each answer node.
-        /// </summary>
         private void SetUpAnswerNodeKeys(Node node, StringTableCollection table)
         {
             AnswerNode answerNode = (AnswerNode)node;
@@ -227,14 +208,8 @@ namespace cherrydev
         private void InstallLocalizationPackage()
         {
             if (IsLocalizationPackageInstalled())
-            {
-                EditorUtility.DisplayDialog("Package Already Installed",
-                    "The Unity Localization package is already installed.",
-                    "OK");
-                AddLocalizationDefineSymbol();
                 return;
-            }
-
+            
             AddRequest request = Client.Add(LocalizationPackageId);
             EditorUtility.DisplayProgressBar("Installing Package",
                 "Installing the Unity Localization package...", 0.5f);
@@ -254,8 +229,6 @@ namespace cherrydev
                             "The Unity Localization package has been installed successfully. " +
                             "Please restart Unity to complete the installation.",
                             "OK");
-                        // Add the define symbol after successful installation
-                        AddLocalizationDefineSymbol();
                     }
                     else
                     {

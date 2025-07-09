@@ -14,40 +14,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LocaleId:
     m_Code: fr-FR
-  m_SharedData: {fileID: 11400000, guid: b0b4f013d92a24643a998f8bffdd3a64, type: 2}
+  m_SharedData: {fileID: 11400000, guid: f5475e6fe92ef8b4e84387af526257a0, type: 2}
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 1817944064
-    m_Localized: "Bonjour, voici le graphe de n\u0153uds de d\xE9monstration!"
+  - m_Id: 539014605807616
+    m_Localized: "Bienvenue dans la d\xE9mo du syst\xE8me de dialogue !"
     m_Metadata:
       m_Items: []
-  - m_Id: 2031853568
+  - m_Id: 539014664527872
     m_Localized: cherrydev
     m_Metadata:
       m_Items: []
-  - m_Id: 2040242176
-    m_Localized: " Aller \xE0 la premi\xE8re phrase"
+  - m_Id: 539014664527873
+    m_Localized: "Vous pouvez cr\xE9er des variables et les modifier/afficher dans
+      le dialogue !"
     m_Metadata:
       m_Items: []
-  - m_Id: 2040242177
-    m_Localized: " Aller \xE0 la deuxi\xE8me phrase"
+  - m_Id: 539014664527875
+    m_Localized: "Votre r\xE9putation est <color=yellow>{Reputation}</color>. Aimez-vous
+      cet outil ?"
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825088
-    m_Localized: " Bienvenue \xE0 la premi\xE8re phrase"
+  - m_Id: 539014664527876
+    m_Localized: Oui
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825089
-    m_Localized: " Bienvenue \xE0 la deuxi\xE8me phrase"
+  - m_Id: 539014664527877
+    m_Localized: Non
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825090
-    m_Localized: " Fin de la bo\xEEte de dialogue"
+  - m_Id: 539014664527878
+    m_Localized: "Je suis tr\xE8s heureux, votre r\xE9putation est maintenant : <color=yellow>{Reputation}</color>"
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825091
-    m_Localized: Fin <3
+  - m_Id: 539014664527879
+    m_Localized: "C'est dommage, votre r\xE9putation est maintenant : <color=red>{Reputation}</color>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539014664527880
+    m_Localized: "Merci d'avoir compl\xE9t\xE9 le graphique des n\u0153uds de dialogue
+      de la d\xE9mo. V\xE9rifions le n\u0153ud final, qui d\xE9pend de votre r\xE9putation."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539014664527881
+    m_Localized: "Bon r\xE9sultat ! Votre r\xE9putation est sup\xE9rieure \xE0 z\xE9ro."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539014664527882
+    m_Localized: "Mauvais r\xE9sultat ! Votre r\xE9putation est inf\xE9rieure \xE0
+      z\xE9ro "
     m_Metadata:
       m_Items: []
   references:

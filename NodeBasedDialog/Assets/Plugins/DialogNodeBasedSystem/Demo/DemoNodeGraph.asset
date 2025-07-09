@@ -1,6 +1,34 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-9074106610206620859
+--- !u!114 &-8341448837715939743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30402c10d300488491eb82eed1db9a20, type: 3}
+  m_Name: Modify Variable Node
+  m_EditorClassIdentifier: 
+  NodeGraph: {fileID: 11400000}
+  Rect:
+    serializedVersion: 2
+    x: 207.40018
+    y: 372.60107
+    width: 210
+    height: 155
+  IsDragging: 1
+  IsSelected: 0
+  _variableName: Reputation
+  _modifyType: 2
+  _boolValue: 0
+  _intValue: 100
+  _floatValue: 0
+  ParentNode: {fileID: 8955379997175096319}
+  ChildNode: {fileID: 5948779960604983931}
+--- !u!114 &-5694142694314560960
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,27 +40,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
   m_Name: Sentence Node
   m_EditorClassIdentifier: 
-  ConnectedNodesList: []
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 1044.5997
-    y: 102.499954
+    x: 704.20074
+    y: 278.20087
     width: 190
     height: 135
   IsDragging: 1
-  IsSelected: 1
+  IsSelected: 0
   _sentence:
     CharacterName: cherrydev
-    Text: End <3
+    Text: Thank you for completing demo dialog node graph. Let's check the final
+      node, which depends on your reputation.
     CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  ParentNode: {fileID: 3744781970286011628}
+  ParentNode: {fileID: 0}
+  ChildNode: {fileID: 2712214907965644317}
+  _isExternalFunc: 0
+  _externalFunctionName: 
+  CharacterNameKey: Demo_Name
+  SentenceTextKey: Demo_Final
+--- !u!114 &-5484529471573560660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  NodeGraph: {fileID: 11400000}
+  Rect:
+    serializedVersion: 2
+    x: 1243.199
+    y: 370.0003
+    width: 190
+    height: 135
+  IsDragging: 1
+  IsSelected: 0
+  _sentence:
+    CharacterName: cherrydev
+    Text: 'Bad outcome! Your reputation is below zero '
+    CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
+  ParentNode: {fileID: 2712214907965644317}
   ChildNode: {fileID: 0}
   _isExternalFunc: 0
   _externalFunctionName: 
-  CharacterNameKey: SentenceName_a7438c5b-3859-41ed-8496-020bbf206e16
-  SentenceTextKey: SentenceText_986442a6-d397-4b8f-8c82-f43ec1b37fcc
---- !u!114 &-8813047481145087756
+  CharacterNameKey: Demo_Name
+  SentenceTextKey: Demo_BadFinal
+--- !u!114 &-2687158952091482671
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,90 +103,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
   m_Name: Sentence Node
   m_EditorClassIdentifier: 
-  ConnectedNodesList: []
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 540.5993
-    y: 343.30017
+    x: -586.20013
+    y: 339.80096
     width: 190
     height: 135
   IsDragging: 1
   IsSelected: 0
   _sentence:
     CharacterName: cherrydev
-    Text: Welcome to the second sentence
-    CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  ParentNode: {fileID: -7983766367039425753}
-  ChildNode: {fileID: 3744781970286011628}
-  _isExternalFunc: 0
-  _externalFunctionName: 
-  CharacterNameKey: SentenceName_a7438c5b-3859-41ed-8496-020bbf206e16
-  SentenceTextKey: SentenceText_427b31d9-4863-4514-be39-1b9540e9211f
---- !u!114 &-7983766367039425753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1717f3c6dba9fa40844ddacac301510, type: 3}
-  m_Name: Answer Node
-  m_EditorClassIdentifier: 
-  ConnectedNodesList: []
-  NodeGraph: {fileID: 11400000}
-  Rect:
-    serializedVersion: 2
-    x: 280.59958
-    y: 200.10011
-    width: 190
-    height: 135
-  IsDragging: 1
-  IsSelected: 0
-  Answers:
-  - Go to first sentence
-  - Go to second sentence
-  AnswerKeys:
-  - Answer_73419b8d-b28a-4be9-9f73-2e4967cd3077
-  - Answer_4c5f4b30-a1d1-4e26-a6ac-5c099d6e344e
-  ParentSentenceNode: {fileID: -5774457913687574346}
-  ChildSentenceNodes:
-  - {fileID: 8807642734761001252}
-  - {fileID: -8813047481145087756}
---- !u!114 &-5774457913687574346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
-  m_Name: Sentence Node
-  m_EditorClassIdentifier: 
-  ConnectedNodesList: []
-  NodeGraph: {fileID: 11400000}
-  Rect:
-    serializedVersion: 2
-    x: 35.80052
-    y: 324.9001
-    width: 190
-    height: 135
-  IsDragging: 1
-  IsSelected: 0
-  _sentence:
-    CharacterName: cherrydev
-    Text: Hello, this is demo node graph!
+    Text: Welcome to the Dialog System Demo!
     CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
   ParentNode: {fileID: 0}
-  ChildNode: {fileID: -7983766367039425753}
+  ChildNode: {fileID: 8641861406733518020}
   _isExternalFunc: 0
   _externalFunctionName: 
-  CharacterNameKey: SentenceName_a7438c5b-3859-41ed-8496-020bbf206e16
-  SentenceTextKey: SentenceText_42a408bd-2c5e-4e63-a2f0-eca43065b219
+  CharacterNameKey: Demo_Name
+  SentenceTextKey: Demo_Welcome
+--- !u!114 &-969988046379566455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  NodeGraph: {fileID: 11400000}
+  Rect:
+    serializedVersion: 2
+    x: -291.80014
+    y: 239.00056
+    width: 190
+    height: 135
+  IsDragging: 1
+  IsSelected: 0
+  _sentence:
+    CharacterName: cherrydev
+    Text: Your reputation is <color=yellow>{Reputation}</color>. Do you like this
+      tool?
+    CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
+  ParentNode: {fileID: 8641861406733518020}
+  ChildNode: {fileID: 8955379997175096319}
+  _isExternalFunc: 0
+  _externalFunctionName: 
+  CharacterNameKey: Demo_Name
+  SentenceTextKey: Demo_ReputationShow1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,18 +167,25 @@ MonoBehaviour:
   m_Name: DemoNodeGraph
   m_EditorClassIdentifier: 
   NodesList:
-  - {fileID: -5774457913687574346}
-  - {fileID: -7983766367039425753}
-  - {fileID: 8807642734761001252}
-  - {fileID: -8813047481145087756}
-  - {fileID: 3744781970286011628}
-  - {fileID: -9074106610206620859}
+  - {fileID: -2687158952091482671}
+  - {fileID: 8641861406733518020}
+  - {fileID: -969988046379566455}
+  - {fileID: 8955379997175096319}
+  - {fileID: 5641350639572772662}
+  - {fileID: -8341448837715939743}
+  - {fileID: 4939571328540799565}
+  - {fileID: 5948779960604983931}
+  - {fileID: -5694142694314560960}
+  - {fileID: 6631677728925077753}
+  - {fileID: 2712214907965644317}
+  - {fileID: -5484529471573560660}
+  VariablesConfig: {fileID: 11400000, guid: 7d395dfdd8feba244ad2f5b23f1b0693, type: 2}
   _localizationTableName: DemoNodeGraph
   _characterNamesLocalizationName: 
   NodeToDrawLineFrom: {fileID: 0}
   LinePosition: {x: 0, y: 0}
   IsLocalizationSetUp: 1
---- !u!114 &3744781970286011628
+--- !u!114 &2712214907965644317
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,27 +194,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1717f3c6dba9fa40844ddacac301510, type: 3}
-  m_Name: Answer Node
+  m_Script: {fileID: 11500000, guid: 38789157e7795244280823d019530045, type: 3}
+  m_Name: Variable Condition Node
   m_EditorClassIdentifier: 
-  ConnectedNodesList: []
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 794.1996
-    y: 244.90001
-    width: 190
-    height: 115
+    x: 930.3997
+    y: 260.40036
+    width: 240
+    height: 160
   IsDragging: 1
   IsSelected: 0
-  Answers:
-  - End dialog
-  AnswerKeys:
-  - Answer_f0ce8366-c6c4-4e60-8a72-f79ae2e1cf4c
-  ParentSentenceNode: {fileID: 8807642734761001252}
-  ChildSentenceNodes:
-  - {fileID: -9074106610206620859}
---- !u!114 &8807642734761001252
+  _variableName: Reputation
+  _conditionType: 2
+  _boolTargetValue: 0
+  _intTargetValue: 0
+  _floatTargetValue: 0
+  ParentNode: {fileID: -5694142694314560960}
+  TrueChildNode: {fileID: 6631677728925077753}
+  FalseChildNode: {fileID: -5484529471573560660}
+--- !u!114 &4939571328540799565
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -193,23 +226,174 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
   m_Name: Sentence Node
   m_EditorClassIdentifier: 
-  ConnectedNodesList: []
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 533.39923
-    y: 134.49992
+    x: 460.20053
+    y: 172.59972
     width: 190
     height: 135
   IsDragging: 1
   IsSelected: 0
   _sentence:
     CharacterName: cherrydev
-    Text: Welcome to first the sentence
+    Text: 'I am very glad, your reputation is now: <color=yellow>{Reputation}</color>'
     CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  ParentNode: {fileID: -7983766367039425753}
-  ChildNode: {fileID: 3744781970286011628}
+  ParentNode: {fileID: 5641350639572772662}
+  ChildNode: {fileID: -5694142694314560960}
   _isExternalFunc: 0
   _externalFunctionName: 
-  CharacterNameKey: SentenceName_a7438c5b-3859-41ed-8496-020bbf206e16
-  SentenceTextKey: SentenceText_f37ff077-24b6-4c9d-a879-e263578bcd14
+  CharacterNameKey: Demo_Name
+  SentenceTextKey: Demo_ReputationShow2
+--- !u!114 &5641350639572772662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30402c10d300488491eb82eed1db9a20, type: 3}
+  m_Name: Modify Variable Node
+  m_EditorClassIdentifier: 
+  NodeGraph: {fileID: 11400000}
+  Rect:
+    serializedVersion: 2
+    x: 201.80008
+    y: 167.7996
+    width: 210
+    height: 155
+  IsDragging: 1
+  IsSelected: 0
+  _variableName: Reputation
+  _modifyType: 1
+  _boolValue: 0
+  _intValue: 100
+  _floatValue: 0
+  ParentNode: {fileID: 8955379997175096319}
+  ChildNode: {fileID: 4939571328540799565}
+--- !u!114 &5948779960604983931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  NodeGraph: {fileID: 11400000}
+  Rect:
+    serializedVersion: 2
+    x: 466.6002
+    y: 383.00092
+    width: 190
+    height: 135
+  IsDragging: 1
+  IsSelected: 0
+  _sentence:
+    CharacterName: cherrydev
+    Text: 'It''s a pity, your reputation is now: <color=red>{Reputation}</color>'
+    CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
+  ParentNode: {fileID: -8341448837715939743}
+  ChildNode: {fileID: -5694142694314560960}
+  _isExternalFunc: 0
+  _externalFunctionName: 
+  CharacterNameKey: Demo_Name
+  SentenceTextKey: Demo_ReputationShow3
+--- !u!114 &6631677728925077753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  NodeGraph: {fileID: 11400000}
+  Rect:
+    serializedVersion: 2
+    x: 1235.3992
+    y: 133.40012
+    width: 190
+    height: 135
+  IsDragging: 1
+  IsSelected: 0
+  _sentence:
+    CharacterName: cherrydev
+    Text: Good outcome! Your reputation is above zero.
+    CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
+  ParentNode: {fileID: 2712214907965644317}
+  ChildNode: {fileID: 0}
+  _isExternalFunc: 0
+  _externalFunctionName: 
+  CharacterNameKey: Demo_Name
+  SentenceTextKey: Demo_GoodFinal
+--- !u!114 &8641861406733518020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a32a464d8ccff4e40a60c45b40a1e648, type: 3}
+  m_Name: Sentence Node
+  m_EditorClassIdentifier: 
+  NodeGraph: {fileID: 11400000}
+  Rect:
+    serializedVersion: 2
+    x: -359.00003
+    y: 430.20074
+    width: 190
+    height: 135
+  IsDragging: 1
+  IsSelected: 0
+  _sentence:
+    CharacterName: cherrydev
+    Text: You can create variables and change/show them in the dialog!
+    CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
+  ParentNode: {fileID: -2687158952091482671}
+  ChildNode: {fileID: -969988046379566455}
+  _isExternalFunc: 0
+  _externalFunctionName: 
+  CharacterNameKey: Demo_Name
+  SentenceTextKey: Demo_YouCanCreate
+--- !u!114 &8955379997175096319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1717f3c6dba9fa40844ddacac301510, type: 3}
+  m_Name: Answer Node
+  m_EditorClassIdentifier: 
+  NodeGraph: {fileID: 11400000}
+  Rect:
+    serializedVersion: 2
+    x: -47.00052
+    y: 271.0008
+    width: 190
+    height: 135
+  IsDragging: 1
+  IsSelected: 0
+  Answers:
+  - Yes
+  - No
+  AnswerKeys:
+  - Demo_Answer1
+  - Demo_Answer2
+  ParentNode: {fileID: -969988046379566455}
+  ChildNodes:
+  - {fileID: 5641350639572772662}
+  - {fileID: -8341448837715939743}

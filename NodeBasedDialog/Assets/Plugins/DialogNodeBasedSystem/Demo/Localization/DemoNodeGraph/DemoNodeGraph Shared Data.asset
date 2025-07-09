@@ -13,48 +13,60 @@ MonoBehaviour:
   m_Name: DemoNodeGraph Shared Data
   m_EditorClassIdentifier: 
   m_TableCollectionName: DemoNodeGraph
-  m_TableCollectionNameGuidString: b0b4f013d92a24643a998f8bffdd3a64
+  m_TableCollectionNameGuidString: f5475e6fe92ef8b4e84387af526257a0
   m_Entries:
-  - m_Id: 1817944064
-    m_Key: SentenceText_42a408bd-2c5e-4e63-a2f0-eca43065b219
+  - m_Id: 539014605807616
+    m_Key: Demo_Welcome
     m_Metadata:
       m_Items: []
-  - m_Id: 2031853568
-    m_Key: SentenceName_a7438c5b-3859-41ed-8496-020bbf206e16
+  - m_Id: 539014664527872
+    m_Key: Demo_Name
     m_Metadata:
       m_Items: []
-  - m_Id: 2040242176
-    m_Key: Answer_73419b8d-b28a-4be9-9f73-2e4967cd3077
+  - m_Id: 539014664527873
+    m_Key: Demo_YouCanCreate
     m_Metadata:
       m_Items: []
-  - m_Id: 2040242177
-    m_Key: Answer_4c5f4b30-a1d1-4e26-a6ac-5c099d6e344e
+  - m_Id: 539014664527875
+    m_Key: Demo_ReputationShow1
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825088
-    m_Key: SentenceText_f37ff077-24b6-4c9d-a879-e263578bcd14
+  - m_Id: 539014664527876
+    m_Key: Demo_Answer1
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825089
-    m_Key: SentenceText_427b31d9-4863-4514-be39-1b9540e9211f
+  - m_Id: 539014664527877
+    m_Key: Demo_Answer2
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825090
-    m_Key: Answer_f0ce8366-c6c4-4e60-8a72-f79ae2e1cf4c
+  - m_Id: 539014664527878
+    m_Key: Demo_ReputationShow2
     m_Metadata:
       m_Items: []
-  - m_Id: 2052825091
-    m_Key: SentenceText_986442a6-d397-4b8f-8c82-f43ec1b37fcc
+  - m_Id: 539014664527879
+    m_Key: Demo_ReputationShow3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539014664527880
+    m_Key: Demo_Final
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539014664527881
+    m_Key: Demo_GoodFinal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539014664527882
+    m_Key: Demo_BadFinal
     m_Metadata:
       m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
-    rid: 5515509301028847616
+    rid: 9073421918650499074
   references:
     version: 2
     RefIds:
-    - rid: 5515509301028847616
+    - rid: 9073421918650499074
       type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
       data:
-        m_CustomEpoch: 1745421260297
+        m_CustomEpoch: 1751922584822

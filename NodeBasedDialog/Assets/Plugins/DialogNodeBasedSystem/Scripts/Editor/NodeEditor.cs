@@ -51,11 +51,15 @@ namespace cherrydev
         private const float GridSmallLineSpacing = 25;
 
         private bool _isLeftMouseDragFromEmpty;
-        private bool _showLocalizationKeys;
         private bool _isMiddleMouseClickedOnNode;
+        
+        private bool _showLocalizationKeys;
         private bool _showNodesDropdown;
-
-        // Search functionality
+        private bool _stylesInitialized;
+        
+        private bool _isConnectingVariableNode;
+        private bool _isConnectingToTrue;
+        
         private string _searchText = "";
 
         /// <summary>
@@ -64,9 +68,7 @@ namespace cherrydev
         private void OnEnable()
         {
             Selection.selectionChanged += ChangeEditorWindowOnSelection;
-
-            InitializeToolbarStyles();
-
+            
             _nodeStyle = new GUIStyle();
             _nodeStyle.normal.background = EditorGUIUtility.Load(StringConstants.Node) as Texture2D;
             _nodeStyle.padding = new RectOffset(NodePadding, NodePadding, NodePadding, NodePadding);
@@ -139,6 +141,12 @@ namespace cherrydev
         /// </summary>
         private void OnGUI()
         {
+            if (!_stylesInitialized)
+            {
+                InitializeToolbarStyles();
+                _stylesInitialized = true;
+            }
+            
             EditorGUI.DrawRect(new Rect(0, 0, position.width, position.height), _backgroundColor);
             DrawToolbar();
             GUI.BeginGroup(new Rect(0, ToolbarHeight, position.width, position.height - ToolbarHeight));
@@ -159,7 +167,7 @@ namespace cherrydev
             if (GUI.changed)
                 Repaint();
         }
-
+        
         /// <summary>
         /// Setting up nodes when opening the editor
         /// </summary>
@@ -359,10 +367,27 @@ namespace cherrydev
                         return;
                     }
                 }
+                else if (node.GetType() == typeof(ModifyVariableNode))
+                {
+                    ModifyVariableNode modifyVariableNode = (ModifyVariableNode)node;
+                    if (!string.IsNullOrEmpty(modifyVariableNode.VariableName) && 
+                        modifyVariableNode.VariableName.ToLower().Contains(searchText))
+                    {
+                        CenterAndSelectNode(node);
+                        return;
+                    }
+                }
+                else if (node.GetType() == typeof(VariableConditionNode))
+                {
+                    VariableConditionNode variableConditionNode = (VariableConditionNode)node;
+                    if (!string.IsNullOrEmpty(variableConditionNode.VariableName) && 
+                        variableConditionNode.VariableName.ToLower().Contains(searchText))
+                    {
+                        CenterAndSelectNode(node);
+                        return;
+                    }
+                }
             }
-
-            // If we got here, no node was found
-            Debug.Log($"No node containing '{searchText}' was found.");
         }
 
         /// <summary>
@@ -387,7 +412,7 @@ namespace cherrydev
                     if (nodeText.Length > 20)
                         nodeText = nodeText.Substring(0, 20) + "...";
                 }
-                else
+                else if (node.GetType() == typeof(AnswerNode))
                 {
                     AnswerNode answerNode = (AnswerNode)node;
                     prefix = "A";
@@ -400,6 +425,31 @@ namespace cherrydev
 
                     if (nodeText.Length > 20)
                         nodeText = nodeText.Substring(0, 20) + "...";
+                }
+                else if (node.GetType() == typeof(ModifyVariableNode))
+                {
+                    ModifyVariableNode modifyVariableNode = (ModifyVariableNode)node;
+                    prefix = "MV";
+                    nodeText = !string.IsNullOrEmpty(modifyVariableNode.VariableName) ? 
+                        $"Modify {modifyVariableNode.VariableName}" : "Empty";
+
+                    if (nodeText.Length > 20)
+                        nodeText = nodeText.Substring(0, 20) + "...";
+                }
+                else if (node.GetType() == typeof(VariableConditionNode))
+                {
+                    VariableConditionNode variableConditionNode = (VariableConditionNode)node;
+                    prefix = "VC";
+                    nodeText = !string.IsNullOrEmpty(variableConditionNode.VariableName) ? 
+                        $"If {variableConditionNode.VariableName}" : "Empty";
+
+                    if (nodeText.Length > 20)
+                        nodeText = nodeText.Substring(0, 20) + "...";
+                }
+                else
+                {
+                    prefix = "?";
+                    nodeText = "Unknown";
                 }
 
                 string menuItemName = $"{prefix}: {nodeText}";
@@ -464,14 +514,21 @@ namespace cherrydev
                 {
                     AnswerNode answerNode = (AnswerNode)node;
 
-                    for (int i = 0; i < answerNode.ChildSentenceNodes.Count; i++)
+                    for (int i = 0; i < answerNode.ChildNodes.Count; i++)
                     {
-                        if (answerNode.ChildSentenceNodes[i] != null)
+                        if (answerNode.ChildNodes[i] != null)
                         {
                             parentNode = node;
-                            childNode = answerNode.ChildSentenceNodes[i];
+                            childNode = answerNode.ChildNodes[i];
 
-                            DrawConnectionLine(parentNode, childNode);
+                            Color connectionColor = Color.white;
+
+                            if (childNode is ModifyVariableNode)
+                                connectionColor = new Color(0.8f, 0.6f, 0.2f);
+                            else if (childNode is VariableConditionNode)
+                                connectionColor = new Color(0.6f, 0.2f, 0.8f);
+
+                            DrawConnectionLine(parentNode, childNode, connectionColor);
                         }
                     }
                 }
@@ -487,6 +544,38 @@ namespace cherrydev
                         DrawConnectionLine(parentNode, childNode);
                     }
                 }
+                else if (node.GetType() == typeof(ModifyVariableNode))
+                {
+                    ModifyVariableNode modifyVariableNode = (ModifyVariableNode)node;
+
+                    if (modifyVariableNode.ChildNode != null)
+                    {
+                        parentNode = node;
+                        childNode = modifyVariableNode.ChildNode;
+
+                        DrawConnectionLine(parentNode, childNode);
+                    }
+                }
+                else if (node.GetType() == typeof(VariableConditionNode))
+                {
+                    VariableConditionNode variableConditionNode = (VariableConditionNode)node;
+
+                    if (variableConditionNode.TrueChildNode != null)
+                    {
+                        parentNode = node;
+                        childNode = variableConditionNode.TrueChildNode;
+
+                        DrawConnectionLine(parentNode, childNode, new Color(0.2f, 0.8f, 0.2f), "T");
+                    }
+
+                    if (variableConditionNode.FalseChildNode != null)
+                    {
+                        parentNode = node;
+                        childNode = variableConditionNode.FalseChildNode;
+
+                        DrawConnectionLine(parentNode, childNode, new Color(0.8f, 0.2f, 0.2f), "F");
+                    }
+                }
             }
         }
 
@@ -495,8 +584,12 @@ namespace cherrydev
         /// </summary>
         /// <param name="parentNode"></param>
         /// <param name="childNode"></param>
-        private void DrawConnectionLine(Node parentNode, Node childNode)
+        /// <param name="lineColor">Optional line color</param>
+        /// <param name="label">Optional label for the connection</param>
+        private void DrawConnectionLine(Node parentNode, Node childNode, Color? lineColor = null, string label = null)
         {
+            Color color = lineColor ?? Color.white;
+
             Vector2 startPosition = parentNode.Rect.center;
             Vector2 endPosition = childNode.Rect.center;
 
@@ -510,7 +603,7 @@ namespace cherrydev
                 endPosition,
                 startTangent,
                 endTangent,
-                Color.white,
+                color,
                 null,
                 ConnectingLineWidth
             );
@@ -526,15 +619,43 @@ namespace cherrydev
             Vector2 midPosition = bezierPoints[bezierPoints.Length / 2];
             Vector2 direction = (endPosition - startPosition).normalized;
 
-            if (parentNode is AnswerNode answerNode && childNode is SentenceNode sentenceNode)
+            if (!string.IsNullOrEmpty(label))
             {
-                int index = answerNode.ChildSentenceNodes.IndexOf(sentenceNode);
+                Handles.color = new Color(0.2f, 0.2f, 0.2f, 0.8f);
+                Handles.DrawSolidDisc(midPosition, Vector3.forward, 12f);
+
+                Handles.color = Color.white;
+
+                GUIStyle style = new GUIStyle();
+                style.normal.textColor = Color.white;
+                style.alignment = TextAnchor.MiddleCenter;
+                style.fontSize = 12;
+                style.fontStyle = FontStyle.Bold;
+
+                Handles.BeginGUI();
+                GUI.Label(new Rect(midPosition.x - 10, midPosition.y - 10, 20, 20), label, style);
+                Handles.EndGUI();
+            }
+            else if (parentNode is AnswerNode answerNode)
+            {
+                int index = answerNode.ChildNodes.IndexOf(childNode);
 
                 if (index >= 0)
                 {
                     string indexText = (index + 1).ToString();
 
-                    Handles.color = new Color(0.2f, 0.2f, 0.2f, 0.8f);
+                    Color backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
+                    if (childNode is ModifyVariableNode)
+                        backgroundColor = new Color(0.8f, 0.6f, 0.2f, 0.8f);
+                    else if (childNode is VariableConditionNode)
+                        backgroundColor = new Color(0.6f, 0.2f, 0.8f, 0.8f);
+                    else if (childNode is SentenceNode)
+                        backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
+                        backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
+                        backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
+                        backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
+
+                    Handles.color = backgroundColor;
                     Handles.DrawSolidDisc(midPosition, Vector3.forward, 12f);
 
                     Handles.color = Color.white;
@@ -554,7 +675,7 @@ namespace cherrydev
             }
             else
                 DrawArrowAtMidpoint(midPosition, direction);
-            
+
             GUI.changed = true;
         }
         
@@ -864,10 +985,7 @@ namespace cherrydev
                 Node node = GetHighlightedNode(currentEvent.mousePosition);
 
                 if (node != null)
-                {
-                    _currentNodeGraph.NodeToDrawLineFrom.AddToChildConnectedNode(node);
-                    node.AddToParentConnectedNode(_currentNodeGraph.NodeToDrawLineFrom);
-                }
+                    NodeConnectionHelper.CreateConnection(_currentNodeGraph.NodeToDrawLineFrom, node);
             }
         }
 
@@ -957,6 +1075,8 @@ namespace cherrydev
 
             contextMenu.AddItem(new GUIContent("Create Sentence Node"), false, CreateSentenceNode, mousePosition);
             contextMenu.AddItem(new GUIContent("Create Answer Node"), false, CreateAnswerNode, mousePosition);
+            contextMenu.AddItem(new GUIContent("Create Modify Variable Node"), false, CreateModifyVariableNode, mousePosition);
+            contextMenu.AddItem(new GUIContent("Create Variable Condition Node"), false, CreateVariableConditionNode, mousePosition);
             contextMenu.AddSeparator("");
             contextMenu.AddItem(new GUIContent("Select All Nodes"), false, SelectAllNodes, mousePosition);
             contextMenu.AddItem(new GUIContent("Remove Selected Nodes"), false, RemoveSelectedNodes, mousePosition);
@@ -964,6 +1084,32 @@ namespace cherrydev
             contextMenu.ShowAsContext();
         }
 
+        /// <summary>
+        /// Create Variable Condition Node at mouse position and add it to Node Graph asset
+        /// </summary>
+        /// <param name="mousePositionObject"></param>
+        private void CreateVariableConditionNode(object mousePositionObject)
+        {
+            if (_currentNodeGraph != null)
+                _currentNodeGraph.EnsureVariablesConfig();
+            
+            VariableConditionNode variableConditionNode = CreateInstance<VariableConditionNode>();
+            InitializeNode(mousePositionObject, variableConditionNode, "Variable Condition Node");
+        }
+
+        /// <summary>
+        /// Create Modify Variable Node at mouse position and add it to Node Graph asset
+        /// </summary>
+        /// <param name="mousePositionObject"></param>
+        private void CreateModifyVariableNode(object mousePositionObject)
+        {
+            if (_currentNodeGraph != null)
+                _currentNodeGraph.EnsureVariablesConfig();
+            
+            ModifyVariableNode modifyVariableNode = CreateInstance<ModifyVariableNode>();
+            InitializeNode(mousePositionObject, modifyVariableNode, "Modify Variable Node");
+        }
+        
         /// <summary>
         /// Create Sentence Node at mouse position and add it to Node Graph asset
         /// </summary>
@@ -1075,19 +1221,10 @@ namespace cherrydev
                 if (!node.IsSelected)
                     continue;
 
-                if (node.GetType() == typeof(AnswerNode))
-                {
-                    AnswerNode answerNode = (AnswerNode)node;
-                    answerNode.ParentSentenceNode = null;
-                    answerNode.ChildSentenceNodes.Clear();
-                }
-                else if (node.GetType() == typeof(SentenceNode))
-                {
-                    SentenceNode sentenceNode = (SentenceNode)node;
-                    sentenceNode.ParentNode = null;
-                    sentenceNode.ChildNode = null;
-                }
+                NodeConnectionHelper.RemoveAllConnectionsForNode(node);
             }
+    
+            GUI.changed = true;
         }
 
         /// <summary>

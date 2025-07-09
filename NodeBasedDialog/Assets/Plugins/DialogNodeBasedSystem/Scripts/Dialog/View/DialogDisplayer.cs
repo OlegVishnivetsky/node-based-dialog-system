@@ -15,6 +15,7 @@ namespace cherrydev
         {
             _dialogBehaviour.AddListenerToDialogFinishedEvent(DisableDialogPanel);
 
+            _dialogBehaviour.DialogDisabled += DisableDialogPanel;
             _dialogBehaviour.AnswerButtonSetUp += SetUpAnswerButtonsClickEvent;
 
             _dialogBehaviour.DialogTextCharWrote += _dialogSentencePanel.IncreaseMaxVisibleCharacters;
@@ -39,6 +40,7 @@ namespace cherrydev
 
         private void OnDisable()
         {
+            _dialogBehaviour.DialogDisabled -= DisableDialogPanel;
             _dialogBehaviour.AnswerButtonSetUp -= SetUpAnswerButtonsClickEvent;
 
             _dialogBehaviour.DialogTextCharWrote -= _dialogSentencePanel.IncreaseMaxVisibleCharacters;
@@ -116,6 +118,7 @@ namespace cherrydev
         
         /// <summary>
         /// Removing all listeners and Setting up answer button onClick event
+        /// UPDATED: Now uses the new ChildNodes system and passes the button index
         /// </summary>
         /// <param name="index"></param>
         /// <param name="answerNode"></param>
@@ -123,7 +126,7 @@ namespace cherrydev
         {
             _dialogAnswerPanel.GetButtonByIndex(index).onClick.RemoveAllListeners();
             _dialogAnswerPanel.AddButtonOnClickListener(index, 
-                () => _dialogBehaviour.SetCurrentNodeAndHandleDialogGraph(answerNode.ChildSentenceNodes[index]));
+                () => _dialogBehaviour.SetCurrentNodeAndHandleDialogGraph(index));
         }
 
         /// <summary>
