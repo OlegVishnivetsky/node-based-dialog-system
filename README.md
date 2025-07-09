@@ -11,16 +11,16 @@ You can check the video tutorial on YouTube (note: the video is slightly outdate
 
 ## 📋 Navigation
 
-- [Node Editor](#node-editor)
-- [Variables](#variables)
-- [Sentence Node](#sentence-node)
-- [Answer Node](#answer-node)
-- [Modify Variable Node](#modify-variable-node)
-- [Variable Condition Node](#variable-condition-node)
-- [How to Use and Technical Part](#how-to-use-and-technical-part)
-- [Localization Integration](#localization-integration)
-- [Timeline Integration](#timeline-integration)
-- [Tool Bar Navigation](#tool-bar-navigation)
+- [1. Node Editor 🗂️](#1-node-editor-)
+- [2. Variables 🧠](#2-variables-)
+- [3. Sentence Node 🗣️](#3-sentence-node-)
+- [4. Answer Node ✍️](#4-answer-node-)
+- [5. Modify Variable Node 🔧](#5-modify-variable-node-)
+- [6. Variable Condition Node 🔍](#6-variable-condition-node-)
+- [7. How to Use and Technical Part 💻](#7-how-to-use-and-technical-part-)
+- [8. Localization Integration 🌐](#8-localization-integration-)
+- [9. Timeline Integration ⏱️](#9-timeline-integration-)
+- [10. Tool Bar Navigation 🧭](#10-tool-bar-navigation-)
 
 ## 1️⃣ Node Editor
 
