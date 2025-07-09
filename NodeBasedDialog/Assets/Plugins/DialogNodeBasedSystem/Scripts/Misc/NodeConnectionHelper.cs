@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 
 namespace cherrydev
 {
@@ -47,46 +48,31 @@ namespace cherrydev
         /// </summary>
         private static void PrepareForNewConnection(Node parent, Node child)
         {
-            // Handle parent node cleanup
             switch (parent)
             {
                 case SentenceNode sentenceParent:
-                    // Sentence nodes can only have one child, so remove the old one
                     if (sentenceParent.ChildNode != null && sentenceParent.ChildNode != child)
-                    {
                         RemoveConnection(sentenceParent, sentenceParent.ChildNode);
-                    }
                     break;
 
                 case ModifyVariableNode modifyParent:
-                    // Modify Variable nodes can only have one child
                     if (modifyParent.ChildNode != null && modifyParent.ChildNode != child)
-                    {
                         RemoveConnection(modifyParent, modifyParent.ChildNode);
-                    }
                     break;
 
                 case VariableConditionNode conditionParent:
-                    // Variable Condition nodes can have two children, but each slot is unique
-                    // This is handled in the node's AddToChildConnectedNode method
                     break;
 
                 case AnswerNode answerParent:
-                    // Answer nodes can have multiple children up to the answer count
-                    // Check if child already exists in another slot
                     if (answerParent.ChildNodes.Contains(child))
-                    {
                         answerParent.ChildNodes.Remove(child);
-                    }
                     break;
             }
 
-            // Handle child node cleanup
             Node existingParent = GetParentNode(child);
+            
             if (existingParent != null && existingParent != parent)
-            {
                 RemoveConnection(existingParent, child);
-            }
         }
 
         /// <summary>
@@ -97,7 +83,6 @@ namespace cherrydev
             if (parent == null || child == null)
                 return;
 
-            // Remove child from parent
             switch (parent)
             {
                 case SentenceNode sentenceParent:
@@ -122,7 +107,6 @@ namespace cherrydev
                     break;
             }
 
-            // Remove parent from child
             switch (child)
             {
                 case SentenceNode sentenceChild:
@@ -154,13 +138,8 @@ namespace cherrydev
             if (nodeToDisconnect == null)
                 return;
 
-            // Remove this node from its parent's children
             RemoveFromParent(nodeToDisconnect);
-            
-            // Remove this node from its children's parents
             RemoveFromChildren(nodeToDisconnect);
-            
-            // Clear the node's own connections
             nodeToDisconnect.RemoveAllConnections();
         }
 
@@ -170,6 +149,7 @@ namespace cherrydev
         private static void RemoveFromParent(Node node)
         {
             Node parentNode = GetParentNode(node);
+            
             if (parentNode == null)
                 return;
 
@@ -282,3 +262,4 @@ namespace cherrydev
         }
     }
 }
+#endif
