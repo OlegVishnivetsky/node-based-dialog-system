@@ -7,7 +7,9 @@
 > 💡 **About**: The **Nodes-based Dialog System** is a Unity asset tool that enables game developers to create branching dialog trees for game characters with ease. It provides a visual editor to create and connect nodes, building dynamic conversations. Each node represents a piece of dialog, and connections between nodes determine the conversation flow.  
 > The **Node Editor** presents an editable graph, displaying nodes and their connections, allowing you to create simple sentence nodes or answer nodes to craft your dialogs.
 
-You can check the video tutorial on YouTube (note: the video is slightly outdated): [Watch here](https://www.youtube.com/watch?v=oFOvop46eic&t=16s&ab_channel=cherrydev).
+You can check the video tutorial on YouTube: 
+[Basics](https://www.youtube.com/watch?v=oFOvop46eic&t=16s&ab_channel=cherrydev),
+[New](https://youtu.be/881lzd-p9eg).
 
 ## 📋 Navigation
 
