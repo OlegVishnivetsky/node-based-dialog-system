@@ -11,16 +11,16 @@ You can check the video tutorial on YouTube (note: the video is slightly outdate
 
 ## 📋 Navigation
 
-- [1. Node Editor 🗂️](#1-node-editor-)
-- [2. Variables 🧠](#2-variables-)
-- [3. Sentence Node 🗣️](#3-sentence-node-)
-- [4. Answer Node ✍️](#4-answer-node-)
-- [5. Modify Variable Node 🔧](#5-modify-variable-node-)
-- [6. Variable Condition Node 🔍](#6-variable-condition-node-)
-- [7. How to Use and Technical Part 💻](#7-how-to-use-and-technical-part-)
-- [8. Localization Integration 🌐](#8-localization-integration-)
-- [9. Timeline Integration ⏱️](#9-timeline-integration-)
-- [10. Tool Bar Navigation 🧭](#10-tool-bar-navigation-)
+- [1. Node Editor 🗂️](#1️⃣-node-editor)
+- [2. Variables 🧠](#2️⃣-variables)
+- [3. Sentence Node 🗣️](#3️⃣-sentence-node)
+- [4. Answer Node ✍️](#4️⃣-answer-node)
+- [5. Modify Variable Node 🔧](#5️⃣-modify-variable-node)
+- [6. Variable Condition Node 🔍](#6️⃣-variable-condition-node)
+- [7. How to Use and Technical Part 💻](#🔧-how-to-use-and-technical-part)
+- [8. Localization Integration 🌐](#🌐-localization-integration)
+- [9. Timeline Integration ⏱️](#⏱️-timeline-integration)
+- [10. Tool Bar Navigation 🧭](#🧭-tool-bar-navigation)
 
 ## 1️⃣ Node Editor
 
@@ -80,7 +80,7 @@ dialogBehaviour.SetVariableValue("isDoorOpen", true);
    - **Name**
    - **Sentence**
    - **Sprite** (optional, can be left **null**).
-3. Click the "**Add External Function**" button to add a field for a previously bound function (see [How to Use and Technical Part](#how-to-use-and-technical-part)).
+3. Click the "**Add External Function**" button to add a field for a previously bound function (see [How to Use and Technical Part](#🔧-how-to-use-and-technical-part)).
 4. Click the "**Remove External Function**" button to remove it.
 
 ## 4️⃣ Answer Node
@@ -119,7 +119,7 @@ Used to check variable values and branch dialog flow based on conditions.
 
 1. Drag and drop the **Dialog Prefab** from the **Prefab folder** and call the **StartDialog** method from the **DialogBehaviour** script attached to the prefab.
 
-> 💡 It’s recommended to call this method from another script, as shown in the demo script:
+> 💡 It's recommended to call this method from another script, as shown in the demo script:
 
 ```csharp
 public class TestDialogStarter : MonoBehaviour
@@ -195,7 +195,7 @@ public class TestDialogStarter : MonoBehaviour
 
 ## 🌐 Localization Integration
 
-This asset integrates with Unity’s Localization system for multi-language support.
+This asset integrates with Unity's Localization system for multi-language support.
 
 > 💡 The Unity Localization package is a dependency. If not needed, you can remove it.
 
@@ -217,11 +217,11 @@ This asset integrates with Unity’s Localization system for multi-language supp
 - Auto-generated keys may be random and less readable.
 - Edit keys to be more descriptive, then click **Localization > Update Keys** to apply changes.
 
-> ✅ Auto-generated keys work fine if you don’t want to customize them.
+> ✅ Auto-generated keys work fine if you don't want to customize them.
 
 ## ⏱️ Timeline Integration
 
-Integrate **Dialog Behaviour** with Unity’s Timeline system for cutscenes and scripted sequences.
+Integrate **Dialog Behaviour** with Unity's Timeline system for cutscenes and scripted sequences.
 
 ### Setting Up Dialog in Timeline
 1. **Create Dialog Behavior Track**: Add a new track in your Timeline and assign the **Dialog Behavior** component.
@@ -260,7 +260,7 @@ The editor toolbar enhances your workflow with quick-access functions.
 
 ---
 
-:star::star::star::star::star: Feel free to edit the code to suit your needs. If you find bugs or have questions, contact me via email, GitHub, or Unity Asset Store reviews. I’d also love for you to visit my itch.io page! 😄
+:star::star::star::star::star: Feel free to edit the code to suit your needs. If you find bugs or have questions, contact me via email, GitHub, or Unity Asset Store reviews. I'd also love for you to visit my itch.io page! 😄
 
 - **Email**: [olegmroleg@gmail.com](mailto:olegmroleg@gmail.com)
 - **GitHub**: [OlegVishnivetsky](https://github.com/OlegVishnivetsky)
