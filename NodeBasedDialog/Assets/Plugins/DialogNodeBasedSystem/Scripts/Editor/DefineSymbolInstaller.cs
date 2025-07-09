@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEditor.PackageManager;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
@@ -15,16 +16,22 @@ public static class DefineSymbolInstaller
     private const string LocalizationDefineSymbol = "UNITY_LOCALIZATION";
 
     private static ListRequest _listRequest;
-    private const string EditorPrefKey = "DefineSymbolInstaller_HasChecked";
+    private static string EditorPrefKey => $"DefineSymbolInstaller_HasChecked_{Application.dataPath.GetHashCode()}";
 
     static DefineSymbolInstaller()
     {
-        if (!EditorPrefs.GetBool(EditorPrefKey, false))
+        EditorApplication.delayCall += () =>
         {
-            EditorPrefs.SetBool(EditorPrefKey, true);
-            CheckPackagesAndDefineSymbols();
-        }
+            if (!EditorPrefs.GetBool(EditorPrefKey, false))
+            {
+                EditorPrefs.SetBool(EditorPrefKey, true);
+                CheckPackagesAndDefineSymbols();
+            }
+        };
     }
+
+    [MenuItem("Tools/Dialog System/Check Define Symbols")]
+    public static void ForceCheckDefineSymbols() => CheckPackagesAndDefineSymbols();
 
     public static void CheckPackagesAndDefineSymbols()
     {
@@ -52,22 +59,23 @@ public static class DefineSymbolInstaller
 
     private static void UpdateDefineSymbol(string defineSymbol, bool shouldEnable)
     {
-        BuildTargetGroup targetGroup = EditorUserBuildSettings.selectedBuildTargetGroup;
-        string defines = PlayerSettings.GetScriptingDefineSymbolsForGroup(targetGroup);
-
-        bool contains = defines.Split(';').Contains(defineSymbol);
+        NamedBuildTarget namedBuildTarget = NamedBuildTarget.FromBuildTargetGroup(EditorUserBuildSettings.selectedBuildTargetGroup);
+        PlayerSettings.GetScriptingDefineSymbols(namedBuildTarget, out string[] currentDefines);
+        List<string> definesList = currentDefines.ToList();
+        
+        bool contains = definesList.Contains(defineSymbol);
 
         if (shouldEnable && !contains)
         {
-            defines = string.IsNullOrEmpty(defines) ? defineSymbol : $"{defines};{defineSymbol}";
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(targetGroup, defines);
-            Debug.Log($"[DefineSymbolManager] Added {defineSymbol} define symbol for {targetGroup}");
+            definesList.Add(defineSymbol);
+            PlayerSettings.SetScriptingDefineSymbols(namedBuildTarget, definesList.ToArray());
+            Debug.Log($"[DefineSymbolManager] Added {defineSymbol} define symbol for {namedBuildTarget.TargetName}");
         }
         else if (!shouldEnable && contains)
         {
-            IEnumerable<string> newDefines = defines.Split(';').Where(d => d != defineSymbol);
-            PlayerSettings.SetScriptingDefineSymbolsForGroup(targetGroup, string.Join(";", newDefines));
-            Debug.Log($"[DefineSymbolManager] Removed {defineSymbol} define symbol for {targetGroup}");
+            definesList.Remove(defineSymbol);
+            PlayerSettings.SetScriptingDefineSymbols(namedBuildTarget, definesList.ToArray());
+            Debug.Log($"[DefineSymbolManager] Removed {defineSymbol} define symbol for {namedBuildTarget.TargetName}");
         }
     }
 }
