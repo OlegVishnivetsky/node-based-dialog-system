@@ -16,6 +16,7 @@ namespace cherrydev
         [SerializeField] private bool _boolValue;
         [SerializeField] private int _intValue;
         [SerializeField] private float _floatValue;
+        [SerializeField] private string _stringValue = "";
 
         [Space(10)]
         public Node ParentNode;
@@ -59,6 +60,9 @@ namespace cherrydev
                 case VariableType.Float:
                     ModifyFloatVariable(variable);
                     break;
+                case VariableType.String:
+                    ModifyStringVariable(variable);
+                    break;
             }
         }
 
@@ -94,6 +98,19 @@ namespace cherrydev
             variable.SetValue(newValue);
         }
 
+        private void ModifyStringVariable(Variable variable)
+        {
+            string currentValue = variable.GetStringValue();
+            string newValue = _modifyType switch
+            {
+                ModificationType.Set => _stringValue,
+                ModificationType.Increase => currentValue + _stringValue,
+                ModificationType.Decrease => currentValue.Replace(_stringValue, ""),
+                _ => _stringValue
+            };
+            variable.SetValue(newValue);
+        }
+
         private string GetModificationDescription()
         {
             return _modifyType switch
@@ -121,6 +138,7 @@ namespace cherrydev
                 VariableType.Bool => _boolValue.ToString(),
                 VariableType.Int => _intValue.ToString(),
                 VariableType.Float => _floatValue.ToString(),
+                VariableType.String => $"\"{_stringValue}\"",
                 _ => "unknown"
             };
         }
@@ -242,8 +260,8 @@ namespace cherrydev
             string label = _modifyType switch
             {
                 ModificationType.Set => "Set to:",
-                ModificationType.Increase => "Add:",
-                ModificationType.Decrease => "Subtract:",
+                ModificationType.Increase => selectedVariable.Type == VariableType.String ? "Append:" : "Add:",
+                ModificationType.Decrease => selectedVariable.Type == VariableType.String ? "Remove:" : "Subtract:",
                 _ => "Value:"
             };
             
@@ -259,6 +277,9 @@ namespace cherrydev
                     break;
                 case VariableType.Float:
                     _floatValue = EditorGUILayout.FloatField(_floatValue, GUILayout.Width(FieldWidth));
+                    break;
+                case VariableType.String:
+                    _stringValue = EditorGUILayout.TextField(_stringValue, GUILayout.Width(FieldWidth));
                     break;
             }
             
@@ -287,8 +308,12 @@ namespace cherrydev
             string action = _modifyType switch
             {
                 ModificationType.Set => $"Set {variable.Name} = {GetCurrentModifyValueAsString()}",
-                ModificationType.Increase => $"Add {GetCurrentModifyValueAsString()} to {variable.Name}",
-                ModificationType.Decrease => $"Subtract {GetCurrentModifyValueAsString()} from {variable.Name}",
+                ModificationType.Increase => variable.Type == VariableType.String 
+                    ? $"Append {GetCurrentModifyValueAsString()} to {variable.Name}"
+                    : $"Add {GetCurrentModifyValueAsString()} to {variable.Name}",
+                ModificationType.Decrease => variable.Type == VariableType.String 
+                    ? $"Remove {GetCurrentModifyValueAsString()} from {variable.Name}"
+                    : $"Subtract {GetCurrentModifyValueAsString()} from {variable.Name}",
                 ModificationType.Toggle => $"Toggle {variable.Name}",
                 _ => $"Modify {variable.Name}"
             };
@@ -303,6 +328,7 @@ namespace cherrydev
             {
                 VariableType.Bool => new[] { ModificationType.Set, ModificationType.Toggle },
                 VariableType.Int or VariableType.Float => new[] { ModificationType.Set, ModificationType.Increase, ModificationType.Decrease },
+                VariableType.String => new[] { ModificationType.Set, ModificationType.Increase, ModificationType.Decrease },
                 _ => new[] { ModificationType.Set }
             };
         }
@@ -312,8 +338,8 @@ namespace cherrydev
             return modifyType switch
             {
                 ModificationType.Set => "Set",
-                ModificationType.Increase => "Increase",
-                ModificationType.Decrease => "Decrease", 
+                ModificationType.Increase => variableType == VariableType.String ? "Append" : "Increase",
+                ModificationType.Decrease => variableType == VariableType.String ? "Remove" : "Decrease",
                 ModificationType.Toggle => "Toggle",
                 _ => modifyType.ToString()
             };

@@ -15,6 +15,7 @@ namespace cherrydev
         [SerializeField] private bool _boolTargetValue;
         [SerializeField] private int _intTargetValue;
         [SerializeField] private float _floatTargetValue;
+        [SerializeField] private string _stringTargetValue = "";
 
         [Space(10)]
         public Node ParentNode;
@@ -66,6 +67,9 @@ namespace cherrydev
                 case VariableType.Float:
                     return EvaluateFloatCondition(variable.GetFloatValue());
                     
+                case VariableType.String:
+                    return EvaluateStringCondition(variable.GetStringValue());
+                    
                 default:
                     Debug.LogWarning($"Unsupported variable type: {variable.Type}");
                     return false;
@@ -110,6 +114,20 @@ namespace cherrydev
             };
         }
 
+        private bool EvaluateStringCondition(string variableValue)
+        {
+            return _conditionType switch
+            {
+                ConditionType.Equal => variableValue.Equals(_stringTargetValue, System.StringComparison.Ordinal),
+                ConditionType.NotEqual => !variableValue.Equals(_stringTargetValue, System.StringComparison.Ordinal),
+                ConditionType.Greater => string.Compare(variableValue, _stringTargetValue, System.StringComparison.Ordinal) > 0,
+                ConditionType.GreaterOrEqual => string.Compare(variableValue, _stringTargetValue, System.StringComparison.Ordinal) >= 0,
+                ConditionType.Less => string.Compare(variableValue, _stringTargetValue, System.StringComparison.Ordinal) < 0,
+                ConditionType.LessOrEqual => string.Compare(variableValue, _stringTargetValue, System.StringComparison.Ordinal) <= 0,
+                _ => false
+            };
+        }
+
         private string GetConditionDescription()
         {
             if (string.IsNullOrEmpty(_variableName))
@@ -138,6 +156,7 @@ namespace cherrydev
                 VariableType.Bool => _boolTargetValue.ToString(),
                 VariableType.Int => _intTargetValue.ToString(),
                 VariableType.Float => _floatTargetValue.ToString("F2"),
+                VariableType.String => $"\"{_stringTargetValue}\"",
                 _ => "?"
             };
 
@@ -268,6 +287,9 @@ namespace cherrydev
                 case VariableType.Float:
                     _floatTargetValue = EditorGUILayout.FloatField(_floatTargetValue, GUILayout.Width(FieldWidth + 20));
                     break;
+                case VariableType.String:
+                    _stringTargetValue = EditorGUILayout.TextField(_stringTargetValue, GUILayout.Width(FieldWidth + 20));
+                    break;
             }
             
             EditorGUILayout.EndHorizontal();
@@ -284,7 +306,7 @@ namespace cherrydev
             return variableType switch
             {
                 VariableType.Bool => new[] { ConditionType.Equal, ConditionType.NotEqual },
-                VariableType.Int or VariableType.Float => System.Enum.GetValues(typeof(ConditionType)).Cast<ConditionType>().ToArray(),
+                VariableType.Int or VariableType.Float or VariableType.String => System.Enum.GetValues(typeof(ConditionType)).Cast<ConditionType>().ToArray(),
                 _ => new[] { ConditionType.Equal }
             };
         }

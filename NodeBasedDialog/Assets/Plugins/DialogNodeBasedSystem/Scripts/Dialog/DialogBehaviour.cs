@@ -126,7 +126,6 @@ namespace cherrydev
                 LocalizationSettings.SelectedLocaleChanged -= OnSelectedLocaleChanged;
 #endif
             
-            // Unsubscribe from variable events
             if (_variablesHandler != null)
             {
                 _variablesHandler.VariableChanged -= OnVariableChanged;
@@ -249,6 +248,8 @@ namespace cherrydev
         public void SetVariableValue(string variableName, int value) => _variablesHandler?.SetVariableValueDirect(variableName, value);
 
         public void SetVariableValue(string variableName, float value) => _variablesHandler?.SetVariableValueDirect(variableName, value);
+
+        public void SetVariableValue(string variableName, string value) => _variablesHandler?.SetVariableValueDirect(variableName, value);
 
         /// <summary>
         /// This method is designed for ease of use. Calls a method 

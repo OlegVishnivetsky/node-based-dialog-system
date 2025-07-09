@@ -100,6 +100,7 @@ namespace cherrydev
         [SerializeField] private bool _boolValue;
         [SerializeField] private int _intValue;
         [SerializeField] private float _floatValue;
+        [SerializeField] private string _stringValue;
         
         public string Name => _name;
         public VariableType Type => _type;
@@ -146,6 +147,7 @@ namespace cherrydev
         public int GetIntValue() => _intValue;
         
         public float GetFloatValue() => _floatValue;
+        public string GetStringValue() => _stringValue;
         
         public void SetValue(bool value) => _boolValue = value;
         

@@ -159,6 +159,9 @@ namespace cherrydev
                 case VariableType.Float:
                     return EditorGUILayout.FloatField((float)currentValue);
                     
+                case VariableType.String:
+                    return EditorGUILayout.TextField((string)currentValue ?? "");
+                    
                 default:
                     EditorGUILayout.LabelField("Unknown type");
                     return currentValue;

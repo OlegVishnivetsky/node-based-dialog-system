@@ -172,6 +172,21 @@ namespace cherrydev
             }
         }
 
+        public void SetVariableValueDirect(string variableName, string value)
+        {
+            Variable variable = _variablesConfig?.GetVariable(variableName);
+            
+            if (variable?.Type == VariableType.String)
+            {
+                variable.SetValue(value);
+                
+                if (variable.SaveToPrefs)
+                    _variablesConfig.SaveVariable(variable);
+                
+                VariableChanged?.Invoke(variableName);
+            }
+        }
+
         /// <summary>
         /// Check if a variable exists
         /// </summary>
@@ -221,6 +236,9 @@ namespace cherrydev
                     case VariableType.Float:
                         variable.SetValue(0f);
                         break;
+                    case VariableType.String:
+                        variable.SetValue("");
+                        break;
                 }
 
                 if (variable.SaveToPrefs)
@@ -239,10 +257,9 @@ namespace cherrydev
         public void UpdateVariablesConfig(VariablesConfig newVariablesConfig)
         {
             _variablesConfig = newVariablesConfig;
+            
             if (_variablesConfig != null)
-            {
                 LoadVariables();
-            }
         }
     }
 }
