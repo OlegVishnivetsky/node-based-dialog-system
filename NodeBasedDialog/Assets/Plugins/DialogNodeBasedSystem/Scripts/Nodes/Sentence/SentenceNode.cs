@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 #if UNITY_LOCALIZATION
@@ -12,7 +13,7 @@ namespace cherrydev
         [SerializeField] private Sentence _sentence;
 
         [Space(10)] 
-        public Node ParentNode;
+        public List<Node> ParentNodes = new();
         public Node ChildNode;
 
         [Space(7)] 
@@ -123,6 +124,8 @@ namespace cherrydev
         {
             base.Draw(nodeStyle, labelStyle);
 
+            ParentNodes.RemoveAll(item => item == null);
+            
             GUILayout.BeginArea(Rect, nodeStyle);
 
             EditorGUILayout.LabelField("Sentence Node", labelStyle);
@@ -162,10 +165,13 @@ namespace cherrydev
         /// </summary>
         public override void RemoveAllConnections()
         {
-            ParentNode = null;
+            ParentNodes.Clear();
             ChildNode = null;
         }
 
+        public override bool RemoveFromParentConnectedNode(Node nodeToRemove) => 
+            ParentNodes.Remove(nodeToRemove);
+        
         /// <summary>
         /// Draw label and text fields for char name
         /// </summary>
@@ -250,21 +256,32 @@ namespace cherrydev
         /// <returns></returns>
         public override bool AddToChildConnectedNode(Node nodeToAdd)
         {
-            if (nodeToAdd.GetType() == typeof(SentenceNode))
-            {
-                nodeToAdd = (SentenceNode)nodeToAdd;
-
-                if (nodeToAdd == this)
-                    return false;
-            }
+            if (nodeToAdd == this)
+                return false;
 
             if (nodeToAdd.GetType() == typeof(SentenceNode))
             {
                 SentenceNode sentenceNodeToAdd = (SentenceNode)nodeToAdd;
-
                 if (sentenceNodeToAdd != null && sentenceNodeToAdd.ChildNode == this)
+                {
+                    Debug.LogWarning("Circular parenting not allowed");
                     return false;
+                }
             }
+    
+            if (nodeToAdd.GetType() == typeof(ExternalFunctionNode))
+            {
+                ExternalFunctionNode externalFunctionNodeToAdd = (ExternalFunctionNode)nodeToAdd;
+                
+                if (externalFunctionNodeToAdd != null && externalFunctionNodeToAdd.ChildNode == this)
+                {
+                    Debug.LogWarning("Circular parenting not allowed");
+                    return false;
+                }
+            }
+
+            if (ChildNode != null && ChildNode != nodeToAdd)
+                ChildNode.RemoveFromParentConnectedNode(this);
 
             ChildNode = nodeToAdd;
             return true;
@@ -277,9 +294,14 @@ namespace cherrydev
         /// <returns></returns>
         public override bool AddToParentConnectedNode(Node nodeToAdd)
         {
+            
             if (nodeToAdd.GetType() == typeof(AnswerNode))
             {
-                return false;
+                if (ParentNodes.Contains(nodeToAdd))
+                    return false;
+                    
+                ParentNodes.Add(nodeToAdd);
+                return true;
             }
 
             if (nodeToAdd.GetType() == typeof(SentenceNode))
@@ -287,26 +309,28 @@ namespace cherrydev
                 nodeToAdd = (SentenceNode)nodeToAdd;
 
                 if (nodeToAdd == this)
-                {
                     return false;
-                }
+
+                if (ParentNodes.Contains(nodeToAdd))
+                    return false;
+
+                ParentNodes.Add(nodeToAdd);
+                return true;
             }
 
-            ParentNode = nodeToAdd;
-
-            if (nodeToAdd.GetType() == typeof(SentenceNode))
+            if (nodeToAdd.GetType() == typeof(ModifyVariableNode) || 
+                nodeToAdd.GetType() == typeof(VariableConditionNode) ||
+                nodeToAdd.GetType() == typeof(ExternalFunctionNode))
             {
-                SentenceNode sentenceNodeToAdd = (SentenceNode)nodeToAdd;
-
-                if (sentenceNodeToAdd.ChildNode == this)
-                    return true;
-
-                ParentNode = null;
+                if (ParentNodes.Contains(nodeToAdd))
+                    return false;
+                    
+                ParentNodes.Add(nodeToAdd);
+                return true;
             }
 
-            return true;
+            return false;
         }
-
 #endif
     }
 }

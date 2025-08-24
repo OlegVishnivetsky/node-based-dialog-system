@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using UnityEngine;
+using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -19,7 +20,7 @@ namespace cherrydev
         [SerializeField] private string _stringValue = "";
 
         [Space(10)]
-        public Node ParentNode;
+        public List<Node> ParentNodes = new();
         public Node ChildNode;
 
         public string VariableName => _variableName;
@@ -154,6 +155,9 @@ namespace cherrydev
         {
             base.Draw(nodeStyle, labelStyle);
 
+            // Clean up null parent references
+            ParentNodes.RemoveAll(item => item == null);
+
             float currentHeight = _modifyType == ModificationType.Toggle 
                 ? ToggleModificationHeight 
                 : NodeHeight;
@@ -181,7 +185,7 @@ namespace cherrydev
         /// </summary>
         public override void RemoveAllConnections()
         {
-            ParentNode = null;
+            ParentNodes.Clear();
             ChildNode = null;
         }
 
@@ -349,8 +353,12 @@ namespace cherrydev
         {
             if (nodeToAdd == this)
                 return false;
-            
+
+            if (ChildNode != null && ChildNode != nodeToAdd)
+                ChildNode.RemoveFromParentConnectedNode(this);
+
             ChildNode = nodeToAdd;
+    
             return true;
         }
 
@@ -359,9 +367,14 @@ namespace cherrydev
             if (nodeToAdd == this) 
                 return false;
             
-            ParentNode = nodeToAdd;
+            if (ParentNodes.Contains(nodeToAdd))
+                return false;
+            
+            ParentNodes.Add(nodeToAdd);
             return true;
         }
+        
+        public override bool RemoveFromParentConnectedNode(Node nodeToRemove) => ParentNodes.Remove(nodeToRemove);
 #endif
     }
 }

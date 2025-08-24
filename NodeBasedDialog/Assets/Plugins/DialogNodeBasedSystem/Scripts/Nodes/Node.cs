@@ -159,6 +159,33 @@ namespace cherrydev
             Rect.position += delta;
             EditorUtility.SetDirty(this);
         }
+
+        public virtual void RemoveChildConnection(Node childToRemove)
+        {
+            if (this is SentenceNode sentenceNode && sentenceNode.ChildNode == childToRemove)
+                sentenceNode.ChildNode = null;
+            else if (this is ExternalFunctionNode externalFunctionNode && externalFunctionNode.ChildNode == childToRemove)
+                externalFunctionNode.ChildNode = null;
+            else if (this is ModifyVariableNode modifyVariableNode && modifyVariableNode.ChildNode == childToRemove)
+                modifyVariableNode.ChildNode = null;
+            else if (this is VariableConditionNode conditionNode)
+            {
+                if (conditionNode.TrueChildNode == childToRemove)
+                    conditionNode.TrueChildNode = null;
+                if (conditionNode.FalseChildNode == childToRemove)
+                    conditionNode.FalseChildNode = null;
+            }
+            else if (this is AnswerNode answerNode)
+                answerNode.ChildNodes.Remove(childToRemove);
+        }
+
+        /// <summary>
+        /// Remove a parent node connection
+        /// </summary>
+        /// <param name="nodeToRemove"></param>
+        /// <returns></returns>
+        public virtual bool RemoveFromParentConnectedNode(Node nodeToRemove) => false;
+
 #endif
     }
 }

@@ -15,8 +15,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: -80.59973
-    y: 419.80215
+    x: 456.20047
+    y: 276.6022
     width: 210
     height: 155
   IsDragging: 1
@@ -27,7 +27,7 @@ MonoBehaviour:
   _intValue: 100
   _floatValue: 0
   _stringValue: 
-  ParentNode: {fileID: 8955379997175096319}
+  ParentNodes: []
   ChildNode: {fileID: 5948779960604983931}
 --- !u!114 &-5694142694314560960
 MonoBehaviour:
@@ -44,8 +44,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 416.2008
-    y: 325.40152
+    x: 953.002
+    y: 182.20148
     width: 190
     height: 135
   IsDragging: 1
@@ -55,7 +55,7 @@ MonoBehaviour:
     Text: Thank you for completing demo dialog node graph. Let's check the final
       node, which depends on your reputation.
     CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  ParentNode: {fileID: 0}
+  ParentNodes: []
   ChildNode: {fileID: 2712214907965644317}
   _isExternalFunc: 0
   _externalFunctionName: 
@@ -76,8 +76,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 955.1996
-    y: 417.2014
+    x: 1492.0011
+    y: 274.00137
     width: 190
     height: 135
   IsDragging: 1
@@ -86,7 +86,7 @@ MonoBehaviour:
     CharacterName: cherrydev
     Text: 'Bad outcome! Your reputation is below zero '
     CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  ParentNode: {fileID: 2712214907965644317}
+  ParentNodes: []
   ChildNode: {fileID: 0}
   _isExternalFunc: 0
   _externalFunctionName: 
@@ -107,8 +107,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: -874.2002
-    y: 387.00204
+    x: -337.4001
+    y: 243.80203
     width: 190
     height: 135
   IsDragging: 1
@@ -117,7 +117,7 @@ MonoBehaviour:
     CharacterName: cherrydev
     Text: Welcome to the Dialog System Demo!
     CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  ParentNode: {fileID: 0}
+  ParentNodes: []
   ChildNode: {fileID: 8641861406733518020}
   _isExternalFunc: 0
   _externalFunctionName: 
@@ -138,8 +138,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: -579.80005
-    y: 286.20065
+    x: -42.999817
+    y: 143.00063
     width: 190
     height: 135
   IsDragging: 1
@@ -149,7 +149,7 @@ MonoBehaviour:
     Text: Your reputation is <color=yellow>{Reputation}</color>. Do you like this
       tool?
     CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  ParentNode: {fileID: 8641861406733518020}
+  ParentNodes: []
   ChildNode: {fileID: 8955379997175096319}
   _isExternalFunc: 0
   _externalFunctionName: 
@@ -201,8 +201,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 642.3996
-    y: 307.6008
+    x: 1179.2006
+    y: 164.40077
     width: 240
     height: 160
   IsDragging: 1
@@ -213,7 +213,7 @@ MonoBehaviour:
   _intTargetValue: 0
   _floatTargetValue: 0
   _stringTargetValue: 
-  ParentNode: {fileID: -5694142694314560960}
+  ParentNodes: []
   TrueChildNode: {fileID: 6631677728925077753}
   FalseChildNode: {fileID: -5484529471573560660}
 --- !u!114 &4939571328540799565
@@ -231,8 +231,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 172.20062
-    y: 219.79971
+    x: 709.00116
+    y: 76.59967
     width: 190
     height: 135
   IsDragging: 1
@@ -241,7 +241,7 @@ MonoBehaviour:
     CharacterName: cherrydev
     Text: 'I am very glad, your reputation is now: <color=yellow>{Reputation}</color>'
     CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  ParentNode: {fileID: 5641350639572772662}
+  ParentNodes: []
   ChildNode: {fileID: -5694142694314560960}
   _isExternalFunc: 0
   _externalFunctionName: 
@@ -262,8 +262,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: -86.19983
-    y: 214.9996
+    x: 450.60034
+    y: 71.79956
     width: 210
     height: 155
   IsDragging: 1
@@ -274,8 +274,8 @@ MonoBehaviour:
   _intValue: 100
   _floatValue: 0
   _stringValue: 
-  ParentNode: {fileID: 8955379997175096319}
-  ChildNode: {fileID: 4939571328540799565}
+  ParentNodes: []
+  ChildNode: {fileID: 5948779960604983931}
 --- !u!114 &5948779960604983931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,8 +291,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 178.60028
-    y: 430.202
+    x: 715.4008
+    y: 287.00198
     width: 190
     height: 135
   IsDragging: 1
@@ -301,7 +301,8 @@ MonoBehaviour:
     CharacterName: cherrydev
     Text: 'It''s a pity, your reputation is now: <color=red>{Reputation}</color>'
     CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  ParentNode: {fileID: -8341448837715939743}
+  ParentNodes:
+  - {fileID: 5641350639572772662}
   ChildNode: {fileID: -5694142694314560960}
   _isExternalFunc: 0
   _externalFunctionName: 
@@ -322,8 +323,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: 947.39996
-    y: 180.60011
+    x: 1484.2013
+    y: 37.4001
     width: 190
     height: 135
   IsDragging: 1
@@ -332,7 +333,7 @@ MonoBehaviour:
     CharacterName: cherrydev
     Text: Good outcome! Your reputation is above zero.
     CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  ParentNode: {fileID: 2712214907965644317}
+  ParentNodes: []
   ChildNode: {fileID: 0}
   _isExternalFunc: 0
   _externalFunctionName: 
@@ -353,8 +354,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: -646.9999
-    y: 477.40182
+    x: -110.199646
+    y: 334.2018
     width: 190
     height: 135
   IsDragging: 1
@@ -363,7 +364,7 @@ MonoBehaviour:
     CharacterName: cherrydev
     Text: You can create variables and change/show them in the dialog!
     CharacterSprite: {fileID: 21300000, guid: c03d0e70107745d48b9cc5f2abe74fe5, type: 3}
-  ParentNode: {fileID: -2687158952091482671}
+  ParentNodes: []
   ChildNode: {fileID: -969988046379566455}
   _isExternalFunc: 0
   _externalFunctionName: 
@@ -384,8 +385,8 @@ MonoBehaviour:
   NodeGraph: {fileID: 11400000}
   Rect:
     serializedVersion: 2
-    x: -335.0004
-    y: 318.20132
+    x: 201.79962
+    y: 175.00128
     width: 190
     height: 135
   IsDragging: 1
@@ -396,7 +397,7 @@ MonoBehaviour:
   AnswerKeys:
   - Demo_Answer1
   - Demo_Answer2
-  ParentNode: {fileID: -969988046379566455}
+  ParentNodes: []
   ChildNodes:
   - {fileID: 5641350639572772662}
   - {fileID: -8341448837715939743}

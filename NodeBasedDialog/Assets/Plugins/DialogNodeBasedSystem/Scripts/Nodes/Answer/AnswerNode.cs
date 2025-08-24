@@ -16,7 +16,7 @@ namespace cherrydev
         public List<string> Answers = new();
         public List<string> AnswerKeys = new();
 
-        public Node ParentNode;
+        public List<Node> ParentNodes = new();
         public List<Node> ChildNodes = new();
 
         private const float LabelFieldSpace = 18f;
@@ -86,6 +86,7 @@ namespace cherrydev
             base.Draw(nodeStyle, labelStyle);
 
             ChildNodes.RemoveAll(item => item == null);
+            ParentNodes.RemoveAll(item => item == null);
 
             float additionalHeight = DialogNodeGraph.ShowLocalizationKeys ? _amountOfAnswers * 20f : 0;
             Rect.size = new Vector2(AnswerNodeWidth, _currentAnswerNodeHeight + additionalHeight);
@@ -120,7 +121,7 @@ namespace cherrydev
         /// </summary>
         public override void RemoveAllConnections()
         {
-            ParentNode = null;
+            ParentNodes.Clear();
             ChildNodes.Clear();
         }
         
@@ -194,14 +195,10 @@ namespace cherrydev
             if (ChildNodes.Count == _amountOfAnswers)
             {
                 Node nodeToRemove = ChildNodes[_amountOfAnswers - 1];
-                
-                if (nodeToRemove is SentenceNode sentenceNode)
-                    sentenceNode.ParentNode = null;
-                else if (nodeToRemove is ModifyVariableNode modifyVariableNode)
-                    modifyVariableNode.ParentNode = null;
-                else if (nodeToRemove is VariableConditionNode variableConditionNode)
-                    variableConditionNode.ParentNode = null;
-                
+        
+                if (nodeToRemove != null)
+                    nodeToRemove.RemoveFromParentConnectedNode(this);
+        
                 ChildNodes.RemoveAt(_amountOfAnswers - 1);
             }
 
@@ -210,7 +207,7 @@ namespace cherrydev
         }
 
         /// <summary>
-        /// Adding nodeToAdd Node to the parentSentenceNode field
+        /// Adding nodeToAdd Node to the parent connected nodes list
         /// </summary>
         /// <param name="nodeToAdd"></param>
         /// <returns></returns>
@@ -219,16 +216,27 @@ namespace cherrydev
             if (nodeToAdd == this)
                 return false;
 
+            if (ParentNodes.Contains(nodeToAdd))
+                return false;
+
             if (nodeToAdd.GetType() == typeof(SentenceNode) 
                 || nodeToAdd.GetType() == typeof(ModifyVariableNode)
-                || nodeToAdd.GetType() == typeof(VariableConditionNode))
+                || nodeToAdd.GetType() == typeof(VariableConditionNode)
+                || nodeToAdd.GetType() == typeof(ExternalFunctionNode))
             {
-                ParentNode = nodeToAdd;
+                ParentNodes.Add(nodeToAdd);
                 return true;
             }
 
             return false;
         }
+
+        /// <summary>
+        /// Remove a parent node connection
+        /// </summary>
+        /// <param name="nodeToRemove"></param>
+        /// <returns></returns>
+        public override bool RemoveFromParentConnectedNode(Node nodeToRemove) => ParentNodes.Remove(nodeToRemove);
 
         /// <summary>
         /// Adding nodeToAdd Node to the child nodes list (supports all node types)
@@ -243,20 +251,12 @@ namespace cherrydev
             if (IsCanAddToChildConnectedNode(nodeToAdd))
             {
                 ChildNodes.Add(nodeToAdd);
-                
-                if (nodeToAdd is SentenceNode sentenceNode)
-                    sentenceNode.ParentNode = this;
-                else if (nodeToAdd is ModifyVariableNode modifyVariableNode)
-                    modifyVariableNode.ParentNode = this;
-                else if (nodeToAdd is VariableConditionNode variableConditionNode)
-                    variableConditionNode.ParentNode = this;
-
                 return true;
             }
 
             return false;
         }
-
+        
         /// <summary>
         /// Calculate answer node height based on amount of answers
         /// </summary>
@@ -276,21 +276,18 @@ namespace cherrydev
         private bool IsCanAddToChildConnectedNode(Node nodeToAdd)
         {
             if (ChildNodes.Count >= _amountOfAnswers)
+            {
+                Debug.LogWarning("Maximum amount of answers reached");
                 return false;
+            }
 
             if (nodeToAdd == this)
                 return false;
 
-            if (nodeToAdd is SentenceNode sentenceNode)
-                return sentenceNode.ParentNode == null && sentenceNode.ChildNode != this;
-            if (nodeToAdd is ModifyVariableNode modifyVariableNode)
-                return modifyVariableNode.ParentNode == null && modifyVariableNode.ChildNode != this;
-            if (nodeToAdd is VariableConditionNode variableConditionNode)
-                return variableConditionNode.ParentNode == null && 
-                       variableConditionNode.TrueChildNode != this && 
-                       variableConditionNode.FalseChildNode != this;
+            if (nodeToAdd is AnswerNode)
+                return false;
 
-            return false;
+            return true;
         }
 #endif
     }

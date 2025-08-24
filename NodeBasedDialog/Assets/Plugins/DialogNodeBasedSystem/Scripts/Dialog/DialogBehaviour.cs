@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 #if UNITY_LOCALIZATION
@@ -19,23 +20,27 @@ namespace cherrydev
         [SerializeField] private bool _reloadTextOnLanguageChange = true;
 #endif
 
-        [Space(10)]
+        [Space(10)] 
         [SerializeField] private UnityEvent _onDialogStarted;
         [SerializeField] private UnityEvent _onDialogFinished;
 
         private DialogNodeGraph _currentNodeGraph;
         private Node _currentNode;
         private DialogVariablesHandler _variablesHandler;
-        
+
         public AnswerNode CurrentAnswerNode { get; private set; }
         public SentenceNode CurrentSentenceNode { get; private set; }
         public ModifyVariableNode CurrentModifyVariableNode { get; private set; }
         public VariableConditionNode CurrentVariableConditionNode { get; private set; }
+        public ExternalFunctionNode CurrentExternalFunctionNode { get; private set; }
         
+        public UnityEvent OnDialogStarted => _onDialogStarted;
+        public UnityEvent OnDialogFinished => _onDialogFinished;
+
 #if UNITY_LOCALIZATION
         public event Action LanguageChanged;
 #endif
-        
+
         private int _maxAmountOfAnswerButtons;
 
         private bool _isDialogStarted;
@@ -45,6 +50,7 @@ namespace cherrydev
         private readonly List<string> _boundFunctionNames = new();
 
         public bool IsActive { get; set; } = true;
+
         public bool IsCanSkippingText
         {
             get => _isCanSkippingText;
@@ -67,9 +73,12 @@ namespace cherrydev
         public event Action<ModifyVariableNode> ModifyVariableNodeActivated;
         public event Action<string> VariableChanged;
         public event Action<string, object> VariableValueChanged;
-        
+
         public event Action<VariableConditionNode> VariableConditionNodeActivated;
         public event Action<string, bool> VariableConditionEvaluated;
+        
+        private event Action<DialogVariablesHandler> _dialogFinished;
+
 
         public DialogExternalFunctionsHandler ExternalFunctionsHandler { get; private set; }
         public DialogVariablesHandler VariablesHandler => _variablesHandler;
@@ -95,7 +104,7 @@ namespace cherrydev
                 {
                     string updatedText = sentenceNode.GetText();
                     string updatedCharName = sentenceNode.GetCharacterName();
-                    
+
                     if (_variablesHandler != null)
                     {
                         updatedText = DialogTextProcessor.ProcessText(updatedText, _variablesHandler);
@@ -125,21 +134,21 @@ namespace cherrydev
             if (_reloadTextOnLanguageChange)
                 LocalizationSettings.SelectedLocaleChanged -= OnSelectedLocaleChanged;
 #endif
-            
+
             if (_variablesHandler != null)
             {
                 _variablesHandler.VariableChanged -= OnVariableChanged;
                 _variablesHandler.VariableModified -= OnVariableModified;
             }
         }
-        
+
         private void Update() => HandleSentenceSkipping();
 
         /// <summary>
         /// Disable dialog panel
         /// </summary>
         public void Disable() => DialogDisabled?.Invoke();
-        
+
         /// <summary>
         /// Setting dialogCharDelay float parameter
         /// </summary>
@@ -156,7 +165,12 @@ namespace cherrydev
         /// Start a dialog
         /// </summary>
         /// <param name="dialogNodeGraph"></param>
-        public void StartDialog(DialogNodeGraph dialogNodeGraph)
+        /// <param name="onVariablesHandlerInitialized"></param>
+        /// <param name="onDialogFinished"></param>
+        public void StartDialog(
+            DialogNodeGraph dialogNodeGraph, 
+            Action<DialogVariablesHandler> onVariablesHandlerInitialized = null, 
+            Action<DialogVariablesHandler> onDialogFinished = null)
         {
             _isDialogStarted = true;
             _boundFunctionNames.Clear();
@@ -171,6 +185,10 @@ namespace cherrydev
             _currentNodeGraph = dialogNodeGraph;
 
             InitializeVariablesHandler(dialogNodeGraph);
+            
+            onVariablesHandlerInitialized?.Invoke(_variablesHandler);
+            _dialogFinished = onDialogFinished;
+            
             DefineFirstNode(dialogNodeGraph);
             CalculateMaxAmountOfAnswerButtons();
             HandleDialogGraphCurrentNode(_currentNode);
@@ -203,11 +221,11 @@ namespace cherrydev
         private void OnVariableChanged(string variableName)
         {
             VariableChanged?.Invoke(variableName);
-            
+
             if (_variablesHandler != null)
             {
                 Variable variable = _variablesHandler.GetVariable(variableName);
-                
+
                 if (variable != null)
                     VariableValueChanged?.Invoke(variableName, variable.GetValue());
             }
@@ -217,7 +235,8 @@ namespace cherrydev
         /// Called when a modify variable node is executed
         /// </summary>
         /// <param name="modifyNode"></param>
-        private void OnVariableModified(ModifyVariableNode modifyNode) => ModifyVariableNodeActivated?.Invoke(modifyNode);
+        private void OnVariableModified(ModifyVariableNode modifyNode) =>
+            ModifyVariableNodeActivated?.Invoke(modifyNode);
 
         /// <summary>
         /// Get variable value by name
@@ -229,7 +248,7 @@ namespace cherrydev
         {
             if (_variablesHandler == null)
                 return default!;
-                
+
             return _variablesHandler.GetVariableValue<T>(variableName);
         }
 
@@ -238,18 +257,23 @@ namespace cherrydev
         /// </summary>
         /// <param name="variableName">Name of the variable</param>
         /// <param name="value">Value to set</param>
-        public void SetVariableValue(string variableName, object value) => _variablesHandler?.SetVariableValue(variableName, value);
+        public void SetVariableValue(string variableName, object value) =>
+            _variablesHandler?.SetVariableValue(variableName, value);
 
         /// <summary>
         /// Set variable value directly
         /// </summary>
-        public void SetVariableValue(string variableName, bool value) => _variablesHandler?.SetVariableValueDirect(variableName, value);
+        public void SetVariableValue(string variableName, bool value) =>
+            _variablesHandler?.SetVariableValueDirect(variableName, value);
 
-        public void SetVariableValue(string variableName, int value) => _variablesHandler?.SetVariableValueDirect(variableName, value);
+        public void SetVariableValue(string variableName, int value) =>
+            _variablesHandler?.SetVariableValueDirect(variableName, value);
 
-        public void SetVariableValue(string variableName, float value) => _variablesHandler?.SetVariableValueDirect(variableName, value);
+        public void SetVariableValue(string variableName, float value) =>
+            _variablesHandler?.SetVariableValueDirect(variableName, value);
 
-        public void SetVariableValue(string variableName, string value) => _variablesHandler?.SetVariableValueDirect(variableName, value);
+        public void SetVariableValue(string variableName, string value) =>
+            _variablesHandler?.SetVariableValueDirect(variableName, value);
 
         /// <summary>
         /// This method is designed for ease of use. Calls a method 
@@ -260,7 +284,7 @@ namespace cherrydev
         public void BindExternalFunction(string funcName, Action function)
         {
             ExternalFunctionsHandler.BindExternalFunction(funcName, function);
-            
+
             if (!_boundFunctionNames.Contains(funcName))
                 _boundFunctionNames.Add(funcName);
         }
@@ -269,7 +293,7 @@ namespace cherrydev
         /// Adding listener to OnDialogFinished UnityEvent
         /// </summary>
         /// <param name="action"></param>
-        public void AddListenerToDialogFinishedEvent(UnityAction action) => 
+        public void AddListenerToDialogFinishedEvent(UnityAction action) =>
             _onDialogFinished.AddListener(action);
 
         /// <summary>
@@ -281,7 +305,7 @@ namespace cherrydev
             _currentNode = node;
             HandleDialogGraphCurrentNode(_currentNode);
         }
-        
+
         /// <summary>
         /// Setting currentNode field to Node and call HandleDialogGraphCurrentNode method
         /// This method should be called when an answer button is clicked with the button index
@@ -321,7 +345,7 @@ namespace cherrydev
             string charName = sentenceNode.GetCharacterName();
             string fullText = sentenceNode.GetText();
             Sprite charSprite = sentenceNode.GetCharacterSprite();
-            
+
             if (_variablesHandler != null)
             {
                 charName = DialogTextProcessor.ProcessText(charName, _variablesHandler);
@@ -329,7 +353,7 @@ namespace cherrydev
             }
 
             SentenceNodeActivatedWithParameter?.Invoke(charName, fullText, charSprite);
-            
+
             if (!string.IsNullOrEmpty(fullText))
             {
                 int charsToShow = Mathf.CeilToInt(fullText.Length * progress);
@@ -338,7 +362,7 @@ namespace cherrydev
                 DialogTextSkipped?.Invoke(subText);
             }
         }
-        
+
         /// <summary>
         /// Processing dialog current node
         /// </summary>
@@ -355,6 +379,8 @@ namespace cherrydev
                 HandleModifyVariableNode(currentNode);
             else if (currentNode.GetType() == typeof(VariableConditionNode))
                 HandleVariableConditionNode(currentNode);
+            else if (currentNode.GetType() == typeof(ExternalFunctionNode))
+                HandleExternalFunctionNode(currentNode);
         }
 
         /// <summary>
@@ -369,22 +395,22 @@ namespace cherrydev
             _isCurrentSentenceSkipped = false;
 
             SentenceNodeActivated?.Invoke();
-    
+
             string localizedCharName = sentenceNode.GetCharacterName();
             string localizedText = sentenceNode.GetText();
-            
+
             if (_variablesHandler != null)
             {
                 localizedCharName = DialogTextProcessor.ProcessText(localizedCharName, _variablesHandler);
                 localizedText = DialogTextProcessor.ProcessText(localizedText, _variablesHandler);
             }
-            
+
             SentenceNodeActivatedWithParameter?.Invoke(localizedCharName, localizedText,
                 sentenceNode.GetCharacterSprite());
 
             if (sentenceNode.IsExternalFunc())
                 CallExternalFunction(sentenceNode.GetExternalFunctionName());
-    
+
             WriteDialogText(localizedText);
         }
 
@@ -406,10 +432,10 @@ namespace cherrydev
                 if (answerNode.ChildNodes[i] != null)
                 {
                     string answerText = answerNode.Answers[i];
-            
+
                     if (_variablesHandler != null)
                         answerText = DialogTextProcessor.ProcessText(answerText, _variablesHandler);
-            
+
                     AnswerNodeSetUp?.Invoke(i, answerText);
                     AnswerButtonSetUp?.Invoke(i, answerNode);
 
@@ -468,12 +494,12 @@ namespace cherrydev
             }
 
             bool conditionResult = variableConditionNode.EvaluateCondition(_variablesHandler);
-            
+
             VariableConditionNodeActivated?.Invoke(variableConditionNode);
             VariableConditionEvaluated?.Invoke(variableConditionNode.VariableName, conditionResult);
 
             Node nextNode = null;
-            
+
             if (conditionResult)
             {
                 nextNode = variableConditionNode.TrueChildNode;
@@ -492,9 +518,30 @@ namespace cherrydev
             }
             else
             {
-                Debug.LogWarning($"No {(conditionResult ? "TRUE" : "FALSE")} path connected for variable condition node");
+                Debug.LogWarning(
+                    $"No {(conditionResult ? "TRUE" : "FALSE")} path connected for variable condition node");
                 EndDialog();
             }
+        }
+
+        /// <summary>
+        /// Processing external function node
+        /// </summary>
+        /// <param name="currentNode"></param>
+        private void HandleExternalFunctionNode(Node currentNode)
+        {
+            ExternalFunctionNode externalFunctionNode = (ExternalFunctionNode)currentNode;
+            CurrentExternalFunctionNode = externalFunctionNode;
+
+            ExternalFunctionsHandler.CallExternalFunction(externalFunctionNode.GetExternalFunctionName());
+
+            if (externalFunctionNode.ChildNode != null)
+            {
+                _currentNode = externalFunctionNode.ChildNode;
+                HandleDialogGraphCurrentNode(_currentNode);
+            }
+            else
+                EndDialog();
         }
 
         /// <summary>
@@ -503,16 +550,20 @@ namespace cherrydev
         private void EndDialog()
         {
             _isDialogStarted = false;
+
+            _dialogFinished?.Invoke(_variablesHandler);
             
             foreach (string funcName in _boundFunctionNames)
                 ExternalFunctionsHandler.UnbindExternalFunction(funcName);
-            
+
             _boundFunctionNames.Clear();
             _onDialogFinished?.Invoke();
+            _dialogFinished = null;
         }
 
         /// <summary>
-        /// Finds the first node that does not have a parent node but has a child one
+        /// Finds the first node that does not have any parent nodes but has child connections
+        /// Updated to work with multiple parents system
         /// </summary>
         /// <param name="dialogNodeGraph"></param>
         private void DefineFirstNode(DialogNodeGraph dialogNodeGraph)
@@ -525,45 +576,53 @@ namespace cherrydev
 
             foreach (Node node in dialogNodeGraph.NodesList)
             {
-                _currentNode = node;
+                bool hasParents = false;
+                bool hasChildren = false;
 
                 if (node.GetType() == typeof(SentenceNode))
                 {
                     SentenceNode sentenceNode = (SentenceNode)node;
-
-                    if (sentenceNode.ParentNode == null && sentenceNode.ChildNode != null)
-                    {
-                        _currentNode = sentenceNode;
-                        return;
-                    }
+                    hasParents = sentenceNode.ParentNodes.Count > 0;
+                    hasChildren = sentenceNode.ChildNode != null;
+                }
+                else if (node.GetType() == typeof(AnswerNode))
+                {
+                    AnswerNode answerNode = (AnswerNode)node;
+                    hasParents = answerNode.ParentNodes.Count > 0;
+                    hasChildren = answerNode.ChildNodes.Count > 0 && answerNode.ChildNodes.Any(child => child != null);
+                }
+                else if (node.GetType() == typeof(ExternalFunctionNode))
+                {
+                    ExternalFunctionNode externalFunctionNode = (ExternalFunctionNode)node;
+                    hasParents = externalFunctionNode.ParentNodes.Count > 0;
+                    hasChildren = externalFunctionNode.ChildNode != null;
                 }
                 else if (node.GetType() == typeof(ModifyVariableNode))
                 {
                     ModifyVariableNode modifyVariableNode = (ModifyVariableNode)node;
-
-                    if (modifyVariableNode.ParentNode == null && modifyVariableNode.ChildNode != null)
-                    {
-                        _currentNode = modifyVariableNode;
-                        return;
-                    }
+                    hasParents = modifyVariableNode.ParentNodes.Count > 0;
+                    hasChildren = modifyVariableNode.ChildNode != null;
                 }
                 else if (node.GetType() == typeof(VariableConditionNode))
                 {
                     VariableConditionNode variableConditionNode = (VariableConditionNode)node;
+                    hasParents = variableConditionNode.ParentNodes.Count > 0;
+                    hasChildren = variableConditionNode.TrueChildNode != null ||
+                                  variableConditionNode.FalseChildNode != null;
+                }
 
-                    if (variableConditionNode.ParentNode == null && 
-                        (variableConditionNode.TrueChildNode != null || variableConditionNode.FalseChildNode != null))
-                    {
-                        _currentNode = variableConditionNode;
-                        return;
-                    }
+                if (!hasParents && hasChildren)
+                {
+                    _currentNode = node;
+                    return;
                 }
             }
 
             _currentNode = dialogNodeGraph.NodesList[0];
+            Debug.LogWarning("No clear starting node found (node without parents). Using first node in list.");
         }
 
-        public void CallExternalFunction(string getExternalFunctionName) => 
+        public void CallExternalFunction(string getExternalFunctionName) =>
             ExternalFunctionsHandler.CallExternalFunction(getExternalFunctionName);
 
         /// <summary>
@@ -581,7 +640,7 @@ namespace cherrydev
         {
             _isCurrentSentenceTyping = true;
             SentenceStarted?.Invoke();
-            
+
             foreach (char textChar in text)
             {
                 if (_isCurrentSentenceSkipped)
@@ -598,7 +657,7 @@ namespace cherrydev
 
             _isCurrentSentenceTyping = false;
             SentenceEnded?.Invoke();
-            
+
             yield return new WaitUntil(() => CheckNextSentenceKeyCodes() && IsActive);
 
             CheckForDialogNextNode();
@@ -616,6 +675,18 @@ namespace cherrydev
                 if (sentenceNode.ChildNode != null)
                 {
                     _currentNode = sentenceNode.ChildNode;
+                    HandleDialogGraphCurrentNode(_currentNode);
+                }
+                else
+                    EndDialog();
+            }
+            else if (_currentNode.GetType() == typeof(ExternalFunctionNode))
+            {
+                ExternalFunctionNode externalFunctionNode = (ExternalFunctionNode)_currentNode;
+
+                if (externalFunctionNode.ChildNode != null)
+                {
+                    _currentNode = externalFunctionNode.ChildNode;
                     HandleDialogGraphCurrentNode(_currentNode);
                 }
                 else
@@ -661,7 +732,7 @@ namespace cherrydev
         {
             if (!_isDialogStarted || !_isCanSkippingText)
                 return;
-            
+
             if (CheckNextSentenceKeyCodes() && !_isCurrentSentenceSkipped)
                 _isCurrentSentenceSkipped = true;
         }
@@ -673,7 +744,7 @@ namespace cherrydev
         private bool CheckNextSentenceKeyCodes()
         {
             for (int i = 0; i < _nextSentenceKeyCodes.Count; i++)
-            { 
+            {
                 if (Input.GetKeyDown(_nextSentenceKeyCodes[i]))
                     return true;
             }

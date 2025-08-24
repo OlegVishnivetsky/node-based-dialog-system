@@ -1,33 +1,50 @@
 ﻿#if UNITY_EDITOR
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace cherrydev
 {
     /// <summary>
-    /// Helper class to manage node connections centrally
+    /// Helper class to manage node connections centrally - Updated for multiple parents support and ExternalFunctionNode
     /// </summary>
     public static class NodeConnectionHelper
     {
         /// <summary>
-        /// Creates a connection between parent and child, removing any conflicting connections
+        /// Creates a connection between parent and child, handling multiple parents
         /// </summary>
         public static bool CreateConnection(Node parent, Node child)
         {
             if (parent == null || child == null || parent == child)
                 return false;
 
-            // First, check if this connection is valid
             if (!IsValidConnection(parent, child))
                 return false;
 
-            // Remove any existing connections that would conflict
+            if (ConnectionExists(parent, child))
+                return false;
+
+            if (WouldCreateCycle(parent, child))
+                return false;
+
             PrepareForNewConnection(parent, child);
 
-            // Create the new connection
             bool parentAccepted = parent.AddToChildConnectedNode(child);
-            bool childAccepted = child.AddToParentConnectedNode(parent);
-
-            return parentAccepted && childAccepted;
+            
+            if (parentAccepted)
+            {
+                bool childAccepted = child.AddToParentConnectedNode(parent);
+                
+                if (!childAccepted)
+                {
+                    RemoveConnection(parent, child);
+                    return false;
+                }
+        
+                return true;
+            }
+    
+            return false;
         }
 
         /// <summary>
@@ -35,16 +52,50 @@ namespace cherrydev
         /// </summary>
         private static bool IsValidConnection(Node parent, Node child)
         {
-            // Answer nodes cannot be parents of Answer nodes
             if (parent is AnswerNode && child is AnswerNode)
                 return false;
 
-            // Add more validation rules as needed
             return true;
         }
 
         /// <summary>
-        /// Prepares nodes for a new connection by removing conflicting connections
+        /// Checks if a connection already exists between parent and child
+        /// </summary>
+        private static bool ConnectionExists(Node parent, Node child)
+        {
+            List<Node> childNodes = GetChildNodes(parent);
+            return childNodes.Contains(child);
+        }
+
+        /// <summary>
+        /// Checks if creating this connection would create a cycle
+        /// </summary>
+        private static bool WouldCreateCycle(Node parent, Node child) => CanReachNode(child, parent);
+
+        /// <summary>
+        /// Recursively checks if we can reach targetNode from sourceNode
+        /// </summary>
+        private static bool CanReachNode(Node sourceNode, Node targetNode)
+        {
+            if (sourceNode == null || targetNode == null)
+                return false;
+
+            if (sourceNode == targetNode)
+                return true;
+
+            List<Node> children = GetChildNodes(sourceNode);
+            
+            foreach (Node child in children)
+            {
+                if (CanReachNode(child, targetNode))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Prepares nodes for a new connection by removing conflicting connections for single-child nodes
         /// </summary>
         private static void PrepareForNewConnection(Node parent, Node child)
         {
@@ -53,6 +104,11 @@ namespace cherrydev
                 case SentenceNode sentenceParent:
                     if (sentenceParent.ChildNode != null && sentenceParent.ChildNode != child)
                         RemoveConnection(sentenceParent, sentenceParent.ChildNode);
+                    break;
+
+                case ExternalFunctionNode externalFunctionParent:
+                    if (externalFunctionParent.ChildNode != null && externalFunctionParent.ChildNode != child)
+                        RemoveConnection(externalFunctionParent, externalFunctionParent.ChildNode);
                     break;
 
                 case ModifyVariableNode modifyParent:
@@ -64,15 +120,8 @@ namespace cherrydev
                     break;
 
                 case AnswerNode answerParent:
-                    if (answerParent.ChildNodes.Contains(child))
-                        answerParent.ChildNodes.Remove(child);
                     break;
             }
-
-            Node existingParent = GetParentNode(child);
-            
-            if (existingParent != null && existingParent != parent)
-                RemoveConnection(existingParent, child);
         }
 
         /// <summary>
@@ -88,6 +137,11 @@ namespace cherrydev
                 case SentenceNode sentenceParent:
                     if (sentenceParent.ChildNode == child)
                         sentenceParent.ChildNode = null;
+                    break;
+
+                case ExternalFunctionNode externalFunctionParent:
+                    if (externalFunctionParent.ChildNode == child)
+                        externalFunctionParent.ChildNode = null;
                     break;
 
                 case AnswerNode answerParent:
@@ -110,26 +164,27 @@ namespace cherrydev
             switch (child)
             {
                 case SentenceNode sentenceChild:
-                    if (sentenceChild.ParentNode == parent)
-                        sentenceChild.ParentNode = null;
+                    sentenceChild.RemoveFromParentConnectedNode(parent);
+                    break;
+
+                case ExternalFunctionNode externalFunctionChild:
+                    externalFunctionChild.RemoveFromParentConnectedNode(parent);
                     break;
 
                 case AnswerNode answerChild:
-                    if (answerChild.ParentNode == parent)
-                        answerChild.ParentNode = null;
+                    answerChild.RemoveFromParentConnectedNode(parent);
                     break;
 
                 case ModifyVariableNode modifyChild:
-                    if (modifyChild.ParentNode == parent)
-                        modifyChild.ParentNode = null;
+                    modifyChild.RemoveFromParentConnectedNode(parent);
                     break;
 
                 case VariableConditionNode conditionChild:
-                    if (conditionChild.ParentNode == parent)
-                        conditionChild.ParentNode = null;
+                    conditionChild.RemoveFromParentConnectedNode(parent);
                     break;
             }
         }
+
         /// <summary>
         /// Removes all connections for a node, including references from other nodes
         /// </summary>
@@ -138,50 +193,55 @@ namespace cherrydev
             if (nodeToDisconnect == null)
                 return;
 
-            RemoveFromParent(nodeToDisconnect);
-            RemoveFromChildren(nodeToDisconnect);
+            RemoveFromAllParents(nodeToDisconnect);
+            RemoveFromAllChildren(nodeToDisconnect);
             nodeToDisconnect.RemoveAllConnections();
         }
 
         /// <summary>
-        /// Removes a node from its parent's child references
+        /// Removes a node from all its parents' child references
         /// </summary>
-        private static void RemoveFromParent(Node node)
+        private static void RemoveFromAllParents(Node node)
         {
-            Node parentNode = GetParentNode(node);
+            List<Node> parentNodes = GetParentNodes(node);
             
-            if (parentNode == null)
-                return;
-
-            switch (parentNode)
+            foreach (Node parentNode in parentNodes.ToArray())
             {
-                case SentenceNode sentenceNode:
-                    if (sentenceNode.ChildNode == node)
-                        sentenceNode.ChildNode = null;
-                    break;
-                    
-                case AnswerNode answerNode:
-                    answerNode.ChildNodes.Remove(node);
-                    break;
-                    
-                case ModifyVariableNode modifyVariableNode:
-                    if (modifyVariableNode.ChildNode == node)
-                        modifyVariableNode.ChildNode = null;
-                    break;
-                    
-                case VariableConditionNode variableConditionNode:
-                    if (variableConditionNode.TrueChildNode == node)
-                        variableConditionNode.TrueChildNode = null;
-                    if (variableConditionNode.FalseChildNode == node)
-                        variableConditionNode.FalseChildNode = null;
-                    break;
+                switch (parentNode)
+                {
+                    case SentenceNode sentenceNode:
+                        if (sentenceNode.ChildNode == node)
+                            sentenceNode.ChildNode = null;
+                        break;
+
+                    case ExternalFunctionNode externalFunctionNode:
+                        if (externalFunctionNode.ChildNode == node)
+                            externalFunctionNode.ChildNode = null;
+                        break;
+                        
+                    case AnswerNode answerNode:
+                        answerNode.ChildNodes.Remove(node);
+                        break;
+                        
+                    case ModifyVariableNode modifyVariableNode:
+                        if (modifyVariableNode.ChildNode == node)
+                            modifyVariableNode.ChildNode = null;
+                        break;
+                        
+                    case VariableConditionNode variableConditionNode:
+                        if (variableConditionNode.TrueChildNode == node)
+                            variableConditionNode.TrueChildNode = null;
+                        if (variableConditionNode.FalseChildNode == node)
+                            variableConditionNode.FalseChildNode = null;
+                        break;
+                }
             }
         }
 
         /// <summary>
-        /// Removes a node from its children's parent references
+        /// Removes a node from all its children's parent references
         /// </summary>
-        private static void RemoveFromChildren(Node node)
+        private static void RemoveFromAllChildren(Node node)
         {
             List<Node> childNodes = GetChildNodes(node);
             
@@ -190,45 +250,46 @@ namespace cherrydev
                 switch (childNode)
                 {
                     case SentenceNode sentenceNode:
-                        if (sentenceNode.ParentNode == node)
-                            sentenceNode.ParentNode = null;
+                        sentenceNode.RemoveFromParentConnectedNode(node);
+                        break;
+
+                    case ExternalFunctionNode externalFunctionNode:
+                        externalFunctionNode.RemoveFromParentConnectedNode(node);
                         break;
                         
                     case AnswerNode answerNode:
-                        if (answerNode.ParentNode == node)
-                            answerNode.ParentNode = null;
+                        answerNode.RemoveFromParentConnectedNode(node);
                         break;
                         
                     case ModifyVariableNode modifyVariableNode:
-                        if (modifyVariableNode.ParentNode == node)
-                            modifyVariableNode.ParentNode = null;
+                        modifyVariableNode.RemoveFromParentConnectedNode(node);
                         break;
                         
                     case VariableConditionNode variableConditionNode:
-                        if (variableConditionNode.ParentNode == node)
-                            variableConditionNode.ParentNode = null;
+                        variableConditionNode.RemoveFromParentConnectedNode(node);
                         break;
                 }
             }
         }
 
         /// <summary>
-        /// Gets the parent node of a given node
+        /// Gets all parent nodes of a given node - Updated for multiple parents and ExternalFunctionNode
         /// </summary>
-        private static Node GetParentNode(Node node)
+        private static List<Node> GetParentNodes(Node node)
         {
             return node switch
             {
-                SentenceNode sentenceNode => sentenceNode.ParentNode,
-                AnswerNode answerNode => answerNode.ParentNode,
-                ModifyVariableNode modifyVariableNode => modifyVariableNode.ParentNode,
-                VariableConditionNode variableConditionNode => variableConditionNode.ParentNode,
-                _ => null
+                SentenceNode sentenceNode => new List<Node>(sentenceNode.ParentNodes),
+                ExternalFunctionNode externalFunctionNode => new List<Node>(externalFunctionNode.ParentNodes),
+                AnswerNode answerNode => new List<Node>(answerNode.ParentNodes),
+                ModifyVariableNode modifyVariableNode => new List<Node>(modifyVariableNode.ParentNodes),
+                VariableConditionNode variableConditionNode => new List<Node>(variableConditionNode.ParentNodes),
+                _ => new List<Node>()
             };
         }
 
         /// <summary>
-        /// Gets all child nodes of a given node
+        /// Gets all child nodes of a given node - Updated to include ExternalFunctionNode
         /// </summary>
         private static List<Node> GetChildNodes(Node node)
         {
@@ -240,9 +301,14 @@ namespace cherrydev
                     if (sentenceNode.ChildNode != null)
                         children.Add(sentenceNode.ChildNode);
                     break;
+
+                case ExternalFunctionNode externalFunctionNode:
+                    if (externalFunctionNode.ChildNode != null)
+                        children.Add(externalFunctionNode.ChildNode);
+                    break;
                     
                 case AnswerNode answerNode:
-                    children.AddRange(answerNode.ChildNodes);
+                    children.AddRange(answerNode.ChildNodes.Where(child => child != null));
                     break;
                     
                 case ModifyVariableNode modifyVariableNode:

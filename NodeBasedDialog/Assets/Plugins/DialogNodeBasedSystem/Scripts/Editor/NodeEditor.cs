@@ -52,14 +52,14 @@ namespace cherrydev
 
         private bool _isLeftMouseDragFromEmpty;
         private bool _isMiddleMouseClickedOnNode;
-        
+
         private bool _showLocalizationKeys;
         private bool _showNodesDropdown;
         private bool _stylesInitialized;
-        
+
         private bool _isConnectingVariableNode;
         private bool _isConnectingToTrue;
-        
+
         private string _searchText = "";
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace cherrydev
         private void OnEnable()
         {
             Selection.selectionChanged += ChangeEditorWindowOnSelection;
-            
+
             _nodeStyle = new GUIStyle();
             _nodeStyle.normal.background = EditorGUIUtility.Load(StringConstants.Node) as Texture2D;
             _nodeStyle.padding = new RectOffset(NodePadding, NodePadding, NodePadding, NodePadding);
@@ -146,7 +146,7 @@ namespace cherrydev
                 InitializeToolbarStyles();
                 _stylesInitialized = true;
             }
-            
+
             EditorGUI.DrawRect(new Rect(0, 0, position.width, position.height), _backgroundColor);
             DrawToolbar();
             GUI.BeginGroup(new Rect(0, ToolbarHeight, position.width, position.height - ToolbarHeight));
@@ -167,7 +167,7 @@ namespace cherrydev
             if (GUI.changed)
                 Repaint();
         }
-        
+
         /// <summary>
         /// Setting up nodes when opening the editor
         /// </summary>
@@ -367,10 +367,22 @@ namespace cherrydev
                         return;
                     }
                 }
+                else if (node.GetType() == typeof(ExternalFunctionNode))
+                {
+                    ExternalFunctionNode externalFunctionNode = (ExternalFunctionNode)node;
+                    if ((!string.IsNullOrEmpty(externalFunctionNode.FunctionName) &&
+                         externalFunctionNode.FunctionName.ToLower().Contains(searchText)) ||
+                        (!string.IsNullOrEmpty(externalFunctionNode.Description) &&
+                         externalFunctionNode.Description.ToLower().Contains(searchText)))
+                    {
+                        CenterAndSelectNode(node);
+                        return;
+                    }
+                }
                 else if (node.GetType() == typeof(ModifyVariableNode))
                 {
                     ModifyVariableNode modifyVariableNode = (ModifyVariableNode)node;
-                    if (!string.IsNullOrEmpty(modifyVariableNode.VariableName) && 
+                    if (!string.IsNullOrEmpty(modifyVariableNode.VariableName) &&
                         modifyVariableNode.VariableName.ToLower().Contains(searchText))
                     {
                         CenterAndSelectNode(node);
@@ -380,7 +392,7 @@ namespace cherrydev
                 else if (node.GetType() == typeof(VariableConditionNode))
                 {
                     VariableConditionNode variableConditionNode = (VariableConditionNode)node;
-                    if (!string.IsNullOrEmpty(variableConditionNode.VariableName) && 
+                    if (!string.IsNullOrEmpty(variableConditionNode.VariableName) &&
                         variableConditionNode.VariableName.ToLower().Contains(searchText))
                     {
                         CenterAndSelectNode(node);
@@ -426,12 +438,24 @@ namespace cherrydev
                     if (nodeText.Length > 20)
                         nodeText = nodeText.Substring(0, 20) + "...";
                 }
+                else if (node.GetType() == typeof(ExternalFunctionNode))
+                {
+                    ExternalFunctionNode externalFunctionNode = (ExternalFunctionNode)node;
+                    prefix = "EF";
+                    nodeText = !string.IsNullOrEmpty(externalFunctionNode.FunctionName)
+                        ? $"Function {externalFunctionNode.FunctionName}"
+                        : "Empty";
+
+                    if (nodeText.Length > 20)
+                        nodeText = nodeText.Substring(0, 20) + "...";
+                }
                 else if (node.GetType() == typeof(ModifyVariableNode))
                 {
                     ModifyVariableNode modifyVariableNode = (ModifyVariableNode)node;
                     prefix = "MV";
-                    nodeText = !string.IsNullOrEmpty(modifyVariableNode.VariableName) ? 
-                        $"Modify {modifyVariableNode.VariableName}" : "Empty";
+                    nodeText = !string.IsNullOrEmpty(modifyVariableNode.VariableName)
+                        ? $"Modify {modifyVariableNode.VariableName}"
+                        : "Empty";
 
                     if (nodeText.Length > 20)
                         nodeText = nodeText.Substring(0, 20) + "...";
@@ -440,8 +464,9 @@ namespace cherrydev
                 {
                     VariableConditionNode variableConditionNode = (VariableConditionNode)node;
                     prefix = "VC";
-                    nodeText = !string.IsNullOrEmpty(variableConditionNode.VariableName) ? 
-                        $"If {variableConditionNode.VariableName}" : "Empty";
+                    nodeText = !string.IsNullOrEmpty(variableConditionNode.VariableName)
+                        ? $"If {variableConditionNode.VariableName}"
+                        : "Empty";
 
                     if (nodeText.Length > 20)
                         nodeText = nodeText.Substring(0, 20) + "...";
@@ -527,6 +552,8 @@ namespace cherrydev
                                 connectionColor = new Color(0.8f, 0.6f, 0.2f);
                             else if (childNode is VariableConditionNode)
                                 connectionColor = new Color(0.6f, 0.2f, 0.8f);
+                            else if (childNode is ExternalFunctionNode)
+                                connectionColor = new Color(0.2f, 0.8f, 0.6f);
 
                             DrawConnectionLine(parentNode, childNode, connectionColor);
                         }
@@ -540,6 +567,22 @@ namespace cherrydev
                     {
                         parentNode = node;
                         childNode = sentenceNode.ChildNode;
+
+                        Color connectionColor = Color.white;
+                        if (childNode is ExternalFunctionNode)
+                            connectionColor = new Color(0.2f, 0.8f, 0.6f);
+
+                        DrawConnectionLine(parentNode, childNode, connectionColor);
+                    }
+                }
+                else if (node.GetType() == typeof(ExternalFunctionNode))
+                {
+                    ExternalFunctionNode externalFunctionNode = (ExternalFunctionNode)node;
+
+                    if (externalFunctionNode.ChildNode != null)
+                    {
+                        parentNode = node;
+                        childNode = externalFunctionNode.ChildNode;
 
                         DrawConnectionLine(parentNode, childNode);
                     }
@@ -651,9 +694,9 @@ namespace cherrydev
                         backgroundColor = new Color(0.6f, 0.2f, 0.8f, 0.8f);
                     else if (childNode is SentenceNode)
                         backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
-                        backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
-                        backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
-                        backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
+                    backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
+                    backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
+                    backgroundColor = new Color(0.2f, 0.2f, 0.2f, 0.8f);
 
                     Handles.color = backgroundColor;
                     Handles.DrawSolidDisc(midPosition, Vector3.forward, 12f);
@@ -678,7 +721,7 @@ namespace cherrydev
 
             GUI.changed = true;
         }
-        
+
         /// <summary>
         /// Draw arrow at the midpoint of a connection line
         /// </summary>
@@ -686,8 +729,10 @@ namespace cherrydev
         /// <param name="direction">Direction of the line</param>
         private void DrawArrowAtMidpoint(Vector2 midPosition, Vector2 direction)
         {
-            Vector2 arrowTail1 = midPosition - new Vector2(-direction.y, direction.x).normalized * ConnectingLineArrowSize;
-            Vector2 arrowTail2 = midPosition + new Vector2(-direction.y, direction.x).normalized * ConnectingLineArrowSize;
+            Vector2 arrowTail1 =
+                midPosition - new Vector2(-direction.y, direction.x).normalized * ConnectingLineArrowSize;
+            Vector2 arrowTail2 =
+                midPosition + new Vector2(-direction.y, direction.x).normalized * ConnectingLineArrowSize;
             Vector2 arrowHead = midPosition + direction * ConnectingLineArrowSize;
 
             Handles.DrawBezier(arrowHead, arrowTail1, arrowHead, arrowTail1, Color.white, null, ConnectingLineWidth);
@@ -1075,13 +1120,27 @@ namespace cherrydev
 
             contextMenu.AddItem(new GUIContent("Create Sentence Node"), false, CreateSentenceNode, mousePosition);
             contextMenu.AddItem(new GUIContent("Create Answer Node"), false, CreateAnswerNode, mousePosition);
-            contextMenu.AddItem(new GUIContent("Create Modify Variable Node"), false, CreateModifyVariableNode, mousePosition);
-            contextMenu.AddItem(new GUIContent("Create Variable Condition Node"), false, CreateVariableConditionNode, mousePosition);
+            contextMenu.AddItem(new GUIContent("Create External Function Node"), false, CreateExternalFunctionNode,
+                mousePosition);
+            contextMenu.AddItem(new GUIContent("Create Modify Variable Node"), false, CreateModifyVariableNode,
+                mousePosition);
+            contextMenu.AddItem(new GUIContent("Create Variable Condition Node"), false, CreateVariableConditionNode,
+                mousePosition);
             contextMenu.AddSeparator("");
             contextMenu.AddItem(new GUIContent("Select All Nodes"), false, SelectAllNodes, mousePosition);
             contextMenu.AddItem(new GUIContent("Remove Selected Nodes"), false, RemoveSelectedNodes, mousePosition);
             contextMenu.AddItem(new GUIContent("Remove Connections"), false, RemoveAllConnections, mousePosition);
             contextMenu.ShowAsContext();
+        }
+
+        /// <summary>
+        /// Create External Function Node at mouse position and add it to Node Graph asset
+        /// </summary>
+        /// <param name="mousePositionObject"></param>
+        private void CreateExternalFunctionNode(object mousePositionObject)
+        {
+            ExternalFunctionNode externalFunctionNode = CreateInstance<ExternalFunctionNode>();
+            InitializeNode(mousePositionObject, externalFunctionNode, "External Function Node");
         }
 
         /// <summary>
@@ -1092,7 +1151,7 @@ namespace cherrydev
         {
             if (_currentNodeGraph != null)
                 _currentNodeGraph.EnsureVariablesConfig();
-            
+
             VariableConditionNode variableConditionNode = CreateInstance<VariableConditionNode>();
             InitializeNode(mousePositionObject, variableConditionNode, "Variable Condition Node");
         }
@@ -1105,11 +1164,11 @@ namespace cherrydev
         {
             if (_currentNodeGraph != null)
                 _currentNodeGraph.EnsureVariablesConfig();
-            
+
             ModifyVariableNode modifyVariableNode = CreateInstance<ModifyVariableNode>();
             InitializeNode(mousePositionObject, modifyVariableNode, "Modify Variable Node");
         }
-        
+
         /// <summary>
         /// Create Sentence Node at mouse position and add it to Node Graph asset
         /// </summary>
@@ -1223,7 +1282,7 @@ namespace cherrydev
 
                 NodeConnectionHelper.RemoveAllConnectionsForNode(node);
             }
-    
+
             GUI.changed = true;
         }
 

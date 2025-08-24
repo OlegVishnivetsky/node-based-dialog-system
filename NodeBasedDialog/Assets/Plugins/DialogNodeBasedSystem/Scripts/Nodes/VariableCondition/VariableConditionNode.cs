@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -18,7 +19,7 @@ namespace cherrydev
         [SerializeField] private string _stringTargetValue = "";
 
         [Space(10)]
-        public Node ParentNode;
+        public List<Node> ParentNodes = new(); // Changed from single Node to List<Node>
         public Node TrueChildNode;
         public Node FalseChildNode;
 
@@ -173,6 +174,9 @@ namespace cherrydev
         {
             base.Draw(nodeStyle, labelStyle);
 
+            // Clean up null parent references
+            ParentNodes.RemoveAll(item => item == null);
+
             Rect.size = new Vector2(NodeWidth, NodeHeight);
 
             GUILayout.BeginArea(Rect, nodeStyle);
@@ -198,7 +202,7 @@ namespace cherrydev
         /// </summary>
         public override void RemoveAllConnections()
         {
-            ParentNode = null;
+            ParentNodes.Clear(); // Clear all parent connections
             TrueChildNode = null;
             FalseChildNode = null;
         }
@@ -347,11 +351,22 @@ namespace cherrydev
 
         public override bool AddToParentConnectedNode(Node nodeToAdd)
         {
-            if (nodeToAdd == this) return false;
+            if (nodeToAdd == this) 
+                return false;
             
-            ParentNode = nodeToAdd;
+            if (ParentNodes.Contains(nodeToAdd))
+                return false;
+            
+            ParentNodes.Add(nodeToAdd);
             return true;
         }
+
+        /// <summary>
+        /// Remove a parent node connection
+        /// </summary>
+        /// <param name="nodeToRemove"></param>
+        /// <returns></returns>
+        public override bool RemoveFromParentConnectedNode(Node nodeToRemove) => ParentNodes.Remove(nodeToRemove);
 #endif
     }
 }
