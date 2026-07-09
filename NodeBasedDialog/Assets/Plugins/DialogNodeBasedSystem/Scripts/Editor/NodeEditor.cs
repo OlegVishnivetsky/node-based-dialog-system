@@ -102,10 +102,17 @@ namespace cherrydev
         /// <param name="instanceID"></param>
         /// <param name="line"></param>
         /// <returns></returns>
+#if UNITY_6000_3_OR_NEWER
+        [OnOpenAsset(0)]
+        public static bool OnDoubleClickAsset(EntityId entityId, int line)
+        {
+            DialogNodeGraph nodeGraph = EditorUtility.EntityIdToObject(entityId) as DialogNodeGraph;
+#else
         [OnOpenAsset(0)]
         public static bool OnDoubleClickAsset(int instanceID, int line)
         {
             DialogNodeGraph nodeGraph = EditorUtility.InstanceIDToObject(instanceID) as DialogNodeGraph;
+#endif
 
             if (_currentNodeGraph != null)
                 SetUpNodes();
@@ -173,8 +180,18 @@ namespace cherrydev
         /// </summary>
         private static void SetUpNodes()
         {
+            if (_currentNodeGraph == null || _currentNodeGraph.NodesList == null)
+                return;
+
             foreach (Node node in _currentNodeGraph.NodesList)
             {
+                if (node == null)
+                {
+                    Debug.LogWarning($"Dialog graph '{_currentNodeGraph.name}' contains a missing node reference. " +
+                        "Reimport the asset or remove the null entry from NodesList.");
+                    continue;
+                }
+
                 if (node.GetType() == typeof(AnswerNode))
                 {
                     AnswerNode answerNode = (AnswerNode)node;
@@ -237,7 +254,10 @@ namespace cherrydev
         /// </summary>
         private void CleanUpUnusedAssets()
         {
-            if (_currentNodeGraph == null)
+            if (_currentNodeGraph == null || _currentNodeGraph.NodesList == null)
+                return;
+
+            if (_currentNodeGraph.NodesList.Contains(null))
                 return;
 
             UnityEngine.Object[] subAssets = AssetDatabase.LoadAllAssetsAtPath(

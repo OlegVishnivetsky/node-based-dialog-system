@@ -16,7 +16,11 @@ namespace cherrydev
             {
                 NodeEditor.SetCurrentNodeGraph(nodeGraph);
                 NodeEditor.OpenWindow();
+#if UNITY_6000_3_OR_NEWER
+                NodeEditor.OnDoubleClickAsset(nodeGraph.GetEntityId(), -1);
+#else
                 NodeEditor.OnDoubleClickAsset(nodeGraph.GetInstanceID(), -1);
+#endif
             }
         }
     }
